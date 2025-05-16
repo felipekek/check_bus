@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tranca Eletrônica - Gerenciamento RFID</title>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
+    h1 { text-align: center; }
+    .container { max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    form { display: flex; flex-direction: column; gap: 10px; }
+    label { font-weight: bold; }
+    input[type="text"] { padding: 8px; border-radius: 4px; border: 1px solid #ccc; }
+    button { padding: 10px; border: none; border-radius: 4px; cursor: pointer; }
+    button.add { background: #28a745; color: #fff; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
+    button.delete { background: #dc3545; color: #fff; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Gerenciamento de Usuários RFID</h1>
+    <form id="registerForm">
+      <label for="name">Nome do Usuário:</label>
+      <input type="text" id="name" required />
+      <label for="rfid">ID RFID:</label>
+      <input type="text" id="rfid" required />
+      <button type="submit" class="add">Adicionar Usuário</button>
+    </form>
+
+    <h2>Usuários Autorizados</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>ID RFID</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="usersList"></tbody>
+    </table>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDAG_nfsNFNk6ZnhTnC9Cci-N6L3Bui4PY",
+      authDomain: "trancaeletronica-90835.firebaseapp.com",
+      projectId: "trancaeletronica-90835",
+      storageBucket: "trancaeletronica-90835.appspot.com",
+      messagingSenderId: "566150115221",
+      appId: "1:566150115221:web:1c6eaf30767894dbfd909c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const form = document.getElementById('registerForm');
+    const usersList = document.getElementById('usersList');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const rfid = document.getElementById('rfid').value.trim();
+      if (!name || !rfid) return;
+      try {
+        await addDoc(collection(db, 'usuarios'), { nome: name, rfidId: rfid });
+        form.reset();
+      } catch (error) {
+        console.error('Erro ao adicionar usuário:', error);
+      }
+    });
+
+    onSnapshot(collection(db, 'usuarios'), (snapshot) => {
+      usersList.innerHTML = '';
+      snapshot.forEach(docItem => {
+        const data = docItem.data();
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${data.nome}</td>
+          <td>${data.rfidId}</td>
+          <td><button class="delete" data-id="${docItem.id}">Excluir</button></td>
+        `;
+        usersList.appendChild(tr);
+      });
+
+      document.querySelectorAll('.delete').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const id = btn.getAttribute('data-id');
+          try {
+            await deleteDoc(doc(db, 'usuarios', id));
+          } catch (error) {
+            console.error('Erro ao excluir usuário:', error);
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
