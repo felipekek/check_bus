@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Localização - Ônibus</title>
+  <style>
+    body { margin: 0; font-family: Arial; }
+    #map { height: 100vh; width: 100vw; }
+  </style>
+</head>
+<body>
+  <div id="map">Carregando mapa...</div>
+
+  <script>
+    // Exemplo com mapa do Leaflet
+    const script = document.createElement('script');
+    script.src = 'https://unpkg.com/leaflet@1.9.3/dist/leaflet.js';
+    script.onload = () => {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://unpkg.com/leaflet@1.9.3/dist/leaflet.css';
+      document.head.appendChild(link);
+
+      const div = document.getElementById('map');
+      const map = L.map(div).setView([-12.2569, -38.9633], 13); // coordenadas exemplo
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
+    };
+    document.head.appendChild(script);
+  </script>
+</body>
+</html>

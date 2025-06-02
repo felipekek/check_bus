@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Horários - Aluno</title>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+  <style>
+    body { font-family: Arial; background: #eef2f7; padding: 20px; }
+    .container { max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; }
+    h1 { text-align: center; }
+    input, button { width: 100%; padding: 10px; margin-top: 10px; border-radius: 5px; border: 1px solid #ccc; }
+    button { background: #28a745; color: white; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Editar Horários</h1>
+    <input type="text" id="horario" placeholder="Digite seu horário (ex: 07:00 - 12:00)" />
+    <button onclick="salvarHorario()">Salvar Horário</button>
+    <p id="msg"></p>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "SUA_API_KEY",
+      authDomain: "SUA_AUTH_DOMAIN",
+      projectId: "SEU_PROJECT_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    let userId = null;
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        userId = user.uid;
+      } else {
+        window.location.href = "index.html";
+      }
+    });
+
+    window.salvarHorario = async () => {
+      const horario = document.getElementById("horario").value;
+      if (!horario || !userId) return;
+
+      try {
+        await setDoc(doc(db, "horarios", userId), { horario });
+        document.getElementById("msg").textContent = "Horário salvo com sucesso!";
+      } catch (err) {
+        document.getElementById("msg").textContent = "Erro ao salvar horário.";
+      }
+    };
+  </script>
+</body>
+</html>
