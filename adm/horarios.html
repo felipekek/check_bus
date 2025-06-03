@@ -57,7 +57,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getFirestore, doc, setDoc, deleteDoc, collection, query, getDocs, addDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, deleteDoc, collection, query, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
     const firebaseConfig = {
@@ -74,49 +74,43 @@
     const auth = getAuth(app);
 
     let userId = null;
-    let horarioEditandoId = null; // NOVO: armazena o ID do horário em edição
 
     onAuthStateChanged(auth, (user) => {
       if (user) {
         userId = user.uid;
-        carregarHorarios();
+        carregarHorarios(); // Carregar os horários salvos
       } else {
         window.location.href = "index.html";
       }
     });
 
-    // Função para salvar ou atualizar o horário
+    // Função para salvar o horário
     window.salvarHorario = async () => {
       const titulo = document.getElementById("titulo").value;
       const hora = document.getElementById("hora").value;
       const minuto = document.getElementById("minuto").value;
 
+      // Verifica se ambos os campos estão preenchidos e se são válidos
       if (!titulo || !hora || !minuto || !userId || hora < 0 || hora > 23 || minuto < 0 || minuto > 59) {
         document.getElementById("msg").textContent = "Por favor, insira um título e horário válidos.";
         return;
       }
 
-      const horario = `${hora.padStart(2, '0')}:${minuto.padStart(2, '0')}`;
-      const horarioData = { titulo, horario };
+      const horario = `${hora.padStart(2, '0')}:${minuto.padStart(2, '0')}`; // Formata o horário como "HH:mm"
 
       try {
+        // Cria um novo horário com título
+        const horarioData = {
+          titulo: titulo,
+          horario: horario
+        };
+
+        // Salva o horário no Firestore em uma coleção com o ID do usuário
         const horariosRef = collection(db, "horarios", userId, "listaHorarios");
-        if (horarioEditandoId) {
-          // Atualiza o horário existente
-          const docRef = doc(db, "horarios", userId, "listaHorarios", horarioEditandoId);
-          await setDoc(docRef, horarioData, { merge: true });
-          horarioEditandoId = null; // Limpa o modo edição
-          document.getElementById("msg").textContent = "Horário editado com sucesso!";
-        } else {
-          // Cria novo horário
-          await addDoc(horariosRef, horarioData);
-          document.getElementById("msg").textContent = "Horário salvo com sucesso!";
-        }
-        // Limpa campos
-        document.getElementById("titulo").value = "";
-        document.getElementById("hora").value = "";
-        document.getElementById("minuto").value = "";
-        carregarHorarios();
+        await addDoc(horariosRef, horarioData); // Adiciona um novo documento
+
+        document.getElementById("msg").textContent = "Horário salvo com sucesso!";
+        carregarHorarios(); // Recarrega os horários
       } catch (err) {
         document.getElementById("msg").textContent = "Erro ao salvar horário.";
       }
@@ -158,18 +152,17 @@
     window.editarHorario = async (id) => {
       const horariosRef = doc(db, "horarios", userId, "listaHorarios", id);
       const docSnapshot = await getDoc(horariosRef);
-
+      
       if (docSnapshot.exists()) {
         const data = docSnapshot.data();
         const { titulo, horario } = data;
-
+        
         document.getElementById("titulo").value = titulo;
         const [hora, minuto] = horario.split(":");
         document.getElementById("hora").value = hora;
         document.getElementById("minuto").value = minuto;
-
-        horarioEditandoId = id; // Marca que está editando este horário
-        document.getElementById("msg").textContent = "Editando horário. Salve para atualizar.";
+        
+        excluirHorario(id); // Exclui o horário atual antes de editar
       }
     };
 
