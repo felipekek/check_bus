@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Home - Tranca Eletrônica</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+    }
+    button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      margin: 5px;
+      cursor: pointer;
+      background: #007bff;
+      color: white;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .logout {
+      background: #dc3545;
+    }
+    .horarios-lista {
+      margin-top: 20px;
+    }
+    .horario-item {
+      background: #f8f9fa;
+      padding: 10px;
+      border-radius: 5px;
+      margin: 5px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .horario-item button {
+      background: #dc3545;
+      cursor: pointer;
+    }
+    .horario-item button:hover {
+      background: #c82333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Bem-vindo(a)!</h1>
+    <p>Escolha uma ação:</p>
+    <button onclick="location.href='horarios.html'">Editar Horários</button>
+    <button onclick="location.href='gps.html'">Abrir GPS</button>
+    <button onclick="logout()" class="logout">Sair</button>
+
+    <!-- Lista de horários -->
+    <div class="horarios-lista" id="horariosLista">
+      <h2>Seus Horários:</h2>
+      <p>Carregando horários...</p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { getFirestore, collection, getDocs, query, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDAG_nfsNFNk6ZnhTnC9Cci-N6L3Bui4PY",
+      authDomain: "trancaeletronica-90835.firebaseapp.com",
+      projectId: "trancaeletronica-90835",
+      storageBucket: "trancaeletronica-90835.appspot.com",
+      messagingSenderId: "566150115221",
+      appId: "1:566150115221:web:1c6eaf30767894dbfd909c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let userId = null;
+
+    // Verifica se o usuário está autenticado
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = "index.html"; // Redireciona se não estiver logado
+      } else {
+        userId = user.uid;
+        carregarHorarios(); // Carrega os horários do usuário logado
+      }
+    });
+
+    // Função de logout
+    window.logout = () => {
+      signOut(auth).then(() => {
+        window.location.href = "index.html"; // Redireciona após o logout
+      });
+    };
+
+    // Função para carregar os horários
+    async function carregarHorarios() {
+      if (!userId) return;
+
+      try {
+        const horariosRef = collection(db, "horarios", userId, "listaHorarios");
+        const horariosSnap = await getDocs(horariosRef);
+
+        const horariosLista = document.getElementById("horariosLista");
+        horariosLista.innerHTML = "<h2>Seus Horários:</h2>"; // Limpa a mensagem de carregando
+
+        if (horariosSnap.empty) {
+          horariosLista.innerHTML += "<p>Você ainda não tem horários salvos.</p>";
+        } else {
+          horariosSnap.forEach(docItem => {
+            const data = docItem.data();
+            const titulo = data.titulo || "Sem título";
+            const horario = data.horario || "--:--";
+            const div = document.createElement("div");
+            div.classList.add("horario-item");
+            div.innerHTML = `
+              <span><strong>${titulo}</strong>: ${horario}</span>
+              <button onclick="excluirHorario('${docItem.id}')">Excluir</button>
+            `;
+            horariosLista.appendChild(div);
+          });
+        }
+      } catch (err) {
+        console.error("Erro ao carregar os horários:", err);
+        const horariosLista = document.getElementById("horariosLista");
+        horariosLista.innerHTML = "<h2>Seus Horários:</h2><p>Erro ao carregar horários. Tente novamente mais tarde.</p>";
+      }
+    }
+
+    // Função para excluir um horário
+    window.excluirHorario = async (docId) => {
+      try {
+        await deleteDoc(doc(db, "horarios", userId, "listaHorarios", docId)); // Exclui o horário
+        carregarHorarios(); // Recarrega os horários após exclusão
+      } catch (err) {
+        alert("Erro ao excluir o horário.");
+      }
+    };
+  </script>
+</body>
+</html>
