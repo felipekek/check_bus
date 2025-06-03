@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Relatórios de Acesso</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    .relatorio-container {
+      max-width: 700px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    #lista > div {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+      font-size: 16px;
+    }
+    #lista > div:last-child {
+      border-bottom: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="relatorio-container">
+    <h1>Relatórios de Acesso</h1>
+    <div id="lista">
+      <p>Carregando registros...</p>
+    </div>
+    <button onclick="window.location.href='home.html'" style="margin-top:20px;">Voltar para Home</button>
+  </div>
+  <script type="module" src="../js/relatorios.js"></script>
+</body>
+</html>
