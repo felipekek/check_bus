@@ -32,7 +32,6 @@
     <p id="message"></p>
   </div>
 
-  <!-- Firebase JS -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
@@ -73,7 +72,6 @@
             cpf,
             instituicao,
             email
-            // ⚠️ Senha não deve ser salva no Firestore por segurança
           });
 
           message.style.color = 'green';

@@ -145,14 +145,10 @@
 </head>
 <body>
 
-  <!-- Botão de menu -->
   <button class="menu-btn" onclick="toggleMenu()">☰</button>
 
-  <!-- Fundo escuro quando menu ativo -->
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-  <!-- Menu lateral -->
-<!-- Menu lateral -->
 <div class="sidebar" id="sidebar">
   <button onclick="location.href='horarios.html'">Editar Horários</button>
   <button onclick="location.href='gps.html'">Abrir GPS</button>
@@ -162,7 +158,6 @@
 </div>
 
 
-  <!-- Conteúdo principal -->
   <div class="container">
     <h1>Seus Horários:</h1>
     <div class="horarios-lista" id="horariosLista">
@@ -170,7 +165,6 @@
     </div>
   </div>
 
-  <!-- Firebase e script principal -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
@@ -200,7 +194,6 @@
         return;
       }
 
-      // Oculta botões para não-staff
       if (user.email !== STAFF_EMAIL) {
         if (btnRelatorio) btnRelatorio.style.display = "none";
         if (btnAlunos) btnAlunos.style.display = "none";
@@ -247,7 +240,6 @@
       }
     }
 
-    // Função para exclusão de horário - corrigida
     window.excluirHorario = async (docId) => {
       try {
         const horarioDocRef = doc(db, "horarios", userId, "listaHorarios", docId);

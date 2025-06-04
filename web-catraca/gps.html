@@ -150,14 +150,10 @@
   </style>
 </head>
 <body>
-
-  <!-- Botão de menu -->
   <button class="menu-btn" onclick="toggleMenu()">☰</button>
 
-  <!-- Fundo escuro quando menu ativo -->
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-  <!-- Menu lateral -->
   <div class="sidebar" id="sidebar">
     <button onclick="location.href='home.html'">Voltar para Home</button>
     <button onclick="location.href='horarios.html'">Horários</button>
@@ -166,7 +162,6 @@
     <button onclick="logout()" class="logout">Sair</button>
   </div>
 
-  <!-- Conteúdo principal -->
   <div class="main-content">
     <h1>Localização do Ônibus</h1>
     <div class="info-msg">Clique no botão abaixo para buscar sua localização atual no mapa.</div>
@@ -199,7 +194,6 @@
       const btnAlunos = document.getElementById("btnAlunos");
 
       if (!user || user.email !== STAFF_EMAIL) {
-        // Oculta botões para não-staff
         if (btnRelatorio) btnRelatorio.style.display = "none";
         if (btnAlunos) btnAlunos.style.display = "none";
       }
@@ -221,10 +215,9 @@
       menuBtn.classList.toggle("hidden");
     };
 
-    // Mapa
-    let map = L.map("map").setView([ -23.55052, -46.633308 ], 13); // São Paulo como padrão
+    let map = L.map("map").setView([ -12.2576, -38.9647 ], 13); 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
-    let marker = L.marker([ -23.55052, -46.633308 ]).addTo(map);
+    let marker = L.marker([ -12.2576, -38.9647 ]).addTo(map);
 
     window.getLocation = function () {
       if (navigator.geolocation) {

@@ -71,13 +71,10 @@
   </style>
 </head>
 <body>
-  <!-- Botão de menu -->
   <button class="menu-btn" onclick="toggleMenu()">☰</button>
 
-  <!-- Fundo escuro quando menu ativo -->
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-  <!-- Menu lateral -->
   <div class="sidebar" id="sidebar">
     <button onclick="location.href='home.html'">Home</button>
     <button onclick="location.href='horarios.html'">Editar Horários</button>
@@ -120,7 +117,6 @@
       const btnAlunos = document.getElementById("btnAlunos");
 
       if (!user || user.email !== STAFF_EMAIL) {
-        // Oculta botões para não-staff
         if (btnRelatorio) btnRelatorio.style.display = "none";
         if (btnAlunos) btnAlunos.style.display = "none";
       }
@@ -139,16 +135,13 @@
         corpo.innerHTML = "";
         for (const alunoDoc of alunosSnap.docs) {
           const aluno = alunoDoc.data();
-          // Busca horários do aluno
           const horariosSnap = await getDocs(collection(db, "horarios", alunoDoc.id, "listaHorarios"));
           let horarios = [];
           horariosSnap.forEach(h => {
             const d = h.data();
             horarios.push(`${d.titulo || ""} ${d.horario || ""}`.trim());
           });
-          // Busca último login (se existir, pode ser salvo em um campo próprio no Firestore)
           let ultimoLogin = aluno.ultimoLogin || "-";
-          // Exibe linha
           corpo.innerHTML += `
             <tr>
               <td>${aluno.nome || "-"}</td>
