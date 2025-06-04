@@ -242,6 +242,8 @@
   <div class="sidebar" id="sidebar">
     <button onclick="location.href='home.html'">Home</button>
     <button onclick="location.href='gps.html'">Abrir GPS</button>
+    <button onclick="location.href='relatorios.html'" id="btnRelatorio">Relatório</button>
+    <button onclick="location.href='alunos.html'" id="btnAlunos">Lista de Alunos</button>
     <button onclick="logout()" class="logout">Sair</button>
   </div>
 
@@ -290,10 +292,21 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
+    const STAFF_EMAIL = "staff@adm.com";
+
     let userId = null;
     let horarioEditandoId = null;
 
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
+      const btnRelatorio = document.getElementById("btnRelatorio");
+      const btnAlunos = document.getElementById("btnAlunos");
+
+      if (!user || user.email !== STAFF_EMAIL) {
+        // Oculta botões para não-staff
+        if (btnRelatorio) btnRelatorio.style.display = "none";
+        if (btnAlunos) btnAlunos.style.display = "none";
+      }
+
       if (user) {
         userId = user.uid;
         carregarHorarios();
