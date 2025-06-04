@@ -1,91 +1,178 @@
-<meta charset="UTF-8" />Add commentMore actions
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Home - Tranca Eletrônica</title>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js" type="module"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js" type="module"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js" type="module"></script>
   <style>
-    body { font-family: Arial, sans-serif; background: #f0f2f5; padding: 20px; }
-    .container { max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-    h1 { text-align: center; }
-    button { padding: 10px 15px; border: none; border-radius: 5px; margin: 5px; cursor: pointer; background: #007bff; color: white; }
-    button:hover { background: #0056b3; }
-    .logout { background: #dc3545; }
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0f2f5;
-      padding: 20px;
-    }
-    .container {
-      max-width: 600px;
-      margin: auto;
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-    h1 {
-      text-align: center;
-    }
-    button {
-      padding: 10px 15px;
-      border: none;
-      border-radius: 5px;
-      margin: 5px;
-      cursor: pointer;
-      background: #007bff;
-      color: white;
-    }
-    button:hover {
-      background: #0056b3;
-    }
-    .logout {
-      background: #dc3545;
-    }
-    .horarios-lista {
-      margin-top: 20px;
-    }
-    .horario-item {
-      background: #f8f9fa;
-      padding: 10px;
-      border-radius: 5px;
-      margin: 5px 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .horario-item button {
-      background: #dc3545;
-      cursor: pointer;
-    }
-    .horario-item button:hover {
-      background: #c82333;
-    }
+
+  body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to right, #004d7a, #008793);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  color: white;
+}
+
+
+  .container {
+    max-width: 600px;
+    margin: 60px auto 0;
+    padding: 20px;
+    background-color: #fff;
+    color: #333;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  .menu-btn {
+  font-size: 30px;
+  background: linear-gradient(90deg, #004d7a 60%, #008793 100%);
+  border: none;
+  cursor: pointer;
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1002;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+}
+.menu-btn:hover {
+  background: linear-gradient(90deg, #008793 60%, #004d7a 100%);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.22);
+  transform: scale(1.08);
+}
+
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    z-index: 1000;
+  }
+
+  .overlay.active {
+    display: block;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100%;
+    background: #00677a;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    padding: 20px;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 1001;
+  }
+
+  .sidebar.active {
+    transform: translateX(0);
+  }
+
+  .sidebar button {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+    background: #008793;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .sidebar button.logout {
+    background: #dc3545;
+  }
+
+  .sidebar button:hover {
+    opacity: 0.9;
+  }
+
+  .horarios-lista {
+    margin-top: 20px;
+  }
+
+  .horario-item {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 5px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .horario-item button {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  .horario-item button:hover {
+    background: #c82333;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  h1 {
+    color: #004d7a;
+  }
+</style>
+
+
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Bem-vindo(a)!</h1>
-    <p>Escolha uma ação:</p>
+
+  <!-- Botão de menu -->
+  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+  <!-- Fundo escuro quando menu ativo -->
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+  <!-- Menu lateral -->
+  <div class="sidebar" id="sidebar">
     <button onclick="location.href='horarios.html'">Editar Horários</button>
     <button onclick="location.href='gps.html'">Abrir GPS</button>
     <button onclick="logout()" class="logout">Sair</button>
+  </div>
 
-    <!-- Lista de horários -->
+  <!-- Conteúdo principal -->
+  <div class="container">
+    <h1>Seus Horários:</h1>
     <div class="horarios-lista" id="horariosLista">
-      <h2>Seus Horários:</h2>
       <p>Carregando horários...</p>
     </div>
   </div>
 
+  <!-- Firebase e script principal -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
     import { getFirestore, collection, getDocs, query, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
     const firebaseConfig = {
-      apiKey: "SUA_API_KEY",
-      authDomain: "SUA_AUTH_DOMAIN",
-      projectId: "SEU_PROJECT_ID"
       apiKey: "AIzaSyDAG_nfsNFNk6ZnhTnC9Cci-N6L3Bui4PY",
       authDomain: "trancaeletronica-90835.firebaseapp.com",
       projectId: "trancaeletronica-90835",
@@ -97,41 +184,34 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-
     let userId = null;
 
-    // Verifica se o usuário está autenticado
     onAuthStateChanged(auth, (user) => {
       if (!user) {
         window.location.href = "index.html";
-        window.location.href = "index.html"; // Redireciona se não estiver logado
       } else {
         userId = user.uid;
-        carregarHorarios(); // Carrega os horários do usuário logado
+        carregarHorarios();
       }
     });
 
-    // Função de logout
     window.logout = () => {
-      signOut(auth);
       signOut(auth).then(() => {
-        window.location.href = "index.html"; // Redireciona após o logout
+        window.location.href = "index.html";
       });
     };
 
-    // Função para carregar os horários
     async function carregarHorarios() {
-      if (!userId) return;Add commentMore actions
+      if (!userId) return;
 
       try {
         const horariosRef = collection(db, "horarios", userId, "listaHorarios");
         const horariosSnap = await getDocs(horariosRef);
-
         const horariosLista = document.getElementById("horariosLista");
-        horariosLista.innerHTML = "<h2>Seus Horários:</h2>"; // Limpa a mensagem de carregando
+        horariosLista.innerHTML = "";
 
         if (horariosSnap.empty) {
-          horariosLista.innerHTML += "<p>Você ainda não tem horários salvos.</p>";
+          horariosLista.innerHTML = "<p>Você ainda não tem horários salvos.</p>";
         } else {
           horariosSnap.forEach(docItem => {
             const data = docItem.data();
@@ -147,22 +227,34 @@
           });
         }
       } catch (err) {
-        console.error("Erro ao carregar os horários:", err);
         const horariosLista = document.getElementById("horariosLista");
-        horariosLista.innerHTML = "<h2>Seus Horários:</h2><p>Erro ao carregar horários. Tente novamente mais tarde.</p>";
+        horariosLista.innerHTML = "<p>Erro ao carregar horários.</p>";
       }
     }
 
-    // Função para excluir um horário
+    // Função para exclusão de horário - corrigida
     window.excluirHorario = async (docId) => {
       try {
-        await deleteDoc(doc(db, "horarios", userId, "listaHorarios", docId)); // Exclui o horário
-        carregarHorarios(); // Recarrega os horários após exclusão
+        const horarioDocRef = doc(db, "horarios", userId, "listaHorarios", docId);
+        await deleteDoc(horarioDocRef);
+        carregarHorarios();
       } catch (err) {
         alert("Erro ao excluir o horário.");
+        console.error(err);
       }
     };
+
+    window.toggleMenu = () => {
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("overlay");
+  const menuBtn = document.querySelector(".menu-btn");
+
+  sidebar.classList.toggle("active");
+  overlay.classList.toggle("active");
+  menuBtn.classList.toggle("hidden");
+};
+
   </script>
+
 </body>
-</html>
 </html>
