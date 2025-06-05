@@ -6,7 +6,6 @@
   <title>Relatórios de Acesso</title>
   <link rel="stylesheet" href="/css/style.css" />
   <style>
-    
     .relatorio-container {
       max-width: 700px;
       margin: 40px auto;
@@ -14,10 +13,12 @@
       padding: 30px;
       border-radius: 12px;
       box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      color: #222; /* Corrige cor da fonte */
     }
     h1 {
       text-align: center;
       margin-bottom: 24px;
+      color: #004d7a;
     }
     #lista > div {
       padding: 12px;
@@ -27,7 +28,12 @@
     #lista > div:last-child {
       border-bottom: none;
     }
-    
+    .no-data {
+      text-align: center;
+      color: #888;
+      padding: 30px 0;
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
@@ -46,7 +52,7 @@
   <div class="relatorio-container">
     <h1>Relatórios de Acesso</h1>
     <div id="lista">
-      <p>Carregando registros...</p>
+      <div class="no-data">Carregando registros...</div>
     </div>
     <button onclick="window.location.href='home.html'" style="margin-top:20px;">Voltar para Home</button>
   </div>

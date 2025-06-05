@@ -14,7 +14,15 @@ onAuthStateChanged(auth, async (user) => {
   }
 
   try {
-    const querySnapshot = await getDocs(collection(db, "acessos")); // Coleção chamada "acessos"
+    lista.innerHTML = '<div class="no-data">Carregando registros...</div>';
+    const querySnapshot = await getDocs(collection(db, "acessos"));
+    lista.innerHTML = ""; // Limpa a mensagem de carregando
+
+    if (querySnapshot.empty) {
+      lista.innerHTML = '<div class="no-data">Nenhum registro encontrado.</div>';
+      return;
+    }
+
     querySnapshot.forEach((doc) => {
       const data = doc.data();
       const item = document.createElement('div');
@@ -22,6 +30,7 @@ onAuthStateChanged(auth, async (user) => {
       lista.appendChild(item);
     });
   } catch (error) {
+    lista.innerHTML = '<div class="no-data">Erro ao carregar relatórios.</div>';
     console.error("Erro ao carregar relatórios:", error);
   }
 });
