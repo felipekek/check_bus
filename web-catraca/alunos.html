@@ -1,177 +1,234 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Lista de Alunos</title>
-  <link rel="stylesheet" href="../css/style.css" />
-  <style>
-
-    .alunos-container {
-      max-width: 900px;
-      margin: 40px auto;
-      background: #fff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-      color: #222; 
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 24px;
-      color: #004d7a;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 18px;
-      background: #f8f9fa;
-      border-radius: 8px;
-      overflow: hidden;
-      color: #222; 
-    }
-    th, td {
-      padding: 12px 10px;
-      border-bottom: 1px solid #e0e0e0;
-      text-align: left;
-      font-size: 15px;
-    }
-    th {
-      background: #008793;
-      color: #fff;
-      font-weight: 600;
-    }
-    tr:last-child td {
-      border-bottom: none;
-    }
-    .voltar-btn {
-      margin-top: 24px;
-      background: #008793;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 12px 28px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background 0.2s;
-      width: auto;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .voltar-btn:hover {
-      background: #00677a;
-    }
-    .no-data {
-      text-align: center;
-      color: #888;
-      padding: 30px 0;
-      font-size: 16px;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Lista de Alunos</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <style>
+        /* Estilos existentes */
+        .alunos-container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            color: #222;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 24px;
+            color: #004d7a;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 18px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            overflow: hidden;
+            color: #222;
+        }
+        th, td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: left;
+            font-size: 15px;
+        }
+        th {
+            background: #008793;
+            color: #fff;
+            font-weight: 600;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        .voltar-btn {
+            margin-top: 24px;
+            background: #008793;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 12px 28px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: auto;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .voltar-btn:hover {
+            background: #00677a;
+        }
+        .no-data {
+            text-align: center;
+            color: #888;
+            padding: 30px 0;
+            font-size: 16px;
+        }
+        /* Novo estilo para o botão de excluir */
+        .delete-btn {
+            background-color: #dc3545; /* Vermelho */
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+        }
+        .delete-btn:hover {
+            background-color: #c82333; /* Vermelho mais escuro no hover */
+        }
+    </style>
 </head>
 <body>
-  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
 
-  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-  <div class="sidebar" id="sidebar">
-    <button onclick="location.href='home.html'">Home</button>
-    <button onclick="location.href='horarios.html'">Editar Horários</button>
-    <button onclick="location.href='gps.html'">Abrir GPS</button>
-    <button onclick="location.href='relatorios.html'" id="btnRelatorio">Relatório</button>
-    <button onclick="location.href='alunos.html'" id="btnAlunos">Lista de Alunos</button>
-    <button onclick="logout()" class="logout">Sair</button>
-  </div>
-
-  <div class="alunos-container">
-    <h1>Lista de Alunos</h1>
-    <div style="overflow-x:auto;">
-      <table id="tabelaAlunos">
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>E-mail</th>
-            <th>Instituição</th>
-            <th>Último Login</th>
-            <th>Horários Registrados</th>
-          </tr>
-        </thead>
-        <tbody id="corpoTabelaAlunos">
-          <tr><td colspan="5" class="no-data">Carregando alunos...</td></tr>
-        </tbody>
-      </table>
+    <div class="sidebar" id="sidebar">
+        <button onclick="location.href='home.html'">Home</button>
+        <button onclick="location.href='horarios.html'">Editar Horários</button>
+        <button onclick="location.href='gps.html'">Abrir GPS</button>
+        <button onclick="location.href='relatorios.html'" id="btnRelatorio">Relatório</button>
+        <button onclick="location.href='alunos.html'" id="btnAlunos">Lista de Alunos</button>
+        <button onclick="logout()" class="logout">Sair</button>
     </div>
-    <button class="voltar-btn" onclick="window.location.href='home.html'">Voltar para Home</button>
-  </div>
 
-  <script type="module">
-    import { db, auth } from "../js/firebase-config.js";
-    import { collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    <div class="alunos-container">
+        <h1>Lista de Alunos</h1>
+        <div style="overflow-x:auto;">
+            <table id="tabelaAlunos">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>E-mail</th>
+                        <th>Instituição</th>
+                        <th>Último Login</th>
+                        <th>Horários Registrados</th>
+                        <th>Ações</th> </tr>
+                </thead>
+                <tbody id="corpoTabelaAlunos">
+                    <tr><td colspan="6" class="no-data">Carregando alunos...</td></tr> </tbody>
+            </table>
+        </div>
+        <button class="voltar-btn" onclick="window.location.href='home.html'">Voltar para Home</button>
+    </div>
 
-    const STAFF_EMAIL = "staff@adm.com";
+    <script type="module">
+        // Importa a função deleteDoc do Firebase Firestore
+        import { db, auth } from "../js/firebase-config.js";
+        import { collection, getDocs, doc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+        import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
-    onAuthStateChanged(auth, async (user) => {
-      const btnRelatorio = document.getElementById("btnRelatorio");
-      const btnAlunos = document.getElementById("btnAlunos");
+        const STAFF_EMAIL = "staff@adm.com";
 
-      if (!user || user.email !== STAFF_EMAIL) {
-        if (btnRelatorio) btnRelatorio.style.display = "none";
-        if (btnAlunos) btnAlunos.style.display = "none";
-      }
-      carregarAlunos();
-    });
+        onAuthStateChanged(auth, async (user) => {
+            const btnRelatorio = document.getElementById("btnRelatorio");
+            const btnAlunos = document.getElementById("btnAlunos");
 
-    async function carregarAlunos() {
-      const corpo = document.getElementById("corpoTabelaAlunos");
-      corpo.innerHTML = `<tr><td colspan="5" class="no-data">Carregando alunos...</td></tr>`;
-      try {
-        const alunosSnap = await getDocs(collection(db, "alunos"));
-        if (alunosSnap.empty) {
-          corpo.innerHTML = `<tr><td colspan="5" class="no-data">Nenhum aluno cadastrado.</td></tr>`;
-          return;
+            if (!user || user.email !== STAFF_EMAIL) {
+                if (btnRelatorio) btnRelatorio.style.display = "none";
+                if (btnAlunos) btnAlunos.style.display = "none";
+                // Redireciona se não for staff
+                window.location.href = "home.html"; // ou outra página de erro/acesso negado
+            } else {
+                carregarAlunos(); // Carrega alunos apenas se for staff
+            }
+        });
+
+        async function carregarAlunos() {
+            const corpo = document.getElementById("corpoTabelaAlunos");
+            corpo.innerHTML = `<tr><td colspan="6" class="no-data">Carregando alunos...</td></tr>`; // colspan ajustado
+            try {
+                const alunosSnap = await getDocs(collection(db, "alunos"));
+                if (alunosSnap.empty) {
+                    corpo.innerHTML = `<tr><td colspan="6" class="no-data">Nenhum aluno cadastrado.</td></tr>`; // colspan ajustado
+                    return;
+                }
+                corpo.innerHTML = "";
+                for (const alunoDoc of alunosSnap.docs) {
+                    const aluno = alunoDoc.data();
+                    // Obtenha o ID do documento do aluno
+                    const alunoId = alunoDoc.id;
+
+                    const horariosSnap = await getDocs(collection(db, "horarios", alunoId, "listaHorarios"));
+                    let horarios = [];
+                    horariosSnap.forEach(h => {
+                        const d = h.data();
+                        horarios.push(`${d.titulo || ""} ${d.horario || ""}`.trim());
+                    });
+                    let ultimoLogin = aluno.ultimoLogin || "-";
+                    corpo.innerHTML += `
+                        <tr>
+                            <td>${aluno.nome || "-"}</td>
+                            <td>${aluno.email || "-"}</td>
+                            <td>${aluno.instituicao || "-"}</td>
+                            <td>${ultimoLogin}</td>
+                            <td>${horarios.length > 0 ? horarios.join("<br>") : "-"}</td>
+                            <td><button class="delete-btn" data-id="${alunoId}">Excluir</button></td> </tr>
+                    `;
+                }
+                // Adiciona os event listeners para os botões de excluir
+                document.querySelectorAll('.delete-btn').forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        const alunoIdParaExcluir = event.target.dataset.id;
+                        excluirAluno(alunoIdParaExcluir);
+                    });
+                });
+
+            } catch (err) {
+                console.error("Erro ao carregar alunos:", err);
+                corpo.innerHTML = `<tr><td colspan="6" class="no-data">Erro ao carregar alunos. Verifique o console.</td></tr>`; // colspan ajustado
+            }
         }
-        corpo.innerHTML = "";
-        for (const alunoDoc of alunosSnap.docs) {
-          const aluno = alunoDoc.data();
-          const horariosSnap = await getDocs(collection(db, "horarios", alunoDoc.id, "listaHorarios"));
-          let horarios = [];
-          horariosSnap.forEach(h => {
-            const d = h.data();
-            horarios.push(`${d.titulo || ""} ${d.horario || ""}`.trim());
-          });
-          let ultimoLogin = aluno.ultimoLogin || "-";
-          corpo.innerHTML += `
-            <tr>
-              <td>${aluno.nome || "-"}</td>
-              <td>${aluno.email || "-"}</td>
-              <td>${aluno.instituicao || "-"}</td>
-              <td>${ultimoLogin}</td>
-              <td>${horarios.length > 0 ? horarios.join("<br>") : "-"}</td>
-            </tr>
-          `;
+
+        // Nova função para excluir aluno
+        async function excluirAluno(alunoId) {
+            if (confirm("Tem certeza que deseja excluir este aluno e todos os seus horários registrados?")) {
+                try {
+                    // 1. Excluir subcoleção 'listaHorarios'
+                    const horariosParaExcluirSnap = await getDocs(collection(db, "horarios", alunoId, "listaHorarios"));
+                    const deletePromises = [];
+                    horariosParaExcluirSnap.forEach(hDoc => {
+                        deletePromises.push(deleteDoc(doc(db, "horarios", alunoId, "listaHorarios", hDoc.id)));
+                    });
+                    await Promise.all(deletePromises);
+                    console.log(`Subcoleção 'listaHorarios' do aluno ${alunoId} excluída.`);
+
+                    // 2. Excluir o documento do aluno na coleção 'alunos'
+                    await deleteDoc(doc(db, "alunos", alunoId));
+                    console.log(`Documento do aluno ${alunoId} excluído com sucesso!`);
+                    alert("Aluno excluído com sucesso!");
+                    carregarAlunos(); // Recarrega a lista após a exclusão
+                } catch (error) {
+                    console.error("Erro ao excluir aluno:", error);
+                    alert("Erro ao excluir aluno: " + error.message);
+                }
+            }
         }
-      } catch (err) {
-        corpo.innerHTML = `<tr><td colspan="5" class="no-data">Erro ao carregar alunos.</td></tr>`;
-      }
-    }
 
-    window.logout = () => {
-      signOut(auth).then(() => {
-        window.location.href = "index.html";
-      });
-    };
+        window.logout = () => {
+            signOut(auth).then(() => {
+                window.location.href = "index.html";
+            }).catch((error) => {
+                console.error("Erro ao fazer logout:", error);
+                alert("Erro ao fazer logout.");
+            });
+        };
 
-    window.toggleMenu = () => {
-      const sidebar = document.getElementById("sidebar");
-      const overlay = document.getElementById("overlay");
-      const menuBtn = document.querySelector(".menu-btn");
+        window.toggleMenu = () => {
+            const sidebar = document.getElementById("sidebar");
+            const overlay = document.getElementById("overlay");
+            const menuBtn = document.querySelector(".menu-btn");
 
-      sidebar.classList.toggle("active");
-      overlay.classList.toggle("active");
-      menuBtn.classList.toggle("hidden");
-    };
-  </script>
+            sidebar.classList.toggle("active");
+            overlay.classList.toggle("active");
+            menuBtn.classList.toggle("hidden");
+        };
+    </script>
 </body>
 </html>

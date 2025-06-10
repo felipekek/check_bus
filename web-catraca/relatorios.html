@@ -1,93 +1,123 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Relatórios de Acesso</title>
-  <link rel="stylesheet" href="/css/style.css" />
-  <style>
-    .relatorio-container {
-      max-width: 700px;
-      margin: 40px auto;
-      background: #fff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-      color: #222; /* Corrige cor da fonte */
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 24px;
-      color: #004d7a;
-    }
-    #lista > div {
-      padding: 12px;
-      border-bottom: 1px solid #eee;
-      font-size: 16px;
-    }
-    #lista > div:last-child {
-      border-bottom: none;
-    }
-    .no-data {
-      text-align: center;
-      color: #888;
-      padding: 30px 0;
-      font-size: 16px;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Relatórios de Acesso</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <style>
+        .relatorio-container {
+            max-width: 700px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            color: #222;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 24px;
+            color: #004d7a;
+        }
+        /* Ajuste para o item da lista e botão */
+        #lista > div {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            font-size: 16px;
+            display: flex; /* Adiciona flexbox para alinhar conteúdo */
+            justify-content: space-between; /* Espaça conteúdo e botão */
+            align-items: center; /* Alinha verticalmente */
+        }
+        #lista > div:last-child {
+            border-bottom: none;
+        }
+        .no-data {
+            text-align: center;
+            color: #888;
+            padding: 30px 0;
+            font-size: 16px;
+        }
+        /* Estilo para o botão de excluir */
+        .delete-btn {
+            background-color: #dc3545; /* Vermelho */
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+            margin-left: 10px; /* Espaço à esquerda do botão */
+            flex-shrink: 0; /* Impede o botão de encolher */
+        }
+        .delete-btn:hover {
+            background-color: #c82333; /* Vermelho mais escuro no hover */
+        }
+    </style>
 </head>
 <body>
-  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
 
-  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-  <div class="sidebar" id="sidebar">
-    <button onclick="location.href='horarios.html'">Editar Horários</button>
-    <button onclick="location.href='gps.html'">Abrir GPS</button>
-    <button onclick="location.href='relatorios.html'" id="btnRelatorio">Relatório</button>
-    <button onclick="location.href='alunos.html'" id="btnAlunos">Lista de Alunos</button>
-    <button onclick="logout()" class="logout">Sair</button>
-  </div>
-
-  <div class="relatorio-container">
-    <h1>Relatórios de Acesso</h1>
-    <div id="lista">
-      <div class="no-data">Carregando registros...</div>
+    <div class="sidebar" id="sidebar">
+        <button onclick="location.href='home.html'">Home</button>
+        <button onclick="location.href='horarios.html'">Editar Horários</button>
+        <button onclick="location.href='gps.html'">Abrir GPS</button>
+        <button onclick="location.href='relatorios.html'" id="btnRelatorio">Relatório</button>
+        <button onclick="location.href='alunos.html'" id="btnAlunos">Lista de Alunos</button>
+        <button onclick="logout()" class="logout">Sair</button>
     </div>
-    <button onclick="window.location.href='home.html'" style="margin-top:20px;">Voltar para Home</button>
-  </div>
-  <script type="module" src="../js/relatorios.js"></script>
-  <script type="module">
-    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-    import { auth } from "../js/firebase-config.js";
 
-    const STAFF_EMAIL = "staff@adm.com";
+    <div class="relatorio-container">
+        <h1>Relatórios de Acesso</h1>
+        <div id="lista">
+            <div class="no-data">Carregando registros...</div>
+        </div>
+        <button onclick="window.location.href='home.html'" style="margin-top:20px;">Voltar para Home</button>
+    </div>
+    <script type="module" src="../js/relatorios.js"></script>
+    <script type="module">
+        // Este script é apenas para a navegação do sidebar e verificação de staff
+        // A lógica de carregamento dos relatórios e o controle de acesso para STAFF_EMAIL
+        // serão tratados no relatorios.js
+        import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        import { auth } from "../js/firebase-config.js";
 
-    onAuthStateChanged(auth, async (user) => {
-      const btnRelatorio = document.getElementById("btnRelatorio");
-      const btnAlunos = document.getElementById("btnAlunos");
+        const STAFF_EMAIL = "staff@adm.com";
 
-      if (!user || user.email !== STAFF_EMAIL) {
-        if (btnRelatorio) btnRelatorio.style.display = "none";
-        if (btnAlunos) btnAlunos.style.display = "none";
-      }
-    });
+        onAuthStateChanged(auth, async (user) => {
+            const btnRelatorio = document.getElementById("btnRelatorio");
+            const btnAlunos = document.getElementById("btnAlunos");
 
-    window.logout = () => {
-      signOut(auth).then(() => {
-        window.location.href = "index.html";
-      });
-    };
+            if (!user || user.email !== STAFF_EMAIL) {
+                if (btnRelatorio) btnRelatorio.style.display = "none";
+                if (btnAlunos) btnAlunos.style.display = "none";
+                // Redireciona se não for staff
+                window.location.href = "home.html"; // ou outra página de acesso negado
+            }
+            // Não chame carregarRelatorios aqui; ele é chamado em relatorios.js após a autenticação.
+        });
 
-    window.toggleMenu = () => {
-      const sidebar = document.getElementById("sidebar");
-      const overlay = document.getElementById("overlay");
-      const menuBtn = document.querySelector(".menu-btn");
+        window.logout = () => {
+            signOut(auth).then(() => {
+                window.location.href = "index.html";
+            }).catch((error) => {
+                console.error("Erro ao fazer logout:", error);
+                alert("Erro ao fazer logout.");
+            });
+        };
 
-      sidebar.classList.toggle("active");
-      overlay.classList.toggle("active");
-      menuBtn.classList.toggle("hidden");
-    };
-  </script>
+        window.toggleMenu = () => {
+            const sidebar = document.getElementById("sidebar");
+            const overlay = document.getElementById("overlay");
+            const menuBtn = document.querySelector(".menu-btn");
+
+            sidebar.classList.toggle("active");
+            overlay.classList.toggle("active");
+            menuBtn.classList.toggle("hidden");
+        };
+    </script>
 </body>
 </html>
