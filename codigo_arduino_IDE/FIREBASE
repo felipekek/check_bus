@@ -1,5 +1,4 @@
 // ===============================
-
 // Bibliotecas
 // ===============================
 #include <WiFi.h>
@@ -19,7 +18,7 @@
 // Firebase Firestore
 // ===============================
 #define API_KEY "AIzaSyDAG_nfsNFNk6ZnhTnC9Cci-N6L3Bui4PY"
-#define DATABASE_URL "https://trancaeletronica-90835-default-rtdb.firebaseio.com/"
+// ⚠️ DATABASE_URL não é usado no Firestore
 #define FIREBASE_PROJECT_ID "trancaeletronica-90835"
 #define USER_EMAIL "staff@adm.com"
 #define USER_PASSWORD "321456"
@@ -68,10 +67,12 @@ void setup() {
   Serial.println("Tempo sincronizado com sucesso!");
 
   // Configurar Firebase
+  // Firebase.setDebugMode(true); // LINHA REMOVIDA/COMENTADA: Este método não existe diretamente no objeto Firebase
   config.api_key = API_KEY;
-  config.database_url = DATABASE_URL;
+  // ⚠️ NÃO usar config.database_url para Firestore
   auth.user.email = USER_EMAIL;
   auth.user.password = USER_PASSWORD;
+
   Firebase.begin(&config, &auth);
   Firebase.reconnectWiFi(true);
 }
@@ -116,9 +117,9 @@ void loop() {
   content.set("fields/horario/stringValue", String(horario));
 
   if (Firebase.Firestore.createDocument(&fbdo, FIREBASE_PROJECT_ID, "", documentPath.c_str(), content.raw())) {
-    Serial.println("Registro enviado para o Firestore!");
+    Serial.println("✅ Registro enviado para o Firestore!");
   } else {
-    Serial.println("Erro ao enviar para o Firestore:");
+    Serial.println("❌ Erro ao enviar para o Firestore:");
     Serial.println(fbdo.errorReason());
   }
 
