@@ -45,9 +45,5 @@ O objetivo do Check Bus é proporcionar um **transporte mais seguro, organizado 
 - Redução de superlotação e atrasos
 - Dados acessíveis por gestores para planejamento do transporte
 
----
 
-## 🔗 Repositório
-
-👉 [GitHub: felipekek/check_bus](https://github.com/felipekek/check_bus.git)
 
