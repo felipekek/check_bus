@@ -26,7 +26,7 @@ A interface web, leve e responsiva, é acessada via celular ou computador e exib
 ## 🧠 Tecnologias utilizadas
 
 - HTML, CSS e JavaScript
-- Firebase (Autenticação, Firestore, Realtime Database, Storage)
+- Firebase (Authentication, Firestore Database)
 - GPS via módulo externo (ou localização simulada)
 - Interface Web embarcada no ESP32
 
