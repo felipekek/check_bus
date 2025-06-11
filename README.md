@@ -25,9 +25,6 @@ A interface web, leve e responsiva, é acessada via celular ou computador e exib
 
 ## 🧠 Tecnologias utilizadas
 
-- ESP32 (D1 R32)
-- Sensor RFID MFRC522
-- Micro Servo Motor
 - HTML, CSS e JavaScript
 - Firebase (Autenticação, Firestore, Realtime Database, Storage)
 - GPS via módulo externo (ou localização simulada)
