@@ -1,31 +1,6 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login - Tranca Eletrônica</title>
-  <link rel="stylesheet" href="../css/style.css" />
-</head>
-<body>
-  <div class="container">
-    <h1>Login do Aluno</h1>
-    <form id="loginForm">
-      <label for="email">Email:</label>
-      <input type="email" id="email" required />
+// index.js
 
-      <label for="password">Senha:</label>
-      <input type="password" id="password" required />
-
-      <button type="submit">Entrar</button>
-    </form>
-
-    <p>Não tem conta? <a href="cadastro.html">Cadastre-se</a></p>
-    <p id="loginMessage" style="color: red;"></p>
-  </div>
-
-  <!-- Firebase -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
     const firebaseConfig = {
@@ -50,18 +25,14 @@
 
       try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
         loginMessage.style.color = 'green';
         loginMessage.textContent = 'Login realizado com sucesso!';
-        // Redirecionar ou carregar outra página:
         setTimeout(() => {
-          window.location.href = "home.html"; // redirecione para a página desejada
+          window.location.href = "home.html";
         }, 1000);
       } catch (error) {
         console.error("Erro ao fazer login:", error.message);
+        loginMessage.style.color = 'red';
         loginMessage.textContent = "Email ou senha incorretos.";
       }
     });
-  </script>
-</body>
-</html>

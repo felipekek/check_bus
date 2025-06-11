@@ -1,0 +1,78 @@
+/* Estilos do menu lateral (drawer) */
+
+.menu-btn {
+  font-size: 28px;
+  width: 54px;
+  height: 54px;
+  background: linear-gradient(135deg, #004d7a 60%, #008793 100%);
+  border: none;
+  cursor: pointer;
+  position: fixed;
+  top: 18px;
+  left: 18px;
+  z-index: 1002;
+  color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+}
+.menu-btn:hover {
+  background: linear-gradient(135deg, #008793 60%, #004d7a 100%);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.22);
+  transform: scale(1.08);
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  z-index: 1000;
+}
+.overlay.active {
+  display: block;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100%;
+  background: #00677a;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  padding: 20px;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  z-index: 1001;
+}
+.sidebar.active {
+  transform: translateX(0);
+}
+.sidebar button {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  background: #008793;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: left;
+}
+.sidebar button.logout {
+  background: #dc3545;
+}
+.sidebar button:hover {
+  opacity: 0.9;
+}
+.hidden {
+  display: none !important;
+}

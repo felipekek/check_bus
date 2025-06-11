@@ -1,0 +1,139 @@
+/* Estilo da página do horarios */
+
+
+/* Container central da página de horários */
+.container {
+  max-width: 600px;
+  margin: 60px auto 0;
+  padding: 20px;
+  background-color: #fff;
+  color: #333;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Título */
+h1 {
+  color: #004d7a;
+}
+
+/* Lista de horários */
+.horarios-lista {
+  margin-top: 20px;
+}
+
+/* Item de horário */
+.horario-item {
+  background: #f8f9fa;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 5px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Botões de ação nos horários */
+.horario-item .botoes {
+  display: flex;
+  gap: 8px;
+}
+
+.horario-item button {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.horario-item button.edit {
+  background: #008793;
+}
+
+.horario-item button.edit:hover {
+  background: #00677a;
+}
+
+.horario-item button:hover {
+  background: #c82333;
+}
+
+/* Inputs do formulário de horários */
+.horario-inputs {
+  display: flex;
+  gap: 10px;
+}
+
+.horario-inputs input {
+  padding: 8px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+/* Botão principal do formulário */
+button {
+  background-color: #008793;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+  width: 100%;
+}
+
+button:hover {
+  background-color: #006f7a;
+}
+
+/* Mensagens e campos do formulário */
+p {
+  font-size: 14px;
+  color: #dc3545;
+  margin-top: 10px;
+}
+
+.horario-fieldset {
+  border: 1px solid #008793;
+  border-radius: 8px;
+  padding: 18px 16px 10px 16px;
+  margin-bottom: 18px;
+  background: #f4fafd;
+}
+
+.horario-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.horario-row label {
+  font-weight: bold;
+  color: #004d7a;
+  min-width: 55px;
+}
+
+.horario-row input[type="text"],
+.horario-row input[type="number"] {
+  padding: 7px 10px;
+  border-radius: 5px;
+  border: 1px solid #b0c4d6;
+  font-size: 16px;
+  background: #fff;
+  color: #333;
+}
+
+.horario-row input[type="number"] {
+  text-align: center;
+}
+
+.dois-pontos {
+  font-size: 22px;
+  color: #004d7a;
+  margin: 0 2px;
+}

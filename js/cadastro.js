@@ -1,39 +1,7 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Cadastro de Aluno</title>
-  <link rel="stylesheet" href="../css/style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-</head>
-<body>
-  <div class="container">
-    <h1>Cadastro de Aluno</h1>
-    <form id="registerForm">
-      <label for="nome">Nome completo</label>
-      <input type="text" id="nome" required placeholder="Digite seu nome completo" />
+// cadastro.js
 
-      <label for="cpf">CPF</label>
-      <input type="text" id="cpf" required placeholder="000.00.000-00" />
 
-      <label for="instituicao">Instituição</label>
-      <input type="text" id="instituicao" required placeholder="Nome da instituição" />
-
-      <label for="email">E-mail</label>
-      <input type="email" id="email" required placeholder="exemplo@email.com" />
-
-      <label for="senha">Senha</label>
-      <input type="password" id="senha" required placeholder="Crie uma senha" />
-
-      <button type="submit">Cadastrar</button>
-    </form>
-    <p id="message"></p>
-  </div>
-
-  <!-- Firebase JS -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
     import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
@@ -72,7 +40,6 @@
             cpf,
             instituicao,
             email
-            // ⚠️ Senha não deve ser salva no Firestore por segurança
           });
 
           message.style.color = 'green';
@@ -85,6 +52,3 @@
         }
       });
     });
-  </script>
-</body>
-</html>

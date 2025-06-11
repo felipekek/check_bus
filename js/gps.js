@@ -1,22 +1,65 @@
 // gps.js
 
-const script = document.createElement('script');
-script.src = 'https://unpkg.com/leaflet@1.9.3/dist/leaflet.js';
-script.onload = () => {
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = 'https://unpkg.com/leaflet@1.9.3/dist/leaflet.css';
-  document.head.appendChild(link);
+import { db, auth } from "./firebase-config.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
-  const div = document.getElementById('map');
-  const map = L.map(div).setView([-12.2569, -38.9633], 13); // coordenadas iniciais
+// STAFF_EMAIL para controle de acesso
+const STAFF_EMAIL = "staff@adm.com";
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
-  }).addTo(map);
+// Controle de acesso: esconde botões para não-staff
+onAuthStateChanged(auth, async (user) => {
+  const btnRelatorio = document.getElementById("btnRelatorio");
+  const btnAlunos = document.getElementById("btnAlunos");
 
-  // Marcador exemplo
-  const marker = L.marker([-12.2569, -38.9633]).addTo(map);
-  marker.bindPopup("Ônibus está aqui.").openPopup();
+  if (!user) {
+    window.location.href = "index.html";
+    return;
+  }
+
+  if (user.email !== STAFF_EMAIL) {
+    if (btnRelatorio) btnRelatorio.style.display = "none";
+    if (btnAlunos) btnAlunos.style.display = "none";
+  }
+});
+
+// Função de logout
+window.logout = () => {
+  signOut(auth).then(() => {
+    window.location.href = "index.html";
+  });
 };
-document.head.appendChild(script);
+
+// Função para abrir/fechar o menu lateral
+window.toggleMenu = () => {
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("overlay");
+  const menuBtn = document.querySelector(".menu-btn");
+
+  sidebar.classList.toggle("active");
+  overlay.classList.toggle("active");
+  menuBtn.classList.toggle("hidden");
+};
+
+// Inicialização do mapa Leaflet
+let map = L.map("map").setView([-12.2576, -38.9647], 13);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+let marker = L.marker([-12.2576, -38.9647]).addTo(map);
+
+// Função para buscar a localização do usuário
+window.getLocation = function () {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      function (position) {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        map.setView([lat, lon], 15);
+        marker.setLatLng([lat, lon]);
+      },
+      function () {
+        alert("Não foi possível obter a localização.");
+      }
+    );
+  } else {
+    alert("Geolocalização não é suportada neste navegador.");
+  }
+};

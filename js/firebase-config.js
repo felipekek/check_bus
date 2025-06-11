@@ -1,4 +1,4 @@
-// js/firebase-config.js
+// firebase-config.js
 
 // Importação dos módulos do Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";

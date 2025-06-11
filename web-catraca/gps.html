@@ -6,148 +6,13 @@
   <title>Localização - Ônibus</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
   <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="../css/gps.css" />
+  <link rel="stylesheet" href="../css/draw.css" />
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js" type="module"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js" type="module"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js" type="module"></script>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #004d7a, #008793);
-      overflow-x: hidden;
-      color: #fff;
-    }
-
-    .menu-btn {
-      font-size: 28px;
-      width: 54px;
-      height: 54px;
-      background: linear-gradient(135deg, #004d7a 60%, #008793 100%);
-      border: none;
-      cursor: pointer;
-      position: fixed;
-      top: 18px;
-      left: 18px;
-      z-index: 1002;
-      color: #fff;
-      border-radius: 50%;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.18);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
-    }
-    .menu-btn:hover {
-      background: linear-gradient(135deg, #008793 60%, #004d7a 100%);
-      box-shadow: 0 6px 18px rgba(0,0,0,0.22);
-      transform: scale(1.08);
-    }
-
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 100%;
-      background: rgba(0,0,0,0.5);
-      display: none;
-      z-index: 1000;
-    }
-    .overlay.active {
-      display: block;
-    }
-
-    .sidebar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 250px;
-      height: 100%;
-      background: #00677a;
-      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-      padding: 20px;
-      transform: translateX(-100%);
-      transition: transform 0.3s ease;
-      z-index: 1001;
-    }
-    .sidebar.active {
-      transform: translateX(0);
-    }
-    .sidebar button {
-      display: block;
-      width: 100%;
-      margin: 10px 0;
-      padding: 10px;
-      background: #008793;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      text-align: left;
-    }
-    .sidebar button.logout {
-      background: #dc3545;
-    }
-    .sidebar button:hover {
-      opacity: 0.9;
-    }
-    .hidden {
-      display: none !important;
-    }
-
-    .main-content {
-      max-width: 700px;
-      margin: 80px auto 0;
-      padding: 24px;
-      background: #fff;
-      color: #222;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.12);
-      position: relative;
-    }
-
-    h1 {
-      color: #004d7a;
-      text-align: center;
-      margin-bottom: 18px;
-    }
-
-    #map {
-      height: 350px;
-      width: 100%;
-      border-radius: 10px;
-      margin-bottom: 18px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-
-    .buttons {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      margin-bottom: 10px;
-    }
-
-    .buttons button {
-      padding: 10px 24px;
-      background-color: #008793;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background 0.2s;
-    }
-    .buttons button:hover {
-      background-color: #004d7a;
-    }
-
-    .info-msg {
-      text-align: center;
-      color: #004d7a;
-      font-size: 15px;
-      margin-bottom: 10px;
-    }
-  </style>
+  
 </head>
 <body>
   <button class="menu-btn" onclick="toggleMenu()">☰</button>
@@ -158,7 +23,7 @@
     <button onclick="location.href='home.html'">Voltar para Home</button>
     <button onclick="location.href='horarios.html'">Horários</button>
     <button onclick="location.href='relatorios.html'" id="btnRelatorio">Relatório</button>
-    <button onclick="location.href='alunos.html'" id="btnAlunos">Lista de Alunos</button>
+    <button onclick="location.href='admin.html'" id="btnAlunos">Lista de Alunos</button>
     <button onclick="logout()" class="logout">Sair</button>
   </div>
 
@@ -171,72 +36,6 @@
     </div>
   </div>
 
-  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDAG_nfsNFNk6ZnhTnC9Cci-N6L3Bui4PY",
-      authDomain: "trancaeletronica-90835.firebaseapp.com",
-      projectId: "trancaeletronica-90835",
-      storageBucket: "trancaeletronica-90835.appspot.com",
-      messagingSenderId: "566150115221",
-      appId: "1:566150115221:web:1c6eaf30767894dbfd909c"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const STAFF_EMAIL = "staff@adm.com";
-
-    onAuthStateChanged(auth, async (user) => {
-      const btnRelatorio = document.getElementById("btnRelatorio");
-      const btnAlunos = document.getElementById("btnAlunos");
-
-      if (!user || user.email !== STAFF_EMAIL) {
-        if (btnRelatorio) btnRelatorio.style.display = "none";
-        if (btnAlunos) btnAlunos.style.display = "none";
-      }
-    });
-
-    window.logout = () => {
-      signOut(auth).then(() => {
-        window.location.href = "index.html";
-      });
-    };
-
-    window.toggleMenu = () => {
-      const sidebar = document.getElementById("sidebar");
-      const overlay = document.getElementById("overlay");
-      const menuBtn = document.querySelector(".menu-btn");
-
-      sidebar.classList.toggle("active");
-      overlay.classList.toggle("active");
-      menuBtn.classList.toggle("hidden");
-    };
-
-    let map = L.map("map").setView([ -12.2576, -38.9647 ], 13); 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
-    let marker = L.marker([ -12.2576, -38.9647 ]).addTo(map);
-
-    window.getLocation = function () {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          function (position) {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
-            map.setView([lat, lon], 15);
-            marker.setLatLng([lat, lon]);
-          },
-          function () {
-            alert("Não foi possível obter a localização.");
-          }
-        );
-      } else {
-        alert("Geolocalização não é suportada neste navegador.");
-      }
-    };
-  </script>
-
+  <script type="module" src="../js/gps.js"></script>
 </body>
 </html>

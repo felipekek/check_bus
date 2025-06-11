@@ -1,0 +1,75 @@
+.alunos-container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            color: #222;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 24px;
+            color: #004d7a;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 18px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            overflow: hidden;
+            color: #222;
+        }
+        th, td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: left;
+            font-size: 15px;
+        }
+        th {
+            background: #008793;
+            color: #fff;
+            font-weight: 600;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        .voltar-btn {
+            margin-top: 24px;
+            background: #008793;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 12px 28px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: auto;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .voltar-btn:hover {
+            background: #00677a;
+        }
+        .no-data {
+            text-align: center;
+            color: #888;
+            padding: 30px 0;
+            font-size: 16px;
+        }
+        /* Novo estilo para o botão de excluir */
+        .delete-btn {
+            background-color: #dc3545; /* Vermelho */
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+        }
+        .delete-btn:hover {
+            background-color: #c82333; /* Vermelho mais escuro no hover */
+        }

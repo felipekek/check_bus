@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Lista de Alunos</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/admin.css" />
+    <link rel="stylesheet" href="../css/draw.css" />
+</head>
+<body>
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+    <div class="sidebar" id="sidebar">
+        <button onclick="location.href='home.html'">Home</button>
+        <button onclick="location.href='horarios.html'">Editar Horários</button>
+        <button onclick="location.href='gps.html'">Abrir GPS</button>
+        <button onclick="location.href='relatorios.html'" id="btnRelatorio">Relatório</button>
+        <button onclick="location.href='alunos.html'" id="btnAlunos">Lista de Alunos</button>
+        <button onclick="logout()" class="logout">Sair</button>
+    </div>
+
+    <div class="alunos-container">
+        <h1>Lista de Alunos</h1>
+        <div style="overflow-x:auto;">
+            <table id="tabelaAlunos">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>E-mail</th>
+                        <th>Instituição</th>
+                        <th>Último Login</th>
+                        <th>Horários Registrados</th>
+                        <th>Ações</th> </tr>
+                </thead>
+                <tbody id="corpoTabelaAlunos">
+                    <tr><td colspan="6" class="no-data">Carregando alunos...</td></tr> </tbody>
+            </table>
+    <script type="module" src="../js/admin.js"></script>
+</body>
+</html>
