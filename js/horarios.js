@@ -1,4 +1,5 @@
 // horarios.js
+// Permite ao usuário cadastrar, editar e excluir horários no Firestore.
 
 import { db, auth } from "./firebase-config.js";
 import { collection, doc, setDoc, deleteDoc, getDocs, addDoc, getDoc, query } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
@@ -18,6 +19,7 @@ onAuthStateChanged(auth, async (user) => {
     return;
   }
 
+  // Esconde botões de admin para usuários comuns
   if (user.email !== STAFF_EMAIL) {
     if (btnRelatorio) btnRelatorio.style.display = "none";
     if (btnAlunos) btnAlunos.style.display = "none";
@@ -27,7 +29,7 @@ onAuthStateChanged(auth, async (user) => {
   carregarHorarios();
 });
 
-// Função para salvar ou editar horário
+// Salva ou edita horário
 window.salvarHorario = async () => {
   const titulo = document.getElementById("titulo").value;
   const hora = document.getElementById("hora").value;
@@ -45,11 +47,13 @@ window.salvarHorario = async () => {
   try {
     const horariosRef = collection(db, "horarios", userId, "listaHorarios");
     if (horarioEditandoId) {
+      // Edita horário existente
       const docRef = doc(db, "horarios", userId, "listaHorarios", horarioEditandoId);
       await setDoc(docRef, horarioData, { merge: true });
       horarioEditandoId = null;
       msg.textContent = "Horário editado com sucesso!";
     } else {
+      // Adiciona novo horário
       await addDoc(horariosRef, horarioData);
       msg.textContent = "Horário salvo com sucesso!";
     }
@@ -62,7 +66,7 @@ window.salvarHorario = async () => {
   }
 };
 
-// Função para carregar horários
+// Carrega horários do usuário
 async function carregarHorarios() {
   const horariosRef = collection(db, "horarios", userId, "listaHorarios");
   const q = query(horariosRef);
@@ -92,7 +96,7 @@ async function carregarHorarios() {
   }
 }
 
-// Função para editar horário
+// Preenche formulário para editar horário
 window.editarHorario = async (id) => {
   const horariosRef = doc(db, "horarios", userId, "listaHorarios", id);
   const docSnapshot = await getDoc(horariosRef);
@@ -111,7 +115,7 @@ window.editarHorario = async (id) => {
   }
 };
 
-// Função para excluir horário
+// Exclui horário
 window.excluirHorario = async (id) => {
   try {
     const horariosRef = doc(db, "horarios", userId, "listaHorarios", id);
@@ -122,14 +126,14 @@ window.excluirHorario = async (id) => {
   }
 };
 
-// Função de logout
+// Logout
 window.logout = () => {
   signOut(auth).then(() => {
     window.location.href = "index.html";
   });
 };
 
-// Função para abrir/fechar o menu lateral
+// Abre/fecha o menu lateral
 window.toggleMenu = () => {
   const sidebar = document.getElementById("sidebar");
   const overlay = document.getElementById("overlay");

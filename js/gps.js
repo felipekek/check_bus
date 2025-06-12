@@ -1,4 +1,5 @@
 // gps.js
+// Mostra o mapa e localização do usuário usando Leaflet e geolocalização do navegador.
 
 import { db, auth } from "./firebase-config.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";

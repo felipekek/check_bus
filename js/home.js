@@ -1,4 +1,5 @@
 // home.js
+// Página inicial do aluno. Mostra horários cadastrados e permite excluir.
 
 import { db, auth } from "./firebase-config.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
@@ -17,6 +18,7 @@ onAuthStateChanged(auth, async (user) => {
     return;
   }
 
+  // Esconde botões de admin para usuários comuns
   if (user.email !== STAFF_EMAIL) {
     if (btnRelatorio) btnRelatorio.style.display = "none";
     if (btnAlunos) btnAlunos.style.display = "none";
@@ -26,7 +28,7 @@ onAuthStateChanged(auth, async (user) => {
   carregarHorarios();
 });
 
-// Função para carregar horários do usuário
+// Carrega horários do usuário logado
 async function carregarHorarios() {
   if (!userId) return;
 
@@ -58,7 +60,7 @@ async function carregarHorarios() {
   }
 }
 
-// Função para excluir um horário
+// Exclui um horário do usuário
 window.excluirHorario = async (docId) => {
   try {
     const horarioDocRef = doc(db, "horarios", userId, "listaHorarios", docId);
@@ -70,14 +72,14 @@ window.excluirHorario = async (docId) => {
   }
 };
 
-// Função de logout
+// Logout
 window.logout = () => {
   signOut(auth).then(() => {
     window.location.href = "index.html";
   });
 };
 
-// Função para abrir/fechar o menu lateral
+// Abre/fecha o menu lateral
 window.toggleMenu = () => {
   const sidebar = document.getElementById("sidebar");
   const overlay = document.getElementById("overlay");

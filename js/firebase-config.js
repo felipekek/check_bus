@@ -1,11 +1,11 @@
 // firebase-config.js
+// Exporta a configuração e inicialização do Firebase para uso nos outros arquivos.
 
-// Importação dos módulos do Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-// Configuração do Firebase com seus dados reais
+// Configuração do Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyDAG_nfsNFNk6ZnhTnC9Cci-N6L3Bui4PY",
   authDomain: "trancaeletronica-90835.firebaseapp.com",
@@ -15,10 +15,9 @@ const firebaseConfig = {
   appId: "1:566150115221:web:1c6eaf30767894dbfd909c"
 };
 
-// Inicialização do Firebase
+// Inicializa Firebase e exporta para uso global
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Exporta os serviços para uso em outros arquivos
 export { auth, db };

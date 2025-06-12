@@ -1,3 +1,8 @@
+<!--
+  Página de administração/lista de alunos.
+  Só acessível para staff. Mostra todos os alunos cadastrados e permite excluir.
+  Toda a lógica está em js/admin.js.
+-->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -9,10 +14,13 @@
     <link rel="stylesheet" href="../css/draw.css" />
 </head>
 <body>
+    <!-- Botão do menu lateral -->
     <button class="menu-btn" onclick="toggleMenu()">☰</button>
 
+    <!-- Overlay para fechar o menu ao clicar fora -->
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
+    <!-- Menu lateral de navegação -->
     <div class="sidebar" id="sidebar">
         <button onclick="location.href='home.html'">Home</button>
         <button onclick="location.href='horarios.html'">Editar Horários</button>
@@ -22,6 +30,7 @@
         <button onclick="logout()" class="logout">Sair</button>
     </div>
 
+    <!-- Tabela de alunos -->
     <div class="alunos-container">
         <h1>Lista de Alunos</h1>
         <div style="overflow-x:auto;">
@@ -33,11 +42,15 @@
                         <th>Instituição</th>
                         <th>Último Login</th>
                         <th>Horários Registrados</th>
-                        <th>Ações</th> </tr>
+                        <th>Ações</th>
+                    </tr>
                 </thead>
                 <tbody id="corpoTabelaAlunos">
-                    <tr><td colspan="6" class="no-data">Carregando alunos...</td></tr> </tbody>
+                    <tr><td colspan="6" class="no-data">Carregando alunos...</td></tr>
+                </tbody>
             </table>
+        </div>
+    </div>
     <script type="module" src="../js/admin.js"></script>
 </body>
 </html>

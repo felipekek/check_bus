@@ -9,10 +9,13 @@
     <link rel="stylesheet" href="../css/relatorios.css" />
 </head>
 <body>
+    <!-- Botão para abrir o menu lateral -->
     <button class="menu-btn" onclick="toggleMenu()">☰</button>
 
+    <!-- Overlay para fechar o menu ao clicar fora -->
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
+    <!-- Menu lateral com navegação -->
     <div class="sidebar" id="sidebar">
         <button onclick="location.href='home.html'">Home</button>
         <button onclick="location.href='horarios.html'">Editar Horários</button>
@@ -22,11 +25,14 @@
         <button onclick="logout()" class="logout">Sair</button>
     </div>
 
+    <!-- Container principal dos relatórios -->
     <div class="relatorio-container">
         <h1>Relatórios de Acesso</h1>
         <div id="lista">
             <div class="no-data">Carregando registros...</div>
-        
+        </div>
+    </div>
+    <!-- Script principal da página -->
     <script type="module" src="../js/relatorios.js"></script>
 </body>
 </html>

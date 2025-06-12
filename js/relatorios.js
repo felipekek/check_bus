@@ -1,4 +1,6 @@
 // relatorios.js
+// Este arquivo controla a página de relatórios de acessos (admin).
+// Permite listar e excluir registros de acessos do Firestore.
 
 import { db, auth } from "./firebase-config.js";
 import { collection, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
@@ -6,8 +8,9 @@ import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/
 
 const STAFF_EMAIL = "staff@adm.com";
 
-// Controle de acesso e carregamento dos relatórios
+// Verifica se o usuário é staff e carrega relatórios
 onAuthStateChanged(auth, async (user) => {
+    // Esconde botões se não for staff
     const btnRelatorio = document.getElementById("btnRelatorio");
     const btnAlunos = document.getElementById("btnAlunos");
 
@@ -21,7 +24,7 @@ onAuthStateChanged(auth, async (user) => {
     carregarRelatorios();
 });
 
-// Função para carregar e exibir os relatórios
+// Busca e exibe todos os registros de acesso
 async function carregarRelatorios() {
     const listaDiv = document.getElementById("lista");
     listaDiv.innerHTML = `<div class="no-data">Carregando registros...</div>`;
@@ -37,6 +40,7 @@ async function carregarRelatorios() {
 
         listaDiv.innerHTML = "";
 
+        // Para cada acesso, cria um item na lista
         for (const acessoDoc of acessosSnap.docs) {
             const acesso = acessoDoc.data();
             const acessoId = acessoDoc.id;
@@ -52,7 +56,7 @@ async function carregarRelatorios() {
             listaDiv.appendChild(div);
         }
 
-        // Adiciona evento aos botões de exclusão
+        // Adiciona evento de exclusão para cada botão
         document.querySelectorAll(".delete-btn").forEach(btn => {
             btn.onclick = async function () {
                 if (confirm("Deseja realmente excluir este registro?")) {
@@ -66,7 +70,7 @@ async function carregarRelatorios() {
     }
 }
 
-// Função para excluir um relatório
+// Exclui um registro de acesso pelo ID
 async function excluirRelatorio(id) {
     try {
         await deleteDoc(doc(db, "acessos", id));
@@ -76,7 +80,7 @@ async function excluirRelatorio(id) {
     }
 }
 
-// Função de logout
+// Faz logout do usuário
 window.logout = () => {
     signOut(auth).then(() => {
         window.location.href = "index.html";
@@ -85,7 +89,7 @@ window.logout = () => {
     });
 };
 
-// Função para abrir/fechar o menu lateral
+// Abre/fecha o menu lateral
 window.toggleMenu = () => {
     const sidebar = document.getElementById("sidebar");
     const overlay = document.getElementById("overlay");

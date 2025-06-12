@@ -1,9 +1,10 @@
 // auth.js
+// Funções de autenticação (login) usando Firebase Authentication.
 
 import { auth } from './firebase-config.js';
 import { signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
-// Função de login
+// Função de login chamada pelo formulário
 window.login = async () => {
   const email = document.getElementById('email').value;
   const senha = document.getElementById('senha').value;
@@ -18,7 +19,7 @@ window.login = async () => {
   }
 };
 
-// Mantém usuário logado
+// Mantém usuário logado (opcional, só log para debug)
 onAuthStateChanged(auth, (user) => {
   if (user) {
     console.log("Usuário logado:", user.email);

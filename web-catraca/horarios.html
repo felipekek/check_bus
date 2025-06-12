@@ -1,3 +1,8 @@
+<!--
+  Página de edição de horários do aluno.
+  Permite cadastrar, editar e excluir horários.
+  Toda a lógica está em js/horarios.js.
+-->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -12,10 +17,13 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js" type="module"></script>
 </head>
 <body>
+  <!-- Botão do menu lateral -->
   <button class="menu-btn" onclick="toggleMenu()">☰</button>
 
+  <!-- Overlay para fechar o menu ao clicar fora -->
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
+  <!-- Menu lateral de navegação -->
   <div class="sidebar" id="sidebar">
     <button onclick="location.href='home.html'">Home</button>
     <button onclick="location.href='gps.html'">Abrir GPS</button>
@@ -24,6 +32,7 @@
     <button onclick="logout()" class="logout">Sair</button>
   </div>
 
+  <!-- Formulário de cadastro/edição de horários -->
   <div class="container">
     <h1>Editar Horários</h1>
     <form id="formHorario" onsubmit="event.preventDefault(); salvarHorario();">
@@ -44,12 +53,14 @@
     </form>
     <p id="msg"></p>
 
+    <!-- Lista de horários cadastrados -->
     <div class="horario-list">
       <h2>Horários Salvos</h2>
       <ul id="listaHorarios"></ul>
     </div>
   </div>
 
+  <!-- Script principal da página -->
   <script type="module" src="../js/horarios.js"></script>
 </body>
 </html>
