@@ -73,3 +73,42 @@
         .delete-btn:hover {
             background-color: #c82333; /* Vermelho mais escuro no hover */
         }
+        .delete-btn svg {
+            vertical-align: middle;
+            display: inline-block;
+            width: 22px; /* aumenta o ícone */
+            height: 22px;
+        }
+
+        .delete-btn svg path:first-child {
+            /* Seleciona a tampa da lixeira e aumenta a espessura */
+            stroke-width: 2.5;
+            /* Se o SVG não tiver stroke, pode aumentar o tamanho geral */
+        }
+        .titulo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 20px;
+        }
+
+        .titulo-container h1 {
+            flex: 2;
+            text-align: center;
+            margin: 0;
+            color: #004d7a;
+        }
+
+        .titulo-container #barraPesquisa {
+            flex: 1;
+            max-width: 220px;
+            margin-left: 20px;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            outline: none;
+            transition: all 0.2s ease-in-out;
+            text-align: left;
+        }

@@ -6,6 +6,7 @@ import { collection, getDocs, doc, deleteDoc } from "https://www.gstatic.com/fir
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
 const STAFF_EMAIL = "staff@adm.com";
+let listaAlunos = []; // <- guarda todos os alunos carregados
 
 // Verifica se é staff e carrega alunos
 onAuthStateChanged(auth, async (user) => {
@@ -31,7 +32,8 @@ async function carregarAlunos() {
             corpo.innerHTML = `<tr><td colspan="6" class="no-data">Nenhum aluno cadastrado.</td></tr>`;
             return;
         }
-        corpo.innerHTML = "";
+
+        listaAlunos = []; // limpa para recarregar
         for (const alunoDoc of alunosSnap.docs) {
             const aluno = alunoDoc.data();
             const alunoId = alunoDoc.id;
@@ -43,30 +45,61 @@ async function carregarAlunos() {
                 const d = h.data();
                 horarios.push(`${d.titulo || ""} ${d.horario || ""}`.trim());
             });
-            let ultimoLogin = aluno.ultimoLogin || "-";
-            corpo.innerHTML += `
-                <tr>
-                    <td>${aluno.nome || "-"}</td>
-                    <td>${aluno.email || "-"}</td>
-                    <td>${aluno.instituicao || "-"}</td>
-                    <td>${ultimoLogin}</td>
-                    <td>${horarios.length > 0 ? horarios.join("<br>") : "-"}</td>
-                    <td><button class="delete-btn" data-id="${alunoId}">Excluir</button></td>
-                </tr>
-            `;
-        }
-        // Adiciona evento de exclusão para cada botão
-        document.querySelectorAll('.delete-btn').forEach(button => {
-            button.addEventListener('click', (event) => {
-                const alunoIdParaExcluir = event.target.dataset.id;
-                excluirAluno(alunoIdParaExcluir);
+
+            listaAlunos.push({
+                id: alunoId,
+                nome: aluno.nome || "-",
+                email: aluno.email || "-",
+                instituicao: aluno.instituicao || "-",
+                ultimoLogin: aluno.ultimoLogin || "-",
+                horarios: horarios.length > 0 ? horarios.join("<br>") : "-"
             });
-        });
+        }
+
+        renderizarAlunos(listaAlunos);
 
     } catch (err) {
         console.error("Erro ao carregar alunos:", err);
         corpo.innerHTML = `<tr><td colspan="6" class="no-data">Erro ao carregar alunos. Verifique o console.</td></tr>`;
     }
+}
+
+// Renderiza os alunos no corpo da tabela
+function renderizarAlunos(alunos) {
+    const corpo = document.getElementById("corpoTabelaAlunos");
+    corpo.innerHTML = "";
+
+    if (alunos.length === 0) {
+        corpo.innerHTML = `<tr><td colspan="6" class="no-data">Nenhum aluno encontrado.</td></tr>`;
+        return;
+    }
+
+    for (const aluno of alunos) {
+        corpo.innerHTML += `
+            <tr>
+                <td>${aluno.nome}</td>
+                <td>${aluno.email}</td>
+                <td>${aluno.instituicao}</td>
+                <td>${aluno.ultimoLogin}</td>
+                <td>${aluno.horarios}</td>
+                <td>
+                    <button class="delete-btn" data-id="${aluno.id}" title="Excluir">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24">
+                            <path fill="white" d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z"/>
+                        </svg>
+                    </button>
+                </td>
+            </tr>
+        `;
+    }
+
+    // Adiciona evento de exclusão
+    document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', (event) => {
+            const alunoIdParaExcluir = event.target.dataset.id;
+            excluirAluno(alunoIdParaExcluir);
+        });
+    });
 }
 
 // Exclui aluno e todos os seus horários
@@ -91,6 +124,19 @@ async function excluirAluno(alunoId) {
         }
     }
 }
+
+// Filtro da barra de pesquisa
+document.getElementById("barraPesquisa").addEventListener("keyup", (e) => {
+    const termo = e.target.value.toLowerCase();
+    const filtrados = listaAlunos.filter(aluno => 
+        aluno.nome.toLowerCase().includes(termo) ||
+        aluno.email.toLowerCase().includes(termo) ||
+        aluno.instituicao.toLowerCase().includes(termo) ||
+        aluno.ultimoLogin.toLowerCase().includes(termo) ||
+        aluno.horarios.toLowerCase().includes(termo)
+    );
+    renderizarAlunos(filtrados);
+});
 
 // Logout do admin
 window.logout = () => {
