@@ -59,31 +59,40 @@
             padding: 30px 0;
             font-size: 16px;
         }
-        /* Novo estilo para o botão de excluir */
+        /* Botão de excluir com SVG da lixeira */
         .delete-btn {
-            background-color: #dc3545; /* Vermelho */
-            color: white;
+            background: #e74c3c;
             border: none;
+            border-radius: 5px;
             padding: 6px 10px;
-            border-radius: 4px;
             cursor: pointer;
-            font-size: 14px;
-            transition: background-color 0.2s ease;
-        }
-        .delete-btn:hover {
-            background-color: #c82333; /* Vermelho mais escuro no hover */
-        }
-        .delete-btn svg {
-            vertical-align: middle;
-            display: inline-block;
-            width: 22px; /* aumenta o ícone */
-            height: 22px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
         }
 
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+
+        .delete-btn svg {
+            width: 18px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: middle;
+        }
+
+        .delete-btn svg path,
+.delete-btn svg line {
+    stroke: white;    /* cor branca */
+    stroke-width: 2;  /* espessura consistente */
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
         .delete-btn svg path:first-child {
-            /* Seleciona a tampa da lixeira e aumenta a espessura */
-            stroke-width: 2.5;
-            /* Se o SVG não tiver stroke, pode aumentar o tamanho geral */
+            stroke-width: 3.5; /* aumenta a espessura da tampa da lixeira */
         }
         .titulo-container {
             display: flex;
