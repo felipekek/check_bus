@@ -35,17 +35,36 @@
         }
         /* Estilo para o botão de excluir */
         .delete-btn {
-            background-color: #dc3545; /* Vermelho */
-            color: white;
+            background: #e74c3c;
             border: none;
+            border-radius: 5px;
             padding: 6px 10px;
-            border-radius: 4px;
             cursor: pointer;
-            font-size: 14px;
-            transition: background-color 0.2s ease;
-            margin-left: 10px; /* Espaço à esquerda do botão */
-            flex-shrink: 0; /* Impede o botão de encolher */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
         }
+
         .delete-btn:hover {
-            background-color: #c82333; /* Vermelho mais escuro no hover */
+            background: #c0392b;
+        }
+
+        .delete-btn svg {
+            width: 18px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: middle;
+        }
+
+        .delete-btn svg path,
+.delete-btn svg line {
+    stroke: white;    /* cor branca */
+    stroke-width: 2;  /* espessura consistente */
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+        .delete-btn svg path:first-child {
+            stroke-width: 3.5; /* aumenta a espessura da tampa da lixeira */
         }

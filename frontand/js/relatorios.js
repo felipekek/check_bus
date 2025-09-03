@@ -50,9 +50,11 @@ async function carregarRelatorios() {
 
             const div = document.createElement("div");
             div.innerHTML = `
-                <span>UID: ${uid} | Data: ${data} | Horário: ${horario}</span>
-                <button class="delete-btn" data-id="${acessoId}">Excluir</button>
-            `;
+    <span>UID: ${uid} | Data: ${data} | Horário: ${horario}</span>
+    <button class="delete-btn" data-id="${acessoId}">
+    <i class="fa-solid fa-trash"></i>
+    </button>
+`;
             listaDiv.appendChild(div);
         }
 
@@ -99,3 +101,4 @@ window.toggleMenu = () => {
     overlay.classList.toggle("active");
     menuBtn.classList.toggle("hidden");
 };
+

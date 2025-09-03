@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/draw.css" />
     <link rel="stylesheet" href="../css/relatorios.css" />
+
+<!-- Importando Font Awesome para usar o ícone de lixeira -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
     <!-- Botão para abrir o menu lateral -->
@@ -25,14 +28,34 @@
         <button onclick="logout()" class="logout">Sair</button>
     </div>
 
-    <!-- Container principal dos relatórios -->
+   <!-- Container principal dos relatórios -->
     <div class="relatorio-container">
         <h1>Relatórios de Acesso</h1>
+
+        <!-- Barra de pesquisa -->
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Pesquisar registros...">
+        </div>
+
         <div id="lista">
             <div class="no-data">Carregando registros...</div>
         </div>
     </div>
+
     <!-- Script principal da página -->
     <script type="module" src="../js/relatorios.js"></script>
+
+    <script>
+        // Exemplo de filtro da barra de pesquisa
+        document.getElementById("searchInput").addEventListener("keyup", function() {
+            let filtro = this.value.toLowerCase();
+            let itens = document.querySelectorAll("#lista .item-relatorio");
+
+            itens.forEach(item => {
+                let texto = item.textContent.toLowerCase();
+                item.style.display = texto.includes(filtro) ? "" : "none";
+            });
+        });
+    </script>
 </body>
 </html>
