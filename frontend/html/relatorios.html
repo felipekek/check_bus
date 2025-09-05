@@ -30,11 +30,9 @@
 
    <!-- Container principal dos relatórios -->
     <div class="relatorio-container">
-        <h1>Relatórios de Acesso</h1>
-
-        <!-- Barra de pesquisa -->
-        <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="Pesquisar registros...">
+        <div class="titulo-container">
+            <h1>Relatórios</h1>
+            <input type="text" id="barraPesquisa" placeholder="Pesquisar...">
         </div>
 
         <div id="lista">
@@ -47,7 +45,7 @@
 
     <script>
         // Exemplo de filtro da barra de pesquisa
-        document.getElementById("searchInput").addEventListener("keyup", function() {
+        document.getElementById("barraPesquisa").addEventListener("keyup", function() {
             let filtro = this.value.toLowerCase();
             let itens = document.querySelectorAll("#lista .item-relatorio");
 

@@ -68,3 +68,27 @@
         .delete-btn svg path:first-child {
             stroke-width: 3.5; /* aumenta a espessura da tampa da lixeira */
         }
+
+        .titulo-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.titulo-container h1 {
+    flex: 1;
+    text-align: center;
+    margin: 0;
+    color: #004d7a;
+}
+
+#barraPesquisa {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    outline: none;
+    margin-left: 20px;
+}

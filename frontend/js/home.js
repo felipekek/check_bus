@@ -1,30 +1,32 @@
-// home.js
-// Página inicial do aluno. Mostra horários cadastrados e permite excluir.
-
 import { db, auth } from "./firebase-config.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { collection, getDocs, query, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { collection, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 const STAFF_EMAIL = "staff@adm.com";
 let userId = null;
 
 // Controle de acesso e carregamento dos horários
 onAuthStateChanged(auth, async (user) => {
-  const btnRelatorio = document.getElementById("btnRelatorio");
-  const btnAlunos = document.getElementById("btnAlunos");
-
   if (!user) {
     window.location.href = "index.html";
     return;
   }
 
-  // Esconde botões de admin para usuários comuns
-  if (user.email !== STAFF_EMAIL) {
-    if (btnRelatorio) btnRelatorio.style.display = "none";
-    if (btnAlunos) btnAlunos.style.display = "none";
+  userId = user.uid;
+
+  // Mostrar/ocultar botões de admin
+  const btnRelatorio = document.getElementById("btnRelatorio");
+  const btnAlunos = document.getElementById("btnAlunos");
+  if (user.email === STAFF_EMAIL) {
+    // Admin vê tudo
+    btnRelatorio.style.display = "block";
+    btnAlunos.style.display = "block";
+  } else {
+    // Aluno vê apenas home, horarios e gps
+    btnRelatorio.style.display = "none";
+    btnAlunos.style.display = "none";
   }
 
-  userId = user.uid;
   carregarHorarios();
 });
 
@@ -79,7 +81,7 @@ window.logout = () => {
   });
 };
 
-// Abre/fecha o menu lateral
+// Toggle menu lateral
 window.toggleMenu = () => {
   const sidebar = document.getElementById("sidebar");
   const overlay = document.getElementById("overlay");
@@ -87,5 +89,5 @@ window.toggleMenu = () => {
 
   sidebar.classList.toggle("active");
   overlay.classList.toggle("active");
-  menuBtn.classList.toggle("hidden");
+  if (menuBtn) menuBtn.classList.toggle("hidden");
 };
