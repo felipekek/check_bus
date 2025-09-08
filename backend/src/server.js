@@ -28,7 +28,7 @@ app.use("/relatorios", relatorioRoutes); // ✅ adicionando a rota de relatório
 
 // Redireciona "/" para index.html
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../../frontend/html/index.html"));
+  res.sendFile(path.join(__dirname, "../../frontend/html/novo_home.html"));
 });
 
 // Redireciona qualquer outro HTML dentro de frontend/html
