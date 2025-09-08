@@ -1,101 +1,105 @@
-/* Estilos globais */
-
-/* Reset básico para garantir consistência entre navegadores */
 * {
-  box-sizing: border-box; /* Inclui borda e padding no cálculo do tamanho */
-  margin: 0;              /* Remove margens padrão */
-  padding: 0;             /* Remove espaçamentos padrão */
-  font-family: 'Inter', Arial, sans-serif; /* Fonte padrão global */
+  box-sizing: border-box; 
+  margin: 0;              
+  padding: 0;             
+  font-family: 'Inter', Arial, sans-serif; 
 }
 
-/* Estilo global do corpo da página */
+
 body {
-  background: linear-gradient(to right, #004d7a, #008793); /* Cor de fundo em degradê */
-  min-height: 100vh;      /* Garante altura mínima de tela cheia */
-  color: #333;            /* Cor padrão do texto */
-  font-family: 'Inter', Arial, sans-serif; /* Fonte padrão */
-  overflow-x: hidden;     /* Evita rolagem horizontal */
+  background: linear-gradient(to right, #004d7a, #008793); 
+  min-height: 100vh;      
+  color: #333;            
+  font-family: 'Inter', Arial, sans-serif; 
+  overflow-x: hidden;     
 }
 
-/* Container central padrão para formulários e conteúdos */
+
 .container {
-  background-color: #fff; /* Fundo branco para destacar o conteúdo */
-  padding: 40px;          /* Espaçamento interno */
-  border-radius: 12px;    /* Cantos arredondados */
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); /* Sombra suave */
-  width: 100%;            /* Ocupa toda a largura disponível */
-  max-width: 600px;       /* Limita a largura máxima */
-  margin: 60px auto 0;    /* Centraliza na tela com margem superior */
-  color: #333;            /* Cor do texto */
-  text-align: center;     /* Centraliza o texto */
+  background-color: #fff; 
+  padding: 40px;          
+  border-radius: 12px;    
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); 
+  width: 100%;            
+  max-width: 600px;       
+  margin: 60px auto 0;    
+  color: #333;            
+  text-align: center;
 }
 
-/* Títulos principais e secundários */
+
 h1, h2, h3 {
-  color: #004d7a;         /* Cor azul padrão dos títulos */
-  margin-bottom: 20px;    /* Espaço abaixo dos títulos */
-  text-align: center;     /* Centraliza os títulos */
+  color: #004d7a;         
+  margin-bottom: 20px;    
+  text-align: center;     
 }
 
-/* Estilo básico para formulários */
+
 form {
-  display: flex;          /* Usa flexbox para organizar os campos */
-  flex-direction: column; /* Coloca os campos em coluna */
-  gap: 15px;              /* Espaçamento entre campos */
+  display: flex;          
+  flex-direction: column; 
+  gap: 15px;              
 }
 
-/* Estilo para rótulos de campos */
+
 label {
-  text-align: left;       /* Alinha o texto à esquerda */
-  font-weight: 600;       /* Deixa o texto em negrito */
-  font-size: 14px;        /* Tamanho de fonte padrão */
+  text-align: left;       
+  font-weight: 600;       
+  font-size: 14px;        
 }
 
-/* Estilo para campos de entrada, seleção e área de texto */
+
 input, select, textarea {
-  padding: 10px;          /* Espaçamento interno */
-  border: 1px solid #ccc; /* Borda cinza clara */
-  border-radius: 8px;     /* Cantos arredondados */
-  font-size: 14px;        /* Tamanho de fonte */
-  font-family: inherit;   /* Usa a mesma fonte do body */
+  padding: 10px;          
+  border: 1px solid #ccc; 
+  border-radius: 8px;     
+  font-size: 14px;        
+  font-family: inherit;   
 }
 
-/* Botão padrão */
+
 button {
-  padding: 12px 24px;     /* Espaçamento interno */
-  background-color: #008793; /* Cor de fundo azul */
-  color: white;           /* Cor do texto */
-  border: none;           /* Sem borda */
-  border-radius: 8px;     /* Cantos arredondados */
-  cursor: pointer;        /* Cursor de mãozinha */
-  font-size: 16px;        /* Tamanho de fonte */
-  transition: background 0.3s; /* Transição suave na cor de fundo */
+  padding: 12px 24px;     
+  background-color: #008793; 
+  color: white;           
+  border: none;           
+  border-radius: 8px;     
+  cursor: pointer;       
+  font-size: 16px;        
+  transition: background 0.3s; 
+  background: linear-gradient(90deg, #2980b9 0%, #6dd5fa 100%);
+  box-shadow: 0 1px 6px rgba(44,62,80,0.07);
+  transition: background 0.2s, transform 0.2s;
 }
 
-/* Efeito hover para botões */
+
 button:hover {
-  background-color: #00677a; /* Cor mais escura ao passar o mouse */
+  background: linear-gradient(90deg, #1c5980 0%, #2980b9 100%);
+  transform: translateY(-2px) scale(1.03);
 }
 
-/* Links */
+
 a {
-  color: #008793;         /* Cor azul padrão para links */
-  text-decoration: none;  /* Remove sublinhado */
+  color: #008793;         
+  text-decoration: none;  
 }
 
-/* Parágrafos */
+a:hover {
+  text-decoration: underline; 
+}
+
 p {
-  margin-top: 10px;       /* Espaço acima do parágrafo */
-  font-size: 14px;        /* Tamanho de fonte padrão */
+  margin-top: 10px;       
+  font-size: 14px;        
 }
 
-/* Mensagem de login */
+
 #loginMessage {
-  margin-top: 10px;       /* Espaço acima da mensagem */
-  font-weight: bold;      /* Texto em negrito */
+  margin-top: 10px;       
+  font-weight: bold;      
 }
 
-/* Classe utilitária para esconder elementos */
+
 .hidden {
-  display: none !important; /* Esconde completamente o elemento */
+  display: none !important; 
 }
