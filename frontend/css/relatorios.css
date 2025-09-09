@@ -1,39 +1,142 @@
-/* Estilos da pagina de relatorios */
-
-
+/* Container principal */
 .relatorio-container {
-            max-width: 700px;
-            margin: 40px auto;
-            background: #fff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-            color: #222;
-        }
-        h1 {
-            text-align: center;
-            margin-bottom: 24px;
-            color: #004d7a;
-        }
-        /* Ajuste para o item da lista e botão */
-        #lista > div {
-            padding: 12px;
-            border-bottom: 1px solid #eee;
-            font-size: 16px;
-            display: flex; /* Adiciona flexbox para alinhar conteúdo */
-            justify-content: space-between; /* Espaça conteúdo e botão */
-            align-items: center; /* Alinha verticalmente */
-        }
-        #lista > div:last-child {
-            border-bottom: none;
-        }
-        .no-data {
-            text-align: center;
-            color: #888;
-            padding: 30px 0;
-            font-size: 16px;
-        }
-        /* Estilo para o botão de excluir */
+  max-width: 1000px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  color: #222;
+}
+
+/* Título + pesquisa */
+.titulo-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.titulo-container h1 {
+  flex: 1;
+  text-align: left;
+  margin: 0;
+  color: #004d7a;
+}
+
+#barraPesquisa {
+  padding: 8px 14px;
+  font-size: 0.95rem;
+  width: 220px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  outline: none;
+  transition: 0.2s;
+}
+#barraPesquisa:focus {
+  border-color: #008793;
+  box-shadow: 0 0 4px rgba(0,135,147,0.4);
+}
+
+/* Filtros */
+.filtros-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center; /* garante alinhamento vertical dos selects/input */
+  margin-bottom: 0; /* remove espaço extra abaixo dos filtros */
+}
+.filtros-container select,
+.filtros-container input[type="date"] {
+  padding: 6px 12px;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+/* Tabela */
+#tabela-relatorios {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+#tabela-relatorios thead {
+  background: linear-gradient(90deg, #004d7a, #008793);
+  color: white;
+}
+
+#tabela-relatorios th,
+#tabela-relatorios td {
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 0.95rem;
+  border-bottom: 1px solid #ddd;
+}
+
+#tabela-relatorios tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+#tabela-relatorios tbody tr:hover {
+  background-color: #eef8fa;
+  transition: 0.2s;
+}
+
+.no-data {
+  text-align: center;
+  padding: 20px;
+  color: #555;
+  font-size: 1rem;
+}
+
+/* Botão excluir */
+.delete-btn {
+  background: #e74c3c;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.2s;
+  color: #fff;
+}
+.delete-btn:hover {
+  background: #c0392b;
+  transform: scale(1.05);
+}
+.delete-btn i {
+  font-size: 14px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .relatorio-container {
+    padding: 15px;
+  }
+  .titulo-container {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  #barraPesquisa {
+    width: 100%;
+  }
+  .filtros-container {
+    flex-direction: column;
+    width: 100%;
+  }
+  #tabela-relatorios {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
+
+/* Botão de excluir com SVG da lixeira */
         .delete-btn {
             background: #e74c3c;
             border: none;
@@ -69,26 +172,35 @@
             stroke-width: 3.5; /* aumenta a espessura da tampa da lixeira */
         }
 
-        .titulo-container {
+.filtro-label {
+    margin-bottom: 18px; /* ou o valor que preferir */
+    margin-top: 16px;
+}
+
+/* Botoão de Baixar Relatório */
+.filtros-e-botao{
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: center; /* garante alinhamento vertical */
+    gap: 16px; /* opcional: espaço entre filtros e botão */
     margin-bottom: 20px;
 }
 
-.titulo-container h1 {
-    flex: 1;
-    text-align: center;
-    margin: 0;
-    color: #004d7a;
+.btn-direita{
+    background: #008793;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 1rem;
+    height: 38px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: background 0.2s, transform 0.2s;
 }
 
-#barraPesquisa {
-    padding: 6px 12px;
-    font-size: 0.9rem;
-    width: 200px;
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    outline: none;
-    margin-left: 20px;
+.btn-direita:hover{
+    background: #008793;
+    transform: scale(1.05);
 }

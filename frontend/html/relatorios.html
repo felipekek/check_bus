@@ -29,16 +29,52 @@
     </div>
 
    <!-- Container principal dos relatórios -->
-    <div class="relatorio-container">
-        <div class="titulo-container">
-            <h1>Relatórios</h1>
-            <input type="text" id="barraPesquisa" placeholder="Pesquisar...">
-        </div>
-
-        <div id="lista">
-            <div class="no-data">Carregando registros...</div>
-        </div>
+<div class="relatorio-container">
+    <div class="titulo-container">
+        <h1>Relatórios</h1>
+        <input type="text" id="barraPesquisa" placeholder="Pesquisar...">
     </div>
+
+    <!-- FILTROS -->
+    <p class="filtro-label">Filtrar por: </p>
+    
+    <div class="filtros-e-botao">
+        <div class="filtros-container">
+            <select id="filtro-instituicao">
+                <option value="">Todas as instituições</option>
+            </select>
+
+            <select id="filtro-curso">
+                <option value="">Todos os cursos</option>
+            </select>
+
+            <input type="date" id="filtro-data" />
+        </div>
+        <button class="btn-direita" id="botaoBaixarRelatorio">Baixar Relatório</button>
+    </div>
+
+    <!-- LISTA DE RELATÓRIOS -->
+<div id="lista">
+    <table id="tabela-relatorios">
+        <thead>
+            <tr>
+                <th>Aluno</th>
+                <th>Matrícula</th>
+                <th>ID Cartão</th>
+                <th>Instituição</th>
+                <th>Curso</th>
+                <th>Data</th>
+                <th>Horário</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="8" class="no-data">Carregando registros...</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
     <!-- Script principal da página -->
     <script type="module" src="../js/relatorios.js"></script>

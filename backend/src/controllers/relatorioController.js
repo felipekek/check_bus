@@ -19,6 +19,7 @@ export async function listarRelatorios(req, res) {
       return {
         id: docSnap.id,
         uid: dados.uid || "UID Desconhecido",
+        idCartao: docSnap.id, // <-- agora pega o ID do documento (o cartão)
         data: dados.data || "Data Desconhecida",
         horario: dados.horario || "Hora Desconhecida"
       };

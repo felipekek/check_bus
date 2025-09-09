@@ -1,4 +1,3 @@
-// frontend/js/relatorios.js
 const token = localStorage.getItem("token");
 const tipoUsuario = localStorage.getItem("tipoUsuario");
 
@@ -7,74 +6,168 @@ if (!token || tipoUsuario !== "admin") {
   window.location.href = "index.html";
 }
 
+const filtroInstituicao = document.getElementById("filtro-instituicao");
+const filtroCurso = document.getElementById("filtro-curso");
+const filtroData = document.getElementById("filtro-data");
+const listaDiv = document.getElementById("lista");
+
+let registros = []; // Vai armazenar todos os registros carregados
+
 async function carregarRelatorios() {
-  const listaDiv = document.getElementById("lista");
-  listaDiv.innerHTML = `<div class="no-data">Carregando registros...</div>`;
+  // Inicializa tabela com carregando registros
+  listaDiv.innerHTML = `
+    <table id="tabela-relatorios">
+      <thead>
+        <tr>
+          <th>Aluno</th>
+          <th>Matrícula</th>
+          <th>ID Cartão</th>
+          <th>Instituição</th>
+          <th>Curso</th>
+          <th>Data</th>
+          <th>Horário</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="8" class="no-data">Carregando registros...</td></tr>
+      </tbody>
+    </table>
+  `;
 
   try {
     const res = await fetch("/relatorios", {
-      headers: {
-        "Authorization": `Bearer ${token}`
-      }
+      headers: { "Authorization": `Bearer ${token}` }
     });
 
     if (!res.ok) throw new Error("Erro ao buscar relatórios");
 
-    const registros = await res.json();
+    registros = await res.json();
 
     if (registros.length === 0) {
-      listaDiv.innerHTML = `<div class="no-data">Nenhum registro encontrado.</div>`;
+      const tbody = document.querySelector("#tabela-relatorios tbody");
+      tbody.innerHTML = `<tr><td colspan="8" class="no-data">Nenhum registro encontrado.</td></tr>`;
       return;
     }
 
-    listaDiv.innerHTML = "";
-
-    registros.forEach(reg => {
-      const div = document.createElement("div");
-      div.classList.add("item-relatorio");
-      div.innerHTML = `
-        <span>UID: ${reg.uid} | Data: ${reg.data} | Horário: ${reg.horario}</span>
-        <button class="delete-btn" data-id="${reg.id}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0,0,256,256">
-                    <g fill="#ffffff" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal">
-                        <g transform="scale(9.84615,9.84615)">
-                            <path d="M11,-0.03125c-0.83594,0 -1.65625,0.16406 -2.25,0.75c-0.59375,0.58594 -0.78125,1.41797 -0.78125,2.28125h-3.96875c-0.55078,0 -1,0.44922 -1,1h-1v2h22v-2h-1c0,-0.55078 -0.44922,-1 -1,-1h-3.96875c0,-0.86328 -0.1875,-1.69531 -0.78125,-2.28125c-0.59375,-0.58594 -1.41406,-0.75 -2.25,-0.75zM11,2.03125h4c0.54688,0 0.71875,0.12891 0.78125,0.1875c0.0625,0.05859 0.1875,0.22266 0.1875,0.78125h-5.9375c0,-0.55859 0.125,-0.72266 0.1875,-0.78125c0.0625,-0.05859 0.23438,-0.1875 0.78125,-0.1875zM4,7v16c0,1.65234 1.34766,3 3,3h12c1.65234,0 3,-1.34766 3,-3v-16zM8,10h2v12h-2zM12,10h2v12h-2zM16,10h2v12h-2z"></path>
-                        </g>
-                     </g>
-                </svg>
-        </button>
-      `;
-      listaDiv.appendChild(div);
-    });
-
-    // Botões de exclusão
-    document.querySelectorAll(".delete-btn").forEach(btn => {
-      btn.onclick = async () => {
-        if (confirm("Deseja realmente excluir este registro?")) {
-          await excluirRelatorio(btn.dataset.id);
-        }
-      };
-    });
+    preencherFiltros();
+    renderizarLista();
   } catch (err) {
     console.error("Erro ao carregar relatórios:", err);
-    listaDiv.innerHTML = `<div class="no-data">Erro ao carregar registros.</div>`;
+    const tbody = document.querySelector("#tabela-relatorios tbody");
+    tbody.innerHTML = `<tr><td colspan="8" class="no-data">Erro ao carregar registros.</td></tr>`;
   }
 }
 
+// Preenche os selects de filtros dinamicamente
+function preencherFiltros() {
+  const instituicoes = [...new Set(registros.map(r => r.instituicao))];
+  const cursos = [...new Set(registros.map(r => r.curso))];
+
+  filtroInstituicao.innerHTML = `<option value="">Todas as instituições</option>` +
+    instituicoes.map(i => `<option value="${i}">${i}</option>`).join('');
+
+  filtroCurso.innerHTML = `<option value="">Todos os cursos</option>` +
+    cursos.map(c => `<option value="${c}">${c}</option>`).join('');
+}
+
+// Função para formatar a data no padrão brasileiro
+function formatarData(dataISO) {
+  if (!dataISO) return "";
+  const partes = dataISO.split("-"); // [2025, 06, 17]
+  return `${partes[2]}/${partes[1]}/${partes[0]}`;
+}
+
+// Renderiza a lista de relatórios aplicando filtros
+function renderizarLista() {
+  const tbody = document.querySelector("#tabela-relatorios tbody");
+  tbody.innerHTML = "";
+
+  const inst = filtroInstituicao.value;
+  const curso = filtroCurso.value;
+  const data = filtroData.value;
+
+  const filtrados = registros.filter(r => 
+    (inst === "" || r.instituicao === inst) &&
+    (curso === "" || r.curso === curso) &&
+    (data === "" || r.data === data)
+  );
+
+  if (filtrados.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8" class="no-data">Nenhum registro encontrado.</td></tr>`;
+    return;
+  }
+
+  filtrados.forEach(reg => {
+    const tr = document.createElement("tr");
+
+    // Formata a data antes de exibir
+    const dataFormatada = formatarData(reg.data);
+
+    tr.innerHTML = `
+      <td>${reg.aluno}</td>
+      <td>${reg.matricula}</td>
+      <td>${reg.idCartao}</td>
+      <td>${reg.instituicao}</td>
+      <td>${reg.curso}</td>
+      <td>${dataFormatada}</td>
+      <td>${reg.horario}</td>
+      <td>
+        <button class="delete-btn" data-id="${reg.id}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0,0,256,256">
+                    <g fill="#ffffff" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal">
+                      <g transform="scale(9.84615,9.84615)">
+                          <path d="M11,-0.03125c-0.83594,0 -1.65625,0.16406 -2.25,0.75c-0.59375,0.58594 -0.78125,1.41797 -0.78125,2.28125h-3.96875c-0.55078,0 -1,0.44922 -1,1h-1v2h22v-2h-1c0,-0.55078 -0.44922,-1 -1,-1h-3.96875c0,-0.86328 -0.1875,-1.69531 -0.78125,-2.28125c-0.59375,-0.58594 -1.41406,-0.75 -2.25,-0.75zM11,2.03125h4c0.54688,0 0.71875,0.12891 0.78125,0.1875c0.0625,0.05859 0.1875,0.22266 0.1875,0.78125h-5.9375c0,-0.55859 0.125,-0.72266 0.1875,-0.78125c0.0625,-0.05859 0.23438,-0.1875 0.78125,-0.1875zM4,7v16c0,1.65234 1.34766,3 3,3h12c1.65234,0 3,-1.34766 3,-3v-16zM8,10h2v12h-2zM12,10h2v12h-2zM16,10h2v12h-2z"></path>
+                      </g>
+                    </g>
+                </svg>
+        </button>
+      </td>
+    `;
+
+    tbody.appendChild(tr);
+  });
+
+  // Botões de exclusão
+  document.querySelectorAll(".delete-btn").forEach(btn => {
+    btn.onclick = async () => {
+      if (confirm("Deseja realmente excluir este registro?")) {
+        await excluirRelatorio(btn.dataset.id);
+      }
+    };
+  });
+}
+
+
+// Função para excluir
 async function excluirRelatorio(id) {
   try {
     const res = await fetch(`/relatorios/${id}`, {
       method: "DELETE",
-      headers: {
-        "Authorization": `Bearer ${token}`
-      }
+      headers: { "Authorization": `Bearer ${token}` }
     });
     if (!res.ok) throw new Error("Erro ao excluir");
-    carregarRelatorios();
+    await carregarRelatorios(); // Recarrega lista e filtros
   } catch (err) {
     alert("Erro ao excluir registro.");
   }
 }
+
+// Eventos de filtros
+filtroInstituicao.addEventListener("change", renderizarLista);
+filtroCurso.addEventListener("change", renderizarLista);
+filtroData.addEventListener("change", renderizarLista);
+
+// Barra de pesquisa
+document.getElementById("barraPesquisa").addEventListener("keyup", function() {
+  const filtro = this.value.toLowerCase();
+  document.querySelectorAll("#tabela-relatorios tbody tr").forEach(tr => {
+    if (!tr.classList.contains("no-data")) {
+      const texto = tr.textContent.toLowerCase();
+      tr.style.display = texto.includes(filtro) ? "" : "none";
+    }
+  });
+});
 
 // Logout
 window.logout = () => {
