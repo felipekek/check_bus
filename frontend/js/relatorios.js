@@ -61,14 +61,28 @@ async function carregarRelatorios() {
 
 // Preenche os selects de filtros dinamicamente
 function preencherFiltros() {
-  const instituicoes = [...new Set(registros.map(r => r.instituicao))];
-  const cursos = [...new Set(registros.map(r => r.curso))];
+  // Exemplo de opções
+  const instituicoes = ["SENAI", "UEFS", "IFBA","UNEFS"];
+  const cursos = ["ADS", "ENGENHARIA", "DIREITO", "MEDICINA"];
 
-  filtroInstituicao.innerHTML = `<option value="">Todas as instituições</option>` +
-    instituicoes.map(i => `<option value="${i}">${i}</option>`).join('');
+  // Limpa as opções antigas
+  filtroInstituicao.innerHTML = '<option value="">Todas as instituições</option>';
+  filtroCurso.innerHTML = '<option value="">Todos os cursos</option>';
 
-  filtroCurso.innerHTML = `<option value="">Todos os cursos</option>` +
-    cursos.map(c => `<option value="${c}">${c}</option>`).join('');
+  // Adiciona novas opções
+  instituicoes.forEach(nome => {
+    const opt = document.createElement("option");
+    opt.value = nome;
+    opt.textContent = nome;
+    filtroInstituicao.appendChild(opt);
+  });
+
+  cursos.forEach(nome => {
+    const opt = document.createElement("option");
+    opt.value = nome;
+    opt.textContent = nome;
+    filtroCurso.appendChild(opt);
+  });
 }
 
 // Função para formatar a data no padrão brasileiro
@@ -189,3 +203,84 @@ window.toggleMenu = () => {
 
 // Inicializa
 carregarRelatorios();
+
+//função de baixar relatorio
+
+// Modal - Abrir
+document.getElementById("botaoBaixarRelatorio").addEventListener("click", () => {
+  document.getElementById("modalRelatorio").style.display = "block";
+});
+
+// Modal - Fechar pelo X
+document.getElementById("fecharModal").addEventListener("click", () => {
+  document.getElementById("modalRelatorio").style.display = "none";
+});
+
+// Modal - Fechar clicando fora
+window.addEventListener("click", (event) => {
+  const modal = document.getElementById("modalRelatorio");
+  if (event.target === modal) {
+    modal.style.display = "none";
+  }
+});
+
+// Ação do botão Baixar dentro do modal
+document.getElementById("confirmarDownload").addEventListener("click", function () {
+    if (!registros.length) return alert("Nenhum dado para exportar!");
+
+    // Pega as colunas selecionadas
+    const checkboxes = document.querySelectorAll('.filtros input[type="checkbox"]:checked');
+    let colunasSelecionadas = Array.from(checkboxes)
+        .map(cb => cb.value)
+        .filter(val => val !== "todas");
+
+    // Se "todas" estiver selecionada, exporta todas as colunas
+    if (checkboxes.length === 0 || checkboxes[checkboxes.length - 1].value === "todas") {
+        colunasSelecionadas = ["aluno", "matricula", "idCartao", "instituicao", "curso", "data", "horario"];
+    }
+
+    // Mapeia os nomes das colunas para títulos bonitos
+    const titulos = {
+        aluno: "Aluno",
+        matricula: "Matrícula",
+        idCartao: "ID Cartão",
+        instituicao: "Instituição",
+        curso: "Curso",
+        data: "Data",
+        horario: "Horário"
+    };
+
+    // Cabeçalhos para o PDF
+    const colunasPDF = colunasSelecionadas.map(col => titulos[col]);
+
+    // Dados das linhas
+    const linhas = registros.map(reg =>
+        colunasSelecionadas.map(col => {
+            if (col === "data") return formatarData(reg[col]);
+            return reg[col] || "";
+        })
+    );
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.autoTable({
+        head: [colunasPDF],
+        body: linhas,
+    });
+
+    doc.save("relatorios.pdf");
+
+    // Fecha o modal após baixar
+    document.getElementById("modalRelatorio").style.display = "none";
+});
+
+// Selecionar/desmarcar todos ao clicar em "Todas as opções"
+document.querySelector('.filtros input[value="todas"]').addEventListener("change", function() {
+    const todos = document.querySelectorAll('.filtros input[type="checkbox"]:not([value="todas"])');
+    todos.forEach(cb => cb.checked = this.checked);
+});
+
+
+
+

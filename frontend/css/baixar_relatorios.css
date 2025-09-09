@@ -1,0 +1,44 @@
+/* Fundo do modal */
+.modal {
+  display: none; /* começa escondido */
+  position: fixed;
+  z-index: 1000; /* fica acima da página */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto; 
+  background-color: rgba(0,0,0,0.6); /* fundo escuro */
+}
+
+/* Conteúdo do modal */
+.modal-content {
+  background-color: #fff;
+  margin: 10% auto;
+  padding: 20px;
+  border-radius: 10px;
+  width: 60%;
+  max-width: 600px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  animation: fadeIn 0.3s;
+}
+
+/* Botão de fechar */
+.close {
+  float: right;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.filtros {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+/* Animação */
+@keyframes fadeIn {
+  from {opacity: 0; transform: scale(0.9);}
+  to {opacity: 1; transform: scale(1);}
+}

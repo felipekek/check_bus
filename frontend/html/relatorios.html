@@ -11,6 +11,30 @@
 <!-- Importando Font Awesome para usar o ícone de lixeira -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
+<!-- Modal de Baixar Relatório -->
+<div id="modalRelatorio" class="modal">
+  <div class="modal-content">
+    <span id="fecharModal" class="close">&times;</span>
+    <h2>Relatório</h2>
+    <p>Filtrar por:</p>
+
+    <div class="filtros">
+      <label><input type="checkbox" value="aluno"> Alunos</label>
+      <label><input type="checkbox" value="matricula"> Matrícula</label>
+      <label><input type="checkbox" value="idCartao"> ID Cartão</label>
+      <label><input type="checkbox" value="instituicao"> Instituição</label>
+      <label><input type="checkbox" value="curso"> Curso</label>
+      <label><input type="checkbox" value="data"> Data</label>
+      <label><input type="checkbox" value="horario"> Horário</label>
+      <label><input type="checkbox" value="todas"> Todas as opções</label>
+    </div>
+
+    <button id="confirmarDownload">Baixar</button>
+  </div>
+</div>
+
+
 <body>
     <!-- Botão para abrir o menu lateral -->
     <button class="menu-btn" onclick="toggleMenu()">☰</button>
@@ -28,6 +52,9 @@
         <button onclick="logout()" class="logout">Sair</button>
     </div>
 
+<!-- Botão de perfil no canto superior direito -->
+<button class="perfil-btn" onclick="location.href='perfil.html'">Perfil</button>
+    <i class="fa fa-user"></i>Perfil
    <!-- Container principal dos relatórios -->
 <div class="relatorio-container">
     <div class="titulo-container">
@@ -42,6 +69,10 @@
         <div class="filtros-container">
             <select id="filtro-instituicao">
                 <option value="">Todas as instituições</option>
+                <option value="Senai">Senai</option>
+                <option value="UEFS">UEFS</option>
+                <option value="IFBA">IFBA</option>
+                <option value="UNEFS">UNEFS</option>
             </select>
 
             <select id="filtro-curso">
@@ -78,6 +109,9 @@
 
     <!-- Script principal da página -->
     <script type="module" src="../js/relatorios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.7.0/jspdf.plugin.autotable.min.js"></script>
 
     <script>
         // Exemplo de filtro da barra de pesquisa
