@@ -2,24 +2,8 @@
 // Página de recuperação de senha via Firebase Authentication
 // Envia um link de redefinição para o e-mail informado pelo usuário.
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-
-// ===============================
-// Configuração do Firebase
-// ===============================
-const firebaseConfig = {
-  apiKey: "AIzaSyDAG_nfsNFNk6ZnhTnC9Cci-N6L3Bui4PY",
-  authDomain: "trancaeletronica-90835.firebaseapp.com",
-  projectId: "trancaeletronica-90835",
-  storageBucket: "trancaeletronica-90835.appspot.com",
-  messagingSenderId: "566150115221",
-  appId: "1:566150115221:web:1c6eaf30767894dbfd909c"
-};
-
-// Inicializa Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+import { auth } from "./firebase-config.js";
+import { sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
 // ===============================
 // Elementos da página
