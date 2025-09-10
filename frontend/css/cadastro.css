@@ -1,0 +1,58 @@
+/* Estilos para feedback visual dos campos do cadastro */
+.campo-invalido {
+  border: 2px solid #e74c3c;
+}
+.campo-valido {
+  border: 2px solid #2ecc71;
+}
+.msg-erro {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+/* Layout de duas colunas para o formulário de cadastro */
+#registerForm {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 32px;
+}
+
+#registerForm .campo {
+  display: flex;
+  flex-direction: column;
+}
+
+#registerForm label,
+#registerForm input,
+#registerForm p.msg-erro {
+  grid-column: auto;
+}
+
+#registerForm label {
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+#registerForm input {
+  margin-bottom: 0;
+}
+
+#registerForm p.msg-erro {
+  margin-bottom: 12px;
+  min-height: 18px;
+}
+
+/* Faz cada label/input/msg-erro ocupar uma linha na coluna */
+#registerForm label,
+#registerForm input,
+#registerForm p.msg-erro {
+  display: block;
+}
+
+/* Faz o botão ocupar as duas colunas */
+#registerForm button {
+  grid-column: 1 / span 2;
+  width: 100%;
+  margin-top: 24px;
+}
