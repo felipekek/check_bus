@@ -16,14 +16,14 @@ body {
 
 
 .container {
-  background-color: #fff; 
-  padding: 40px;          
-  border-radius: 12px;    
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); 
-  width: 100%;            
-  max-width: 600px;       
-  margin: 60px auto 0;    
-  color: #333;            
+  background-color: #fff;
+  padding: 40px 40px 20px 40px; /* top, right, bottom, left */
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  width: 90%;
+  max-width: 600px; /* aumente aqui, por exemplo para 500px */
+  margin: 60px auto 0;
+  color: #333;
   text-align: center;
 }
 
@@ -89,8 +89,9 @@ a:hover {
 }
 
 p {
-  margin-top: 10px;       
-  font-size: 14px;        
+  margin-top: 12px;
+  margin-bottom: 2px;  /* diminui o espaço abaixo */
+  font-size: 14px;
 }
 
 
@@ -102,4 +103,24 @@ p {
 
 .hidden {
   display: none !important; 
+}
+
+
+/* estilização do botão esqueceu a senha */
+
+.esqueceu-senha-link {
+  display: block;
+  margin-top: -5px;         /* diminui o espaço acima */
+  margin-left: 0;          /* garante alinhamento à esquerda */
+  width: fit-content;      /* só ocupa o necessário */
+  text-align: left;
+  font-size: 14px;
+  color: #004d7a; 
+  text-decoration: none;
+  padding-left: 0;         /* remove recuo extra */
+}
+
+.esqueceu-senha-link:hover {
+  color: #004d7a;
+  text-decoration: underline;
 }

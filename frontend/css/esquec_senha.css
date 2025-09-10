@@ -7,19 +7,22 @@ body {
   padding: 0;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   height: 100vh;
+  padding-top: 10px; /* diminua para 10px ou até 0 para colar no topo */
 }
 
 /* Container central */
 .container {
   background-color: #fff;
-  padding: 30px;
+  padding: 40px 40px 20px 40px;
   border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   width: 90%;
-  max-width: 400px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.15);
-  animation: fadeIn 0.4s ease;
+  max-width: 600px; /* aumente aqui conforme desejar */
+  margin: 60px auto 0;
+  color: #333;
+  text-align: center;
 }
 
 h1 {
@@ -52,17 +55,21 @@ input[type="email"] {
 
 input[type="email"]:focus {
   outline: none;
-  border-color: #007bff;
+  border-color: #0056b3;
 }
 
 button {
-  background-color: #007bff;
+  background-color: #0056b3;
   color: #fff;
   border: none;
   padding: 12px;
   border-radius: 8px;
+  margin-top: -34px;
+  margin-bottom: 4px;
   font-size: 1rem;
   cursor: pointer;
+  width: 60%;
+  align-self: center;  
   transition: background-color 0.2s;
 }
 
@@ -85,9 +92,10 @@ button:hover {
 
 /* Links */
 a {
-  color: #007bff;
+  color: #0056b3;
   text-decoration: none;
   transition: color 0.2s;
+  margin-top: 8px;
 }
 
 a:hover {
@@ -104,3 +112,16 @@ a:hover {
   color: #555;
   font-style: italic;
 }
+
+ /* Estilos de validação */
+    .campo-invalido {
+      border: 2px solid red;
+    }
+    .campo-valido {
+      border: 2px solid green;
+    }
+    .msg-erro {
+      color: red;
+      font-size: 14px;
+      margin-top: 4px;
+    }
