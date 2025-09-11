@@ -27,9 +27,10 @@ body {
 
 h1 {
   font-size: 1.6rem;
-  color: #333;
+  color: #004d7a;
   text-align: center;
-  margin-bottom: 20px;
+  margin-top: -5px;
+  margin-bottom: 15px;
 }
 
 /* Formulário */
@@ -40,7 +41,7 @@ form {
 
 label {
   font-size: 0.9rem;
-  color: #555;
+  color: #004d7a;
   margin-bottom: 6px;
 }
 
