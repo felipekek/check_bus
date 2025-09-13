@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home Principal</title>
+  <link rel="stylesheet" href="../css/home_principal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Menu Principal</h1>
+    <div class="grid" id="menuGrid">
+      <!-- Botões padrão visíveis para todos -->
+      <div class="card" onclick="location.href='horarios.html'">
+        <i class="fa-solid fa-clock fa-2x"></i>
+        <span>Horários</span>
+      </div>
+
+      <div class="card" onclick="location.href='gps.html'">
+        <i class="fa-solid fa-location-dot fa-2x"></i>
+        <span>GPS</span>
+      </div>
+
+      <!-- Botões admin escondidos inicialmente, JS vai mostrar se for staff -->
+      <div class="card admin-only" onclick="location.href='relatorios.html'">
+        <i class="fa-solid fa-book-open fa-2x"></i>
+        <span>Relatórios</span>
+      </div>
+      <div class="card admin-only" onclick="location.href='admin.html'">
+        <i class="fa-solid fa-users fa-2x"></i>
+        <span>Lista de Alunos</span>
+      </div>
+
+      <!-- Botão de logout -->
+      <div class="card logout" onclick="logout()">
+        <i class="fa-solid fa-right-from-bracket fa-2x"></i>
+        <span>Sair</span>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="../js/home.js"></script>
+</body>
+</html>

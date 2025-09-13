@@ -31,9 +31,9 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
       // ⚡ Login no Firebase no frontend
       await signInWithEmailAndPassword(auth, email, senha);
 
-      // Redireciona para home.html
+      // Redireciona para home_principal.html
       setTimeout(() => {
-        window.location.href = "home.html";
+        window.location.href = "home_principal.html";
       }, 500);
 
     } else {
