@@ -39,6 +39,61 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
   }
 });
 
+document.getElementById('registerForm').addEventListener('submit', async function (e) {
+  e.preventDefault();
+
+  // Coleta dos campos
+  const nome = document.getElementById('nome').value;
+  const cpf = document.getElementById('cpf').value;
+  const instituicao = document.getElementById('instituicao').value;
+  const email = document.getElementById('email').value;
+  const telefone = document.getElementById('telefone').value;
+  const curso = document.getElementById('curso').value;
+  const turno = document.getElementById('turno').value;
+  const periodo = document.getElementById('periodo').value;
+  const senha = document.getElementById('senha').value;
+  const confirmarSenha = document.getElementById('confirmarSenha').value;
+
+  // Validação de senha
+  if (senha !== confirmarSenha) {
+    document.getElementById('confirmarSenhaMessage').textContent = 'As senhas não coincidem.';
+    return;
+  } else {
+    document.getElementById('confirmarSenhaMessage').textContent = '';
+  }
+
+  // Monta o objeto de cadastro
+  const dadosCadastro = {
+    nome,
+    cpf,
+    instituicao,
+    email,
+    telefone,
+    curso,
+    turno,
+    periodo,
+    senha
+  };
+
+  try {
+    const resposta = await fetch('http://localhost:3000/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(dadosCadastro)
+    });
+
+    const resultado = await resposta.json();
+    if (resposta.ok) {
+      document.getElementById('message').textContent = 'Cadastro realizado com sucesso!';
+      // Redirecionar ou limpar formulário, se desejar
+    } else {
+      document.getElementById('message').textContent = resultado.message || 'Erro ao cadastrar.';
+    }
+  } catch (error) {
+    document.getElementById('message').textContent = 'Erro ao conectar ao servidor.';
+  }
+});
+
 const form = document.getElementById("registerForm");
 const message = document.getElementById("message");
 
@@ -180,5 +235,3 @@ form.addEventListener("submit", function(e) {
     message.textContent = "";
   }
 });
-
-

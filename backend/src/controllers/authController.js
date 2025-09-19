@@ -33,7 +33,7 @@ export const loginUsuario = async (req, res) => {
 
 // ---------------------- CADASTRO ----------------------
 export const cadastrarUsuario = async (req, res) => {
-    const { email, senha, nome, cpf, instituicao } = req.body;
+    const { email, senha, nome, cpf, instituicao, curso, turno, telefone, periodo } = req.body;
 
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
@@ -45,6 +45,10 @@ export const cadastrarUsuario = async (req, res) => {
             email,
             cpf,
             instituicao,
+            curso,
+            turno,
+            telefone,
+            periodo,
             criadoEm: new Date()
         });
 

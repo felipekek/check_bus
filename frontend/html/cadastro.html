@@ -38,9 +38,39 @@
         <p id="emailMessage" class="msg-erro"></p>
       </div>
       <div class="campo">
+        <label for="telefone">Telefone</label>
+        <input type="tel" id="telefone" required placeholder="(99) 99999-9999" maxlength="15" />
+        <p id="telefoneMessage" class="msg-erro"></p>
+      </div>
+      <div class="campo">
+        <label for="curso">Curso</label>
+        <input type="text" id="curso" required placeholder="Nome do curso" />
+        <p id="cursoMessage" class="msg-erro"></p>
+      </div>
+      <div class="campo">
+        <label for="turno">Turno</label>
+        <select id="turno" required>
+          <option value="">Selecione</option>
+          <option value="Manhã">Manhã</option>
+          <option value="Tarde">Tarde</option>
+          <option value="Noite">Noite</option>
+        </select>
+        <p id="turnoMessage" class="msg-erro"></p>
+      </div>
+      <div class="campo">
+        <label for="periodo">Período</label>
+        <input type="number" id="periodo" required min="1" max="12" placeholder="Ex: 1, 2, 3..." />
+        <p id="periodoMessage" class="msg-erro"></p>
+      </div>
+      <div class="campo">
         <label for="senha">Senha</label>
         <input type="password" id="senha" required placeholder="Crie uma senha" />
         <p id="senhaMessage" class="msg-erro"></p>
+      </div>
+      <div class="campo">
+        <label for="confirmarSenha">Confirmar Senha</label>
+        <input type="password" id="confirmarSenha" required placeholder="Repita a senha" />
+        <p id="confirmarSenhaMessage" class="msg-erro"></p>
       </div>
       <button type="submit">Cadastrar</button>
     </form>
