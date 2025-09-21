@@ -28,7 +28,6 @@ export async function gerarPDF(req, res) {
         const dados = docSnap.data();
         let alunoData = {
           nome: "Desconhecido",
-          idCartao: "-",
           curso: "-",
           instituicao: "-",
           periodo: "-",
@@ -43,7 +42,8 @@ export async function gerarPDF(req, res) {
 
         return {
           aluno: alunoData.nome || "Desconhecido",
-          idCartao: alunoData.idCartao || dados.idCartao || "-",
+          // 🔑 prioridade para idCartao do acesso
+          idCartao: dados.idCartao || alunoData.idCartao || "-",
           curso: alunoData.curso || "-",
           instituicao: alunoData.instituicao || "-",
           periodo: alunoData.periodo || "-",

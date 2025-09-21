@@ -103,14 +103,14 @@ function renderizarLista() {
     const dataFormatada = formatarData(reg.data);
 
     tr.innerHTML = `
-      <td>${reg.aluno}</td>
-      <td>${reg.idCartao}</td>
-      <td>${reg.curso}</td>
-      <td>${reg.instituicao}</td>
-      <td>${reg.periodo}</td>
-      <td>${reg.turno}</td>
-      <td>${dataFormatada}</td>
-      <td>${reg.horario}</td>
+      <td>${reg.aluno || "-"}</td>
+      <td>${reg.idCartao || "-"}</td>
+      <td>${reg.curso || "-"}</td>
+      <td>${reg.instituicao || "-"}</td>
+      <td>${reg.periodo || "-"}</td>
+      <td>${reg.turno || "-"}</td>
+      <td>${dataFormatada || "-"}</td>
+      <td>${reg.horario || "-"}</td>
       <td>
         <button class="delete-btn" data-id="${reg.id}" title="Excluir">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0,0,256,256">
