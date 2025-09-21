@@ -7,6 +7,7 @@ import authRoutes from "./routes/authRoutes.js";
 import horariosRoutes from "./routes/horariosRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import relatorioRoutes from "./routes/relatorioRoutes.js"; // rota de relatórios
+import pdfRoutes from "./routes/pdfRoutes.js"; // rota para gerar PDF
 
 const app = express();
 
@@ -24,9 +25,10 @@ app.use(express.static(path.join(__dirname, "../../frontend")));
 app.use("/auth", authRoutes);
 app.use("/horarios", horariosRoutes);
 app.use("/admin", adminRoutes);
-app.use("/relatorios", relatorioRoutes); // ✅ adicionando a rota de relatórios
+app.use("/relatorios", relatorioRoutes); // relatórios
+app.use("/relatorios", pdfRoutes); // download de PDF seguro
 
-// Redireciona "/" para index.html
+// Redireciona "/" para a página inicial
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../../frontend/html/novo_home.html"));
 });

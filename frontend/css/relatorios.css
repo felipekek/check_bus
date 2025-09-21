@@ -277,3 +277,13 @@
   from {opacity: 0; transform: scale(0.9);}
   to {opacity: 1; transform: scale(1);}
 }
+
+/* Garante que a tabela fique dentro do container branco */
+#lista {
+    background: #fff;       /* mesmo fundo do container */
+    padding: 15px;          /* espaço entre borda e tabela */
+    border-radius: 10px;    /* arredonda bordas */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* sombra leve */
+    overflow-x: auto;       /* permite rolagem horizontal se a tabela for larga */
+    margin-top: 15px;       /* espaço entre filtros e tabela */
+}

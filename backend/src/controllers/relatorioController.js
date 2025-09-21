@@ -1,6 +1,7 @@
 // backend/src/controllers/relatorioController.js
 import { db } from "../config/firebase-admin.js";
 
+// Listar todos os relatórios
 export async function listarRelatorios(req, res) {
   try {
     const registrosRef = db.collection("acessos");
@@ -8,16 +9,41 @@ export async function listarRelatorios(req, res) {
 
     if (snapshot.empty) return res.json([]);
 
-    const lista = snapshot.docs.map(docSnap => {
-      const dados = docSnap.data();
-      return {
-        id: docSnap.id,
-        uid: dados.uid || "UID Desconhecido",
-        idCartao: docSnap.id,          // <-- corrigido
-        data: dados.data || "Data Desconhecida",
-        horario: dados.horario || "Hora Desconhecida"
-      };
-    });
+    const lista = await Promise.all(
+      snapshot.docs.map(async (docSnap) => {
+        const dados = docSnap.data();
+
+        // Valores padrão caso não exista o aluno
+        let alunoData = {
+          nome: "Desconhecido",
+          idCartao: "-",
+          curso: "-",
+          instituicao: "-",
+          periodo: "-",
+          turno: "-"
+        };
+
+        // Busca aluno pelo uid
+        if (dados.uid) {
+          const alunoDoc = await db.collection("alunos").doc(dados.uid).get();
+          if (alunoDoc.exists) {
+            alunoData = alunoDoc.data();
+          }
+        }
+
+        return {
+          id: docSnap.id,
+          aluno: alunoData.nome,
+          idCartao: alunoData.idCartao || dados.idCartao || "-",
+          curso: alunoData.curso,
+          instituicao: alunoData.instituicao,
+          periodo: alunoData.periodo,
+          turno: alunoData.turno,
+          data: dados.data || new Date().toISOString().split("T")[0], // Formato ISO YYYY-MM-DD
+          horario: dados.horario || "-"
+        };
+      })
+    );
 
     res.json(lista);
   } catch (err) {
@@ -26,6 +52,7 @@ export async function listarRelatorios(req, res) {
   }
 }
 
+// Excluir um relatório
 export async function excluirRelatorio(req, res) {
   const { id } = req.params;
   try {

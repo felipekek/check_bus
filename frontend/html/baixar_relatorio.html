@@ -1,24 +1,42 @@
-<!-- Botão já existente -->
-<button id="abrirModal">Baixar Relatório</button>
+<!-- Botão para abrir modal -->
+<button id="botaoBaixarRelatorio">Baixar Relatório</button>
 
 <!-- Modal oculto por padrão -->
 <div id="modalRelatorio" class="modal">
   <div class="modal-content">
     <span id="fecharModal" class="close">&times;</span>
     <h2>Relatório</h2>
-    <p>Filtrar por:</p>
+    <p>Filtrar colunas:</p>
 
     <div class="filtros">
-      <label><input type="checkbox"> Alunos</label>
-      <label><input type="checkbox"> Matrícula</label>
-      <label><input type="checkbox"> ID Cartão</label>
-      <label><input type="checkbox"> Instituição</label>
-      <label><input type="checkbox"> Curso</label>
-      <label><input type="checkbox"> Data</label>
-      <label><input type="checkbox"> Horário</label>
-      <label><input type="checkbox"> Todas as opções</label>
+      <label><input type="checkbox" class="checkbox-coluna" data-chave="aluno" checked> Aluno</label>
+      <label><input type="checkbox" class="checkbox-coluna" data-chave="idCartao" checked> ID Cartão</label>
+      <label><input type="checkbox" class="checkbox-coluna" data-chave="curso" checked> Curso</label>
+      <label><input type="checkbox" class="checkbox-coluna" data-chave="instituicao" checked> Instituição</label>
+      <label><input type="checkbox" class="checkbox-coluna" data-chave="periodo" checked> Período</label>
+      <label><input type="checkbox" class="checkbox-coluna" data-chave="turno" checked> Turno</label>
+      <label><input type="checkbox" class="checkbox-coluna" data-chave="data" checked> Data</label>
+      <label><input type="checkbox" class="checkbox-coluna" data-chave="horario" checked> Horário</label>
+      <label><input type="checkbox" id="checkboxTodas" checked> Todas as opções</label>
     </div>
 
     <button id="confirmarDownload">Baixar</button>
   </div>
 </div>
+
+<script>
+  const checkboxTodas = document.getElementById("checkboxTodas");
+  const checkboxes = document.querySelectorAll(".checkbox-coluna");
+
+  // Marca/desmarca todas
+  checkboxTodas.addEventListener("change", () => {
+    checkboxes.forEach(cb => cb.checked = checkboxTodas.checked);
+  });
+
+  // Atualiza checkbox "Todas" se todas estiverem marcadas
+  checkboxes.forEach(cb => {
+    cb.addEventListener("change", () => {
+      checkboxTodas.checked = Array.from(checkboxes).every(c => c.checked);
+    });
+  });
+</script>
