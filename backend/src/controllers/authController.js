@@ -36,11 +36,12 @@ export const cadastrarUsuario = async (req, res) => {
     const { email, senha, nome, cpf, instituicao, curso, turno, telefone, periodo } = req.body;
 
     try {
+        // Cria usuário no Firebase Authentication
         const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
         const user = userCredential.user;
 
-        // Salva dados do usuário no Firestore
-        await setDoc(doc(db, "alunos", user.uid), {  // <-- alterei para coleção "alunos"
+        // Salva dados complementares no Firestore
+        await setDoc(doc(db, "alunos", user.uid), {
             nome,
             email,
             cpf,
@@ -49,7 +50,7 @@ export const cadastrarUsuario = async (req, res) => {
             turno,
             telefone,
             periodo,
-            criadoEm: new Date()
+            criadoEm: new Date().toISOString()
         });
 
         res.status(201).json({
@@ -58,6 +59,7 @@ export const cadastrarUsuario = async (req, res) => {
             mensagem: "Usuário cadastrado com sucesso!"
         });
     } catch (error) {
+        console.error("Erro no cadastro:", error);
         res.status(400).json({ erro: error.message });
     }
 };

@@ -1,98 +1,6 @@
 // frontend/js/cadastro.js
 // Faz cadastro chamando o backend (Express + Firebase)
-
-// Validação de campos do formulário de cadastro
-
-document.getElementById("registerForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const nome = document.getElementById("nome").value.trim();
-  const cpf = document.getElementById("cpf").value.trim();
-  const instituicao = document.getElementById("instituicao").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const senha = document.getElementById("senha").value.trim();
-  const message = document.getElementById("message");
-
-  try {
-    const response = await fetch("/auth/cadastro", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome, cpf, instituicao, email, senha })
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      message.style.color = "green";
-      message.textContent = data.mensagem;
-
-      setTimeout(() => {
-        window.location.href = "index.html";
-      }, 1500);
-    } else {
-      message.style.color = "red";
-      message.textContent = data.erro || "Erro no cadastro";
-    }
-  } catch (err) {
-    message.style.color = "red";
-    message.textContent = "Erro de conexão com o servidor.";
-  }
-});
-
-document.getElementById('registerForm').addEventListener('submit', async function (e) {
-  e.preventDefault();
-
-  // Coleta dos campos
-  const nome = document.getElementById('nome').value;
-  const cpf = document.getElementById('cpf').value;
-  const instituicao = document.getElementById('instituicao').value;
-  const email = document.getElementById('email').value;
-  const telefone = document.getElementById('telefone').value;
-  const curso = document.getElementById('curso').value;
-  const turno = document.getElementById('turno').value;
-  const periodo = document.getElementById('periodo').value;
-  const senha = document.getElementById('senha').value;
-  const confirmarSenha = document.getElementById('confirmarSenha').value;
-
-  // Validação de senha
-  if (senha !== confirmarSenha) {
-    document.getElementById('confirmarSenhaMessage').textContent = 'As senhas não coincidem.';
-    return;
-  } else {
-    document.getElementById('confirmarSenhaMessage').textContent = '';
-  }
-
-  // Monta o objeto de cadastro
-  const dadosCadastro = {
-    nome,
-    cpf,
-    instituicao,
-    email,
-    telefone,
-    curso,
-    turno,
-    periodo,
-    senha
-  };
-
-  try {
-    const resposta = await fetch('http://localhost:3000/api/auth/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(dadosCadastro)
-    });
-
-    const resultado = await resposta.json();
-    if (resposta.ok) {
-      document.getElementById('message').textContent = 'Cadastro realizado com sucesso!';
-      // Redirecionar ou limpar formulário, se desejar
-    } else {
-      document.getElementById('message').textContent = resultado.message || 'Erro ao cadastrar.';
-    }
-  } catch (error) {
-    document.getElementById('message').textContent = 'Erro ao conectar ao servidor.';
-  }
-});
+// Inclui validação de campos em tempo real e CPF
 
 const form = document.getElementById("registerForm");
 const message = document.getElementById("message");
@@ -102,7 +10,12 @@ const nomeInput = document.getElementById("nome");
 const cpfInput = document.getElementById("cpf");
 const instituicaoInput = document.getElementById("instituicao");
 const emailInput = document.getElementById("email");
+const telefoneInput = document.getElementById("telefone");
+const cursoInput = document.getElementById("curso");
+const turnoInput = document.getElementById("turno");
+const periodoInput = document.getElementById("periodo");
 const senhaInput = document.getElementById("senha");
+const confirmarSenhaInput = document.getElementById("confirmarSenha");
 
 // Mensagens
 const nomeMessage = document.getElementById("nomeMessage");
@@ -110,15 +23,15 @@ const cpfMessage = document.getElementById("cpfMessage");
 const instituicaoMessage = document.getElementById("instituicaoMessage");
 const emailMessage = document.getElementById("emailMessage");
 const senhaMessage = document.getElementById("senhaMessage");
+const confirmarSenhaMessage = document.getElementById("confirmarSenhaMessage");
 
-// Função para validar CPF real
+// ===== Função para validar CPF real =====
 function validarCPF(cpf) {
   cpf = cpf.replace(/\D/g, "");
   if (cpf.length !== 11) return false;
   if (/^(\d)\1+$/.test(cpf)) return false;
 
   let soma = 0, resto;
-
   for (let i = 1; i <= 9; i++) soma += parseInt(cpf.substring(i-1, i)) * (11 - i);
   resto = (soma * 10) % 11;
   if (resto === 10 || resto === 11) resto = 0;
@@ -133,8 +46,8 @@ function validarCPF(cpf) {
   return true;
 }
 
-// Máscara do CPF
-cpfInput.addEventListener("input", function(e) {
+// ===== Máscara e validação CPF =====
+cpfInput.addEventListener("input", function (e) {
   let value = e.target.value.replace(/\D/g, "");
   if (value.length > 11) value = value.slice(0, 11);
 
@@ -164,7 +77,7 @@ cpfInput.addEventListener("input", function(e) {
   }
 });
 
-// Validações em tempo real
+// ===== Validações em tempo real =====
 nomeInput.addEventListener("input", () => {
   if (nomeInput.value.trim().length < 3) {
     nomeMessage.textContent = "⚠️ Nome muito curto.";
@@ -214,8 +127,19 @@ senhaInput.addEventListener("input", () => {
   }
 });
 
-// Validação final no envio
-form.addEventListener("submit", function(e) {
+// ===== Evento de envio do formulário =====
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  // Validação de senha e confirmação
+  if (senhaInput.value !== confirmarSenhaInput.value) {
+    confirmarSenhaMessage.textContent = "As senhas não coincidem.";
+    return;
+  } else {
+    confirmarSenhaMessage.textContent = "";
+  }
+
+  // Verifica se existem campos inválidos
   if (
     nomeInput.classList.contains("campo-invalido") ||
     cpfInput.classList.contains("campo-invalido") ||
@@ -228,10 +152,45 @@ form.addEventListener("submit", function(e) {
     !emailInput.value ||
     !senhaInput.value
   ) {
-    e.preventDefault();
     message.textContent = "⚠️ Corrija os erros antes de enviar.";
     message.style.color = "red";
-  } else {
-    message.textContent = "";
+    return;
+  }
+
+  // Monta objeto de cadastro
+  const dadosCadastro = {
+    nome: nomeInput.value.trim(),
+    cpf: cpfInput.value.trim(),
+    instituicao: instituicaoInput.value.trim(),
+    email: emailInput.value.trim(),
+    telefone: telefoneInput.value.trim(),
+    curso: cursoInput.value.trim(),
+    turno: turnoInput.value,
+    periodo: periodoInput.value.trim(),
+    senha: senhaInput.value.trim()
+  };
+
+  try {
+    const resposta = await fetch("/auth/cadastro", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(dadosCadastro)
+    });
+
+    const resultado = await resposta.json();
+
+    if (resposta.ok) {
+      message.style.color = "green";
+      message.textContent = resultado.mensagem || "Cadastro realizado com sucesso!";
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 1500);
+    } else {
+      message.style.color = "red";
+      message.textContent = resultado.erro || "Erro ao cadastrar.";
+    }
+  } catch (error) {
+    message.style.color = "red";
+    message.textContent = "Erro ao conectar ao servidor.";
   }
 });
