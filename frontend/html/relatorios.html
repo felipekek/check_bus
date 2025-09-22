@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/draw.css" />
     <link rel="stylesheet" href="../css/relatorios.css" />
+    <link rel="stylesheet" href="../css/perfil.css">
 
     <!-- Font Awesome para ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -90,7 +91,23 @@
     </div>
 </div>
 
-<!-- Scripts -->
+<!-- Botão Perfil -->
+<button class="perfil-btn" id="btnPerfil">
+  <i class="fa fa-user"></i> Perfil
+</button>
+
+  <!-- Scripts -->
+  <script type="module">
+    import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
+
+    // Injeta o modal do perfil na página
+    carregarModalPerfil();
+
+    // Adiciona evento ao botão Perfil para abrir o modal
+    const btnPerfil = document.getElementById("btnPerfil");
+    btnPerfil.addEventListener("click", abrirPerfil);
+  </script>
+
 <script type="module" src="../js/relatorios.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>

@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="stylesheet" href="../css/horarios.css" />
   <link rel="stylesheet" href="../css/draw.css" />
+  <link rel="stylesheet" href="../css/perfil.css">
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js" type="module"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js" type="module"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js" type="module"></script>
@@ -55,6 +56,23 @@
       <ul id="listaHorarios"></ul>
     </div>
   </div>
+
+<!-- Botão Perfil -->
+<button class="perfil-btn" id="btnPerfil">
+  <i class="fa fa-user"></i> Perfil
+</button>
+
+<!-- Script para carregar e abrir o modal -->
+<script type="module">
+  import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
+
+  // Injeta o modal do perfil na página
+  carregarModalPerfil();
+
+  // Adiciona evento ao botão Perfil para abrir o modal
+  const btnPerfil = document.getElementById("btnPerfil");
+  btnPerfil.addEventListener("click", abrirPerfil);
+</script>
 
   <!-- Script principal da página -->
   <script type="module" src="../js/horarios.js"></script>

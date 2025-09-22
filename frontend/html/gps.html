@@ -1,19 +1,21 @@
-<!--
-  Página de localização do ônibus.
-  Mostra o mapa e permite buscar a localização atual do usuário.
-  Usa Leaflet para o mapa e js/gps.js para lógica.
--->
+<!-- gps.html -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Localização - Ônibus</title>
+
+  <!-- CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="stylesheet" href="../css/gps.css" />
   <link rel="stylesheet" href="../css/draw.css" />
+  <link rel="stylesheet" href="../css/perfil.css" />
+
+  <!-- JS do Leaflet -->
   <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js" type="module"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js" type="module"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js" type="module"></script>
@@ -44,6 +46,23 @@
       <button onclick="getLocation()">Buscar Localização</button>
     </div>
   </div>
+
+ <!-- Botão Perfil -->
+<button class="perfil-btn" id="btnPerfil">
+  <i class="fa fa-user"></i> Perfil
+</button>
+
+  <!-- Scripts -->
+  <script type="module">
+    import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
+
+    // Injeta o modal do perfil na página
+    carregarModalPerfil();
+
+    // Adiciona evento ao botão Perfil para abrir o modal
+    const btnPerfil = document.getElementById("btnPerfil");
+    btnPerfil.addEventListener("click", abrirPerfil);
+  </script>
 
   <script type="module" src="../js/gps.js"></script>
 </body>

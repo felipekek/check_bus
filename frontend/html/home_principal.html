@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home Principal</title>
   <link rel="stylesheet" href="../css/home_principal.css">
+  <link rel="stylesheet" href="../css/perfil.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -14,6 +15,23 @@
       <!-- Grid será gerado dinamicamente pelo home.js -->
     </div>
   </div>
+
+<!-- Botão Perfil -->
+<button class="perfil-btn" id="btnPerfil">
+  <i class="fa fa-user"></i> Perfil
+</button>
+
+  <!-- Scripts -->
+  <script type="module">
+    import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
+
+    // Injeta o modal do perfil na página
+    carregarModalPerfil();
+
+    // Adiciona evento ao botão Perfil para abrir o modal
+    const btnPerfil = document.getElementById("btnPerfil");
+    btnPerfil.addEventListener("click", abrirPerfil);
+  </script>
 
   <script type="module" src="../js/home.js"></script>
 </body>

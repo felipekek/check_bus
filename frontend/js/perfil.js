@@ -1,51 +1,110 @@
-const modal = document.getElementById("perfilModal");
-    const abrirBtn = document.getElementById("abrirPerfil");
-    const fecharBtn = document.getElementById("fecharModal");
-    const atualizarBtn = document.getElementById("atualizarPerfil");
+// frontend/js/perfil.js
+import { auth, db } from "./firebase-config.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-    // Abrir modal
-    abrirBtn.onclick = () => {
-      carregarDados();
-      modal.style.display = "flex";
-    };
+let modalCarregado = false;
 
-    // Fechar modal
-    fecharBtn.onclick = () => {
-      modal.style.display = "none";
-    };
+/**
+ * Injetar o modal do perfil na página
+ */
+export async function carregarModalPerfil() {
+  if (modalCarregado) return;
 
-    // Fechar clicando fora
-    window.onclick = (e) => {
-      if (e.target == modal) {
+  try {
+    const resposta = await fetch("../perfilModal.html");
+    const html = await resposta.text();
+    document.body.insertAdjacentHTML("beforeend", html);
+
+    const modal = document.getElementById("modalPerfil");
+    const btnFechar = document.getElementById("btnFecharPerfil");
+
+    if (btnFechar) {
+      btnFechar.addEventListener("click", () => {
         modal.style.display = "none";
-      }
-    };
-
-    // Carregar dados do localStorage
-    function carregarDados() {
-      document.getElementById("nome").value = localStorage.getItem("nome") || "";
-      document.getElementById("telefone").value = localStorage.getItem("telefone") || "";
-      document.getElementById("cpf").value = localStorage.getItem("cpf") || "";
-      document.getElementById("instituicao").value = localStorage.getItem("instituicao") || "";
-      document.getElementById("outraInstituicao").value = localStorage.getItem("outraInstituicao") || "";
-      document.getElementById("curso").value = localStorage.getItem("curso") || "";
-      document.getElementById("matricula").value = localStorage.getItem("matricula") || "";
-      document.getElementById("email").value = localStorage.getItem("email") || "";
-      document.getElementById("periodo").value = localStorage.getItem("periodo") || "";
+      });
     }
 
-    // Atualizar dados
-    atualizarBtn.onclick = () => {
-      localStorage.setItem("nome", document.getElementById("nome").value);
-      localStorage.setItem("telefone", document.getElementById("telefone").value);
-      localStorage.setItem("cpf", document.getElementById("cpf").value);
-      localStorage.setItem("instituicao", document.getElementById("instituicao").value);
-      localStorage.setItem("outraInstituicao", document.getElementById("outraInstituicao").value);
-      localStorage.setItem("curso", document.getElementById("curso").value);
-      localStorage.setItem("matricula", document.getElementById("matricula").value);
-      localStorage.setItem("email", document.getElementById("email").value);
-      localStorage.setItem("periodo", document.getElementById("periodo").value);
+    window.addEventListener("click", (e) => {
+      if (e.target === modal) modal.style.display = "none";
+    });
 
-      alert("Perfil atualizado com sucesso!");
-      modal.style.display = "none";
+    // Eventos dos novos botões
+    const btnAtualizar = document.getElementById("btnAtualizarPerfil");
+    const btnAlterarSenha = document.getElementById("btnAlterarSenha");
+
+    if (btnAtualizar) {
+      btnAtualizar.addEventListener("click", () => {
+        console.log("Atualizar Perfil clicado!");
+        // Aqui você pode adicionar a lógica para atualizar o perfil
+      });
+    }
+
+    if (btnAlterarSenha) {
+      btnAlterarSenha.addEventListener("click", () => {
+        console.log("Alterar Senha clicado!");
+        // Aqui você pode adicionar a lógica para alterar a senha
+      });
+    }
+
+    modalCarregado = true;
+    return true;
+
+  } catch (err) {
+    console.error("Erro ao carregar modal do perfil:", err);
+    return false;
+  }
+}
+
+/**
+ * Abrir modal do perfil (só funciona após o modal ser carregado)
+ */
+export async function abrirPerfil() {
+  if (!modalCarregado) {
+    const carregou = await carregarModalPerfil();
+    if (!carregou) return;
+  }
+
+  const modal = document.getElementById("modalPerfil");
+  if (!modal) return;
+
+  modal.style.display = "block";
+  carregarDadosUsuario();
+}
+
+/**
+ * Preenche os dados do usuário no modal
+ */
+async function carregarDadosUsuario() {
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) return;
+
+    const campos = {
+      emailUsuario: user.email || "Não informado",
+      idUsuario: user.uid
     };
+
+    try {
+      const userRef = doc(db, "alunos", user.uid);
+      const snap = await getDoc(userRef);
+      if (snap.exists()) {
+        const dados = snap.data();
+        campos.nomeUsuario = dados.nome || "Não informado";
+        campos.cpfUsuario = dados.cpf || "Não informado";
+        campos.instituicaoUsuario = dados.instituicao || "Não informado";
+        campos.telefoneUsuario = dados.telefone || "Não informado";
+        campos.cursoUsuario = dados.curso || "Não informado";
+        campos.turnoUsuario = dados.turno || "Não informado";
+        campos.periodoUsuario = dados.periodo || "Não informado";
+      }
+
+      for (const id in campos) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = campos[id];
+      }
+
+    } catch (err) {
+      console.error("Erro ao carregar perfil:", err);
+    }
+  });
+}
