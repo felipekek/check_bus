@@ -3,78 +3,96 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Horários - Aluno</title>
-  <link rel="stylesheet" href="../css/style.css" />
+  <title>Horários - Check Bus</title>
   <link rel="stylesheet" href="../css/horarios.css" />
-  <link rel="stylesheet" href="../css/draw.css" />
-  <link rel="stylesheet" href="../css/perfil.css">
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js" type="module"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js" type="module"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js" type="module"></script>
+
+  <!-- Flatpickr -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <body>
-  <!-- Botão do menu lateral -->
-  <button class="menu-btn" onclick="toggleMenu()">☰</button>
 
-  <!-- Overlay para fechar o menu ao clicar fora -->
-  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+  <!-- Botão Perfil -->
+  <button id="perfil-btn">Perfil</button>
 
-  <!-- Menu lateral de navegação -->
-  <div class="sidebar" id="sidebar">
-    <button onclick="location.href='home_principal.html'">Principal</button>
-    <button onclick="location.href='seus_horarios.html'">Seus Horários</button>
-    <button onclick="location.href='gps.html'">Abrir GPS</button>
-    <button onclick="location.href='relatorios.html'" id="btnRelatorio">Relatório</button>
-    <button onclick="location.href='admin.html'" id="btnAlunos">Lista de Alunos</button>
-    <button onclick="logout()" class="logout">Sair</button>
-  </div>
-
-  <!-- Formulário de cadastro/edição de horários -->
   <div class="container">
     <h1>Editar Horários</h1>
+
+    <!-- Formulário -->
     <form id="formHorario" onsubmit="event.preventDefault(); salvarHorario();">
       <fieldset class="horario-fieldset">
-        <div class="horario-row">
-          <label for="titulo">Título:</label>
-          <input type="text" id="titulo" placeholder="Título do horário" autocomplete="off" />
+        <div class="form-wrapper">
+          <!-- Esquerda -->
+          <div class="form-left">
+            <div class="horario-row">
+              <label for="titulo">Título:</label>
+              <input type="text" id="titulo" placeholder="Título do horário" autocomplete="off" />
+            </div>
+
+            <div class="horario-row">
+              <label for="hora">Hora:</label>
+              <input type="number" id="hora" placeholder="00" min="0" max="23" />
+              <span class="dois-pontos">:</span>
+              <label for="minuto">Minuto:</label>
+              <input type="number" id="minuto" placeholder="00" min="0" max="59" />
+            </div>
+
+            <div class="horario-row">
+              <label>Dias:</label>
+              <div class="dias-semana">
+                <button type="button" class="dia-btn" data-dia="D">D</button>
+                <button type="button" class="dia-btn" data-dia="S">S</button>
+                <button type="button" class="dia-btn" data-dia="T">T</button>
+                <button type="button" class="dia-btn" data-dia="Q">Q</button>
+                <button type="button" class="dia-btn" data-dia="Q2">Q</button>
+                <button type="button" class="dia-btn" data-dia="S2">S</button>
+                <button type="button" class="dia-btn" data-dia="S3">S</button>
+              </div>
+            </div>
+
+            <button type="submit">Salvar Horário</button>
+            <p id="msg"></p>
+          </div>
+
+          <!-- Direita: Logo -->
+          <div class="form-right">
+            <div class="logo-box">
+              <img src="../assets/logo_do_TCC.jpeg" alt="Logo Check Bus">
+            </div>
+          </div>
         </div>
-        <div class="horario-row">
-          <label for="hora">Hora:</label>
-          <input type="number" id="hora" placeholder="00" min="0" max="23" style="width:60px" />
-          <span class="dois-pontos">:</span>
-          <label for="minuto">Minuto:</label>
-          <input type="number" id="minuto" placeholder="00" min="0" max="59" style="width:60px" />
-        </div>
-        <button type="submit">Salvar Horário</button>
       </fieldset>
     </form>
-    <p id="msg"></p>
 
-    <!-- Lista de horários cadastrados -->
+    <!-- Lista de horários -->
     <div class="horario-list">
       <h2>Horários Salvos</h2>
-      <ul id="listaHorarios"></ul>
+      <table class="tabela-horarios">
+        <thead>
+          <tr>
+            <th>Dias</th>
+            <th>Título</th>
+            <th>Horário</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="listaHorarios"></tbody>
+      </table>
+    </div>
+
+    <!-- Calendário (sem setas) -->
+    <div class="calendario-container">
+      <h3>Calendário</h3>
+      <div class="calendario-wrapper">
+        <div class="calendario-box">
+          <input type="text" id="calendario" placeholder="Selecione uma data" readonly />
+        </div>
+      </div>
     </div>
   </div>
 
-<!-- Botão Perfil -->
-<button class="perfil-btn" id="btnPerfil">
-  <i class="fa fa-user"></i> Perfil
-</button>
-
-<!-- Script para carregar e abrir o modal -->
-<script type="module">
-  import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
-
-  // Injeta o modal do perfil na página
-  carregarModalPerfil();
-
-  // Adiciona evento ao botão Perfil para abrir o modal
-  const btnPerfil = document.getElementById("btnPerfil");
-  btnPerfil.addEventListener("click", abrirPerfil);
-</script>
-
-  <!-- Script principal da página -->
-  <script type="module" src="../js/horarios.js"></script>
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pt.js"></script>
+  <script src="../js/horarios.js"></script>
 </body>
 </html>

@@ -1,101 +1,110 @@
-// frontend/js/horarios.js
-const STAFF_EMAIL = "staff@adm.com";
-let userId = null;
+// Ativar calendário com Flatpickr
+flatpickr("#calendario", {
+  locale: "pt",
+  dateFormat: "d/m/Y",
+});
 
-// Captura usuário logado
-import { auth } from "./firebase-config.js";
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    window.location.href = "index.html";
-    return;
-  }
-  userId = user.uid;
-
-  const btnRelatorio = document.getElementById("btnRelatorio");
-  const btnAlunos = document.getElementById("btnAlunos");
-  if (user.email !== STAFF_EMAIL) {
-    if (btnRelatorio) btnRelatorio.style.display = "none";
-    if (btnAlunos) btnAlunos.style.display = "none";
-  }
-
-  carregarHorarios();
+// Alternar dias selecionados
+document.querySelectorAll(".dia-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    btn.classList.toggle("selecionado");
+  });
 });
 
 // Salvar horário
-window.salvarHorario = async () => {
-  const titulo = document.getElementById("titulo").value;
+function salvarHorario() {
+  const titulo = document.getElementById("titulo").value.trim();
   const hora = document.getElementById("hora").value;
   const minuto = document.getElementById("minuto").value;
-  const msg = document.getElementById("msg");
 
-  if (!titulo || !hora || !minuto) {
-    msg.textContent = "Preencha todos os campos.";
+  const diasSelecionados = [];
+  document.querySelectorAll(".dia-btn.selecionado").forEach(btn => {
+    diasSelecionados.push(btn.textContent);
+  });
+
+  if (!titulo || hora === "" || minuto === "" || diasSelecionados.length === 0) {
+    mostrarMensagem("Preencha todos os campos!", "red");
+    return;
+  }
+
+  // Validação adicional
+  const h = parseInt(hora, 10);
+  const m = parseInt(minuto, 10);
+  if (isNaN(h) || isNaN(m) || h < 0 || h > 23 || m < 0 || m > 59) {
+    mostrarMensagem("Hora ou minuto inválido!", "red");
     return;
   }
 
   const horario = `${hora.padStart(2, "0")}:${minuto.padStart(2, "0")}`;
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td>${diasSelecionados.join(", ")}</td>
+    <td>${titulo}</td>
+    <td>${horario}</td>
+    <td>
+      <button class="edit-btn" onclick="editarHorario(this)">Editar</button>
+      <button class="delete-btn" onclick="excluirHorario(this)">Excluir</button>
+    </td>
+  `;
+  document.getElementById("listaHorarios").appendChild(tr);
 
-  try {
-    const res = await fetch("/horarios/salvar", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId, titulo, horario })
-    });
-    const data = await res.json();
-    msg.textContent = data.mensagem;
-    carregarHorarios();
-  } catch {
-    msg.textContent = "Erro ao salvar horário.";
-  }
-};
+  mostrarMensagem("Horário salvo com sucesso!", "green");
+  document.getElementById("formHorario").reset();
+  document.querySelectorAll(".dia-btn").forEach(btn => btn.classList.remove("selecionado"));
+}
 
-// Listar horários
-async function carregarHorarios() {
-  try {
-    const res = await fetch(`/horarios/listar/${userId}`);
-    const horarios = await res.json();
-    const lista = document.getElementById("listaHorarios");
-    lista.innerHTML = "";
-    horarios.forEach(h => {
-      const li = document.createElement("li");
-      li.innerHTML = `<span><strong>${h.titulo}</strong>: ${h.horario}</span>
-                      <button onclick="excluirHorario('${h.id}')">Excluir</button>`;
-      lista.appendChild(li);
-    });
-  } catch {
-    document.getElementById("msg").textContent = "Erro ao carregar horários.";
-  }
+// Mostrar mensagens
+function mostrarMensagem(texto, cor) {
+  const msg = document.getElementById("msg");
+  msg.textContent = texto;
+  msg.style.color = cor;
 }
 
 // Excluir horário
-window.excluirHorario = async (id) => {
-  try {
-    const res = await fetch("/horarios/excluir", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId, horarioId: id })
-    });
-    const data = await res.json();
-    document.getElementById("msg").textContent = data.mensagem;
-    carregarHorarios();
-  } catch {
-    document.getElementById("msg").textContent = "Erro ao excluir horário.";
-  }
-};
+function excluirHorario(botao) {
+  const linha = botao.closest("tr");
+  linha.remove();
+}
 
-// Logout
-window.logout = () => {
-  signOut(auth).then(() => window.location.href = "index.html");
-};
+// Editar horário
+function editarHorario(botao) {
+  const linha = botao.closest("tr");
+  const colunas = linha.querySelectorAll("td");
 
-// Toggle menu
-window.toggleMenu = () => {
-  const sidebar = document.getElementById("sidebar");
-  const overlay = document.getElementById("overlay");
-  const menuBtn = document.querySelector(".menu-btn");
-  sidebar.classList.toggle("active");
-  overlay.classList.toggle("active");
-  menuBtn.classList.toggle("hidden");
-};
+  const dias = colunas[0].textContent.split(", ");
+  const titulo = colunas[1].textContent;
+  const [hora, minuto] = colunas[2].textContent.split(":");
+
+  document.getElementById("titulo").value = titulo;
+  document.getElementById("hora").value = hora;
+  document.getElementById("minuto").value = minuto;
+
+  document.querySelectorAll(".dia-btn").forEach(btn => {
+    if (dias.includes(btn.textContent)) {
+      btn.classList.add("selecionado");
+    } else {
+      btn.classList.remove("selecionado");
+    }
+  });
+
+  linha.remove();
+  mostrarMensagem("Você está editando este horário.", "#ff9900");
+}
+
+// ✅ Limitar hora/minuto para 2 dígitos no input
+["hora", "minuto"].forEach(id => {
+  const input = document.getElementById(id);
+
+  input.addEventListener("input", () => {
+    if (input.value.length > 2) {
+      input.value = input.value.slice(0, 2);
+    }
+  });
+
+  input.addEventListener("paste", (e) => {
+    e.preventDefault();
+    const texto = (e.clipboardData || window.clipboardData).getData("text");
+    if (!/^\d{1,2}$/.test(texto)) return;
+    input.value = texto.slice(0, 2);
+  });
+});
