@@ -6,6 +6,7 @@
   <title>Home Principal</title>
   <link rel="stylesheet" href="../css/home_principal.css">
   <link rel="stylesheet" href="../css/perfil.css">
+  <link rel="stylesheet" href="../css/feedback.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -16,21 +17,40 @@
     </div>
   </div>
 
-<!-- Botão Perfil -->
-<button class="perfil-btn" id="btnPerfil">
-  <i class="fa fa-user"></i> Perfil
-</button>
+  <!-- Botão Perfil -->
+  <button class="perfil-btn" id="btnPerfil">
+    <i class="fa fa-user"></i> Perfil
+  </button>
+
+  <!-- Botão Feedback -->
+  <button class="feedback-btn" id="btnFeedback">
+    <i class="fa fa-comment"></i> Feedback
+  </button>
+
+  <!-- Modal de Feedback -->
+  <div class="modal-feedback" id="modalFeedback">
+    <div class="modal-content">
+      <span class="close-feedback" id="closeFeedback">&times;</span>
+      <h2>Deixe seu Feedback</h2>
+      <textarea id="feedbackText" placeholder="Escreva seu comentário aqui..."></textarea>
+      <button id="sendFeedback">Enviar</button>
+    </div>
+  </div>
 
   <!-- Scripts -->
   <script type="module">
     import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
+    import { initFeedbackModal } from "../js/feedback.js";
 
-    // Injeta o modal do perfil na página
+    // Injeta modal de perfil
     carregarModalPerfil();
 
-    // Adiciona evento ao botão Perfil para abrir o modal
+    // Botão Perfil
     const btnPerfil = document.getElementById("btnPerfil");
     btnPerfil.addEventListener("click", abrirPerfil);
+
+    // Inicia modal de feedback
+    initFeedbackModal();
   </script>
 
   <script type="module" src="../js/home.js"></script>
