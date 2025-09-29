@@ -1,89 +1,98 @@
 .alunos-container {
-            max-width: 900px;
-            margin: 40px auto;
-            background: #fff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-            color: #222;
-        }
-        h1 {
-            text-align: center;
-            margin-bottom: 24px;
-            color: #004d7a;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 18px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            overflow: hidden;
-            color: #222;
-        }
-        th, td {
-            padding: 12px 10px;
-            border-bottom: 1px solid #e0e0e0;
-            text-align: left;
-            font-size: 15px;
-        }
-        th {
-            background: #008793;
-            color: #fff;
-            font-weight: 600;
-        }
-        tr:last-child td {
-            border-bottom: none;
-        }
-        .voltar-btn {
-            margin-top: 24px;
-            background: #008793;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            padding: 12px 28px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background 0.2s;
-            width: auto;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .voltar-btn:hover {
-            background: #00677a;
-        }
-        .no-data {
-            text-align: center;
-            color: #888;
-            padding: 30px 0;
-            font-size: 16px;
-        }
-        /* Botão de excluir com SVG da lixeira */
-        .delete-btn {
-            background: #e74c3c;
-            border: none;
-            border-radius: 5px;
-            padding: 6px 10px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s;
-        }
+    max-width: 900px;
+    margin: 40px auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    color: #222;
+}
 
-        .delete-btn:hover {
-            background: #c0392b;
-        }
+h1 {
+    text-align: center;
+    margin-bottom: 24px;
+    color: #004d7a;
+}
 
-        .delete-btn svg {
-            width: 18px;
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 18px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    overflow: hidden;
+    color: #222;
+}
+
+th, td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #e0e0e0;
+    text-align: left;
+    font-size: 15px;
+}
+
+th {
+    background: #008793;
+    color: #fff;
+    font-weight: 600;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+.voltar-btn {
+    margin-top: 24px;
+    background: #008793;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 28px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.voltar-btn:hover {
+    background: #00677a;
+}
+
+.no-data {
+    text-align: center;
+    color: #888;
+    padding: 30px 0;
+    font-size: 16px;
+}
+
+/* Botão de excluir com SVG da lixeira */
+.delete-btn {
+    background: #e74c3c;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 10px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.delete-btn:hover {
+    background: #c0392b;
+}
+
+.delete-btn svg {
+    width: 18px;
     height: 20px;
     display: inline-block;
     vertical-align: middle;
-        }
+}
 
-        .delete-btn svg path,
+.delete-btn svg path,
 .delete-btn svg line {
     stroke: white;    /* cor branca */
     stroke-width: 2;  /* espessura consistente */
@@ -91,33 +100,103 @@
     stroke-linejoin: round;
 }
 
-        .delete-btn svg path:first-child {
-            stroke-width: 3.5; /* aumenta a espessura da tampa da lixeira */
-        }
-        .titulo-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 20px;
-            gap: 20px;
-        }
+.delete-btn svg path:first-child {
+    stroke-width: 3.5; /* aumenta a espessura da tampa da lixeira */
+}
 
-        .titulo-container h1 {
-            flex: 2;
-            text-align: center;
-            margin: 0;
-            color: #004d7a;
-        }
+.titulo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 20px;
+}
 
-        .titulo-container #barraPesquisa {
-            flex: 1;
-            max-width: 220px;
-            margin-left: 20px;
-            padding: 6px 12px;
-            font-size: 0.9rem;
-            border: 1px solid #ccc;
-            border-radius: 20px;
-            outline: none;
-            transition: all 0.2s ease-in-out;
-            text-align: left;
-        }
+.titulo-container h1 {
+    flex: 2;
+    text-align: center;
+    margin: 0;
+    color: #004d7a;
+}
+
+.titulo-container #barraPesquisa {
+    flex: 1;
+    max-width: 220px;
+    margin-left: 20px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+    text-align: left;
+}
+
+/* -------------------
+   Estilos do gráfico
+   ------------------- */
+.grafico-container {
+    max-width: 880px;      /* mesmo tamanho da tabela */
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    margin: 40px auto 20px auto; /* espaço acima e abaixo */
+    box-sizing: border-box;
+}
+
+.grafico-container h2 {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+#graficoCanvas, #instituicoesChart {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+
+#instituicoesChart {
+    max-width: 300px; /* largura máxima */
+    max-height: 300px; /* altura máxima */
+    margin: 0 auto; /* centraliza */
+    display: block;
+}
+
+
+/* Aplica transição suave na tabela */
+#corpoTabelaAlunos tr {
+    transition: all 0.3s ease-in-out;
+    opacity: 1;
+}
+
+/* Quando removemos os dados antigos, podemos aplicar fade out */
+#corpoTabelaAlunos.fade-out tr {
+    opacity: 0;
+}
+
+/* Container do gráfico também pode ter fade */
+.grafico-container {
+    transition: all 0.3s ease-in-out;
+    opacity: 1;
+}
+
+.grafico-container.fade {
+    opacity: 0.3; /* leve efeito de desfoque ao atualizar */
+}
+
+#corpoTabelaAlunos {
+  transition: opacity 0.4s ease-in-out;
+}
+
+#corpoTabelaAlunos.fade-out {
+  opacity: 0;
+}
+#corpoTabelaAlunos {
+  transition: opacity 0.4s ease-in-out;
+}
+
+#corpoTabelaAlunos.fade-out {
+  opacity: 0;
+}
