@@ -20,23 +20,33 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     const data = await response.json();
 
     if (response.ok) {
-      // Mostra mensagem de sucesso
-      loginMessage.style.color = "green";
-      loginMessage.textContent = data.mensagem;
+  // Mostra mensagem de sucesso
+  loginMessage.style.color = "green";
+  loginMessage.textContent = data.mensagem;
 
-      // Salva token e tipo de usuário
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("tipoUsuario", data.tipoUsuario);
+  // Salva token e tipo de usuário
+  localStorage.setItem("token", data.token);
+  localStorage.setItem("tipoUsuario", data.tipoUsuario);
 
-      // ⚡ Login no Firebase no frontend
-      await signInWithEmailAndPassword(auth, email, senha);
+  // Salva UID para pegar os dados do usuário depois
+  localStorage.setItem("uid", data.uid);
 
-      // Redireciona para home_principal.html
-      setTimeout(() => {
-        window.location.href = "home_principal.html";
-      }, 500);
+  // ⚡ Login no Firebase no frontend
+  await signInWithEmailAndPassword(auth, email, senha);
 
-    } else {
+  // Buscar os dados do usuário no Firestore para salvar nome e CPF
+  const userDocResponse = await fetch(`/auth/usuario/${data.uid}`);
+  const userData = await userDocResponse.json();
+
+  localStorage.setItem("nome", userData.nome);
+  localStorage.setItem("cpf", userData.cpf);
+
+  // Redireciona para home_principal.html
+  setTimeout(() => {
+    window.location.href = "home_principal.html";
+  }, 500);
+}
+ else {
       loginMessage.style.color = "red";
       loginMessage.textContent = data.erro || "Erro ao fazer login";
     }

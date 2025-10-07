@@ -1,39 +1,100 @@
-export function initFeedbackModal() {
-  const btnFeedback = document.getElementById("btnFeedback"); // botão que abre modal
-  const modalFeedback = document.getElementById("modalFeedback"); // modal
-  const closeFeedback = document.getElementById("closeFeedback"); // botão X
-  const sendFeedback = document.getElementById("sendFeedback"); // botão "Enviar"
-  const feedbackText = document.getElementById("feedbackText"); // textarea
+/**
+ * frontend/js/feedback.js
+ * ----------------------------------------------------------
+ * Script responsável por gerenciar o modal de feedback
+ * e enviar os comentários do usuário autenticado ao backend.
+ * Compatível com alunos e administradores (staff).
+ * ----------------------------------------------------------
+ */
 
-  // Abrir modal
+export function initFeedbackModal() {
+  const btnFeedback = document.getElementById("btnFeedback");
+  const modalFeedback = document.getElementById("modalFeedback");
+  const closeFeedback = document.getElementById("closeFeedback");
+  const sendFeedback = document.getElementById("sendFeedback");
+  const feedbackText = document.getElementById("feedbackText");
+
+  /** Abre o modal de feedback */
   btnFeedback.addEventListener("click", () => {
     modalFeedback.style.display = "flex";
   });
 
-  // Fechar modal no X
+  /** Fecha o modal */
   closeFeedback.addEventListener("click", () => {
     modalFeedback.style.display = "none";
   });
 
-  // Fechar clicando fora da caixa
+  /** Fecha ao clicar fora do modal */
   window.addEventListener("click", (e) => {
     if (e.target === modalFeedback) {
       modalFeedback.style.display = "none";
     }
   });
 
-  // **Botão Enviar da própria caixa de comentário**
-  sendFeedback.addEventListener("click", () => {
-    const feedback = feedbackText.value.trim();
+  /** Envia o feedback */
+  sendFeedback.addEventListener("click", async () => {
+    const comentario = feedbackText.value.trim();
 
-    if (feedback === "") {
+    if (!comentario) {
       alert("Escreva algum comentário antes de enviar!");
       return;
     }
 
-    console.log("Feedback enviado:", feedback); // aqui você pode enviar para o servidor
-    feedbackText.value = ""; // limpa textarea
-    modalFeedback.style.display = "none"; // fecha modal
-    alert("Obrigado pelo seu feedback!");
+    try {
+      /** Pega os dados salvos no login */
+      const uid = localStorage.getItem("uid");
+      const tipoUsuario = localStorage.getItem("tipoUsuario"); // "aluno" ou "admin"
+      const email = localStorage.getItem("email");
+
+      if (!uid || !tipoUsuario) {
+        alert("Erro: usuário não autenticado. Faça login novamente.");
+        return;
+      }
+
+      let usuario = {};
+
+      /** Busca os dados do usuário conforme o tipo */
+      if (tipoUsuario === "aluno") {
+        const resAluno = await fetch(`/auth/usuario/${uid}`);
+        if (!resAluno.ok) throw new Error("Erro ao buscar dados do aluno.");
+        usuario = await resAluno.json();
+      } else if (tipoUsuario === "admin") {
+        // Placeholder para administrador
+        usuario = {
+          nome: "Administrador",
+          cpf: "000.000.000-00",
+          email: email || "staff@adm.com",
+        };
+      } else {
+        alert("Tipo de usuário inválido.");
+        return;
+      }
+
+      /** Envia o feedback ao servidor */
+      const response = await fetch("/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nome: usuario.nome,
+          cpf: usuario.cpf,
+          comentario,
+          email: usuario.email,
+        }),
+      });
+
+      /** Lê a resposta */
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(data.mensagem || "Feedback enviado com sucesso!");
+        feedbackText.value = "";
+        modalFeedback.style.display = "none";
+      } else {
+        alert(data.erro || "Erro ao enviar feedback!");
+      }
+    } catch (error) {
+      console.error("Erro ao enviar feedback:", error);
+      alert("Erro de conexão com o servidor.");
+    }
   });
 }

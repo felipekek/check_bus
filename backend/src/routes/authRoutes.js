@@ -1,15 +1,36 @@
 // backend/src/routes/authRoutes.js
-// Rotas relacionadas à autenticação
+// ============================================================
+// Rotas de autenticação e dados de usuários (alunos e admins)
+// Sistema: CheckBus
+// Autor: Luís Felipe (TCC)
+// ------------------------------------------------------------
+// Endpoints:
+//  - POST /auth/login        → Login de usuário
+//  - POST /auth/cadastro     → Cadastro de aluno
+//  - GET  /auth/usuario/:uid → Retorna dados de um aluno
+//  - GET  /auth/staff/:uid   → Retorna dados de um administrador
+// ============================================================
 
 import express from "express";
-import { loginUsuario, cadastrarUsuario } from "../controllers/authController.js";
+import {
+  loginUsuario,
+  cadastrarUsuario,
+  getUsuario,
+  getStaffUsuario, // ✅ novo controlador
+} from "../controllers/authController.js";
 
 const router = express.Router();
 
-// Endpoint POST /auth/login → login de usuário
+// Login
 router.post("/login", loginUsuario);
 
-// Endpoint POST /auth/cadastro → cadastro de usuário
+// Cadastro
 router.post("/cadastro", cadastrarUsuario);
+
+// Buscar dados do aluno pelo UID
+router.get("/usuario/:uid", getUsuario);
+
+// Buscar dados do administrador (staff) pelo UID
+router.get("/staff/:uid", getStaffUsuario);
 
 export default router;

@@ -8,6 +8,8 @@ import horariosRoutes from "./routes/horariosRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import relatorioRoutes from "./routes/relatorioRoutes.js"; // rota de relatórios
 import pdfRoutes from "./routes/pdfRoutes.js"; // rota para gerar PDF
+import feedbackRoutes from "./routes/feedbackRoutes.js"; // nova rota para feedback
+import staffRoutes from "./routes/staffRoutes.js";
 
 const app = express();
 
@@ -23,10 +25,12 @@ app.use(express.static(path.join(__dirname, "../../frontend")));
 
 // Rotas do backend
 app.use("/auth", authRoutes);
+app.use("/auth/staff", staffRoutes);
 app.use("/horarios", horariosRoutes);
 app.use("/admin", adminRoutes);
 app.use("/relatorios", relatorioRoutes); // relatórios
 app.use("/relatorios", pdfRoutes); // download de PDF seguro
+app.use("/feedback", feedbackRoutes); // <-- adiciona esta linha para o feedback
 
 // Redireciona "/" para a página inicial
 app.get("/", (req, res) => {
