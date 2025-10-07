@@ -44,7 +44,7 @@ export function initFeedbackModal() {
       /** Pega os dados salvos no login */
       const uid = localStorage.getItem("uid");
       const tipoUsuario = localStorage.getItem("tipoUsuario"); // "aluno" ou "admin"
-      const email = localStorage.getItem("email");
+      const emailLocal = localStorage.getItem("email"); // email salvo no login
 
       if (!uid || !tipoUsuario) {
         alert("Erro: usuário não autenticado. Faça login novamente.");
@@ -58,12 +58,14 @@ export function initFeedbackModal() {
         const resAluno = await fetch(`/auth/usuario/${uid}`);
         if (!resAluno.ok) throw new Error("Erro ao buscar dados do aluno.");
         usuario = await resAluno.json();
+        // Garante que o email do aluno também será enviado
+        usuario.email = emailLocal || usuario.email || null;
       } else if (tipoUsuario === "admin") {
         // Placeholder para administrador
         usuario = {
           nome: "Administrador",
           cpf: "000.000.000-00",
-          email: email || "staff@adm.com",
+          email: emailLocal || "staff@adm.com",
         };
       } else {
         alert("Tipo de usuário inválido.");
@@ -78,7 +80,7 @@ export function initFeedbackModal() {
           nome: usuario.nome,
           cpf: usuario.cpf,
           comentario,
-          email: usuario.email,
+          email: usuario.email, // email agora sempre enviado
         }),
       });
 

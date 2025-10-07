@@ -1,7 +1,10 @@
 /**
+ * backend/src/controllers/feedbackController.js
+ * ----------------------------------------------------------
  * Controller responsável por gerenciar os feedbacks dos usuários e administradores
  * Sistema: CheckBus
  * Autor: Luís Felipe (TCC)
+ * ----------------------------------------------------------
  */
 
 import { db } from "../config/firebase-config.js";
@@ -17,18 +20,24 @@ import { collection, addDoc, getDocs, Timestamp } from "firebase/firestore";
  */
 export const enviarFeedback = async (req, res) => {
   try {
-    const { nome, cpf, comentario, email } = req.body;
+    let { nome, cpf, comentario, email } = req.body;
 
     // Validação: nome e comentário são obrigatórios
     if (!nome || !comentario) {
       return res.status(400).json({ erro: "Preencha todos os campos obrigatórios!" });
     }
 
-    // Permitir envio sem CPF (caso o remetente seja um administrador)
+    // Se for aluno e não enviar email, tenta pegar do localStorage (frontend deve enviar email)
+    if (!email) email = null;
+
+    // Se for admin e não enviar CPF, define padrão
+    if (!cpf) cpf = "000.000.000-00";
+
+    // Salva no Firestore
     await addDoc(collection(db, "feedback"), {
       nome,
-      cpf: cpf || null, // CPF é opcional
-      email: email || null, // Se quiser identificar o admin
+      cpf,
+      email,
       comentario,
       data: Timestamp.now(),
     });
