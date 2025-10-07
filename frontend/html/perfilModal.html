@@ -1,8 +1,8 @@
-<!-- perfilModal.html -->
+<!-- Modal de Perfil -->
 <div id="modalPerfil" class="modal">
   <div class="modal-content">
     <span id="btnFecharPerfil" class="close">&times;</span>
-    <h2><i class="fa fa-user"></i> Meu Perfil</h2>
+    <h2 style="color: #008793;">Meu Perfil</h2>
     
     <div class="perfil-card">
       <p><strong>Nome:</strong> <span id="nomeUsuario">Carregando...</span></p>
@@ -21,5 +21,26 @@
       <button id="btnAtualizarPerfil">Atualizar Perfil</button>
       <button id="btnAlterarSenha">Alterar Senha</button>
     </div>
+  </div>
+</div>
+
+<!-- Modal Alterar Senha -->
+<div id="modalAlterarSenha" class="modal">
+  <div class="modal-content">
+    <span class="close" id="btnFecharSenha">&times;</span>
+    <h2 style="color: #008793;">Alterar Senha</h2>
+
+    <form id="formAlterarSenha" class="senha-form">
+      <label for="senhaAtual">Senha Atual:</label>
+      <input type="password" id="senhaAtual" required>
+
+      <label for="novaSenha">Nova Senha:</label>
+      <input type="password" id="novaSenha" required>
+
+      <label for="confirmaNovaSenha">Confirmar Nova Senha:</label>
+      <input type="password" id="confirmaNovaSenha" required>
+
+      <button type="submit" id="btnSalvarSenha">Salvar</button>
+    </form>
   </div>
 </div>
