@@ -2,97 +2,101 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Horários - Check Bus</title>
   <link rel="stylesheet" href="../css/horarios.css" />
-
-  <!-- Flatpickr -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
+
 <body>
+  <header>
+    <button class="menu-btn">☰</button>
+    <h1>Check Bus</h1>
+    <button class="perfil-btn">Perfil</button>
+  </header>
 
-  <!-- Botão Perfil -->
-  <button id="perfil-btn">Perfil</button>
+  <main>
+    <!-- ====== SEÇÃO DE HORÁRIOS ====== -->
+    <section class="card">
+      <h2>Seleção de Horários</h2>
 
-  <div class="container">
-    <h1>Editar Horários</h1>
+      <div class="linha-cabecalho">
+        <span>Turno</span>
+        <span>Saída</span>
+        <span>Chegada prevista</span>
+      
+      </div>
 
-    <!-- Formulário -->
-    <form id="formHorario" onsubmit="event.preventDefault(); salvarHorario();">
-      <fieldset class="horario-fieldset">
-        <div class="form-wrapper">
-          <!-- Esquerda -->
-          <div class="form-left">
-            <div class="horario-row">
-              <label for="titulo">Título:</label>
-              <input type="text" id="titulo" placeholder="Título do horário" autocomplete="off" />
-            </div>
+      <div class="tabela-fixa">
+        <label class="linha">
+          <span class="col-turno">
+            <input type="radio" name="turno" value="Manhã">
+            <span>Manhã</span>
+          </span>
+          <span>06:00</span>
+          <span>14:00</span>
+        </label>
 
-            <div class="horario-row">
-              <label for="hora">Hora:</label>
-              <input type="number" id="hora" placeholder="00" min="0" max="23" />
-              <span class="dois-pontos">:</span>
-              <label for="minuto">Minuto:</label>
-              <input type="number" id="minuto" placeholder="00" min="0" max="59" />
-            </div>
+        <label class="linha">
+          <span class="col-turno">
+            <input type="radio" name="turno" value="Tarde">
+            <span>Tarde</span>
+          </span>
+          <span>11:30</span>
+          <span>18:00</span>
+        </label>
 
-            <div class="horario-row">
-              <label>Dias:</label>
-              <div class="dias-semana">
-                <button type="button" class="dia-btn" data-dia="D">D</button>
-                <button type="button" class="dia-btn" data-dia="S">S</button>
-                <button type="button" class="dia-btn" data-dia="T">T</button>
-                <button type="button" class="dia-btn" data-dia="Q">Q</button>
-                <button type="button" class="dia-btn" data-dia="Q2">Q</button>
-                <button type="button" class="dia-btn" data-dia="S2">S</button>
-                <button type="button" class="dia-btn" data-dia="S3">S</button>
-              </div>
-            </div>
+        <label class="linha">
+          <span class="col-turno">
+            <input type="radio" name="turno" value="Noite">
+            <span>Noite</span>
+          </span>
+          <span>18:00</span>
+          <span>21:00</span>
+        </label>
+      </div>
 
-            <button type="submit">Salvar Horário</button>
-            <p id="msg"></p>
+      <div class="personalizado-container">
+        <label>
+          <input type="checkbox" id="personalizadoToggle">
+          <span>Usar horário personalizado</span>
+        </label>
+
+        <div id="personalizadoCampos" class="personalizado-campos">
+          <div class="input-group">
+            <label for="saidaPersonalizada">Saída:</label>
+            <input type="time" id="saidaPersonalizada">
           </div>
-
-          <!-- Direita: Logo -->
-          <div class="form-right">
-            <div class="logo-box">
-              <img src="../assets/logo_do_TCC.jpeg" alt="Logo Check Bus">
-            </div>
+          <div class="input-group">
+            <label for="chegadaPersonalizada">Chegada prevista:</label>
+            <input type="time" id="chegadaPersonalizada">
           </div>
-        </div>
-      </fieldset>
-    </form>
-
-    <!-- Lista de horários -->
-    <div class="horario-list">
-      <h2>Horários Salvos</h2>
-      <table class="tabela-horarios">
-        <thead>
-          <tr>
-            <th>Dias</th>
-            <th>Título</th>
-            <th>Horário</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody id="listaHorarios"></tbody>
-      </table>
-    </div>
-
-    <!-- Calendário (sem setas) -->
-    <div class="calendario-container">
-      <h3>Calendário</h3>
-      <div class="calendario-wrapper">
-        <div class="calendario-box">
-          <input type="text" id="calendario" placeholder="Selecione uma data" readonly />
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pt.js"></script>
+      <button class="salvar-btn">Salvar</button>
+    </section>
+
+    <!-- ====== SEÇÃO DE DIAS ====== -->
+    <section class="card">
+      <h2>Dias da Semana</h2>
+      <div class="dias-container">
+        <button class="dia-btn">D</button>
+        <button class="dia-btn">S</button>
+        <button class="dia-btn">T</button>
+        <button class="dia-btn">Q</button>
+        <button class="dia-btn">Q</button>
+        <button class="dia-btn">S</button>
+        <button class="dia-btn">S</button>
+      </div>
+    </section>
+
+    <!-- ====== LISTA DE HORÁRIOS SALVOS ====== -->
+    <section class="card">
+      <h2>Horários Salvos</h2>
+      <div id="horariosSalvos"></div>
+    </section>
+  </main>
+
   <script src="../js/horarios.js"></script>
 </body>
 </html>
