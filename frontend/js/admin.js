@@ -17,8 +17,8 @@ let coresOriginais = []; // guarda cores originais
 
 // ---------- CARREGA ALUNOS ----------
 async function carregarAlunos() {
-    const corpo = document.getElementById("corpoTabelaAlunos");
-    corpo.innerHTML = `<tr><td colspan="6" class="no-data">Carregando alunos...</td></tr>`;
+    const container = document.getElementById("accordionContainer");
+    container.innerHTML = `<p class="no-data">Carregando alunos...</p>`;
 
     try {
         const res = await fetch("/admin", {
@@ -29,7 +29,7 @@ async function carregarAlunos() {
         listaAlunos = await res.json();
 
         if (listaAlunos.length === 0) {
-            corpo.innerHTML = `<tr><td colspan="6" class="no-data">Nenhum aluno cadastrado.</td></tr>`;
+            container.innerHTML = `<p class="no-data">Nenhum aluno cadastrado.</p>`;
             atualizarGrafico([]); // limpa gráfico
             return;
         }
@@ -38,57 +38,96 @@ async function carregarAlunos() {
         atualizarGrafico(listaAlunos); // atualiza gráfico
     } catch (err) {
         console.error("Erro ao carregar alunos:", err);
-        corpo.innerHTML = `<tr><td colspan="6" class="no-data">Erro ao carregar alunos. Verifique o console.</td></tr>`;
+        container.innerHTML = `<p class="no-data">Erro ao carregar alunos. Verifique o console.</p>`;
     }
 }
 
 // ---------- RENDERIZA ALUNOS ----------
 function renderizarAlunos(alunos) {
-    const corpo = document.getElementById("corpoTabelaAlunos");
+    const container = document.getElementById("accordionContainer");
+    container.innerHTML = ""; // Limpa o container
 
-    // animação suave (fade-out antes de atualizar)
-    corpo.classList.add("fade-out");
+    if (alunos.length === 0) {
+        container.innerHTML = `<p class="no-data">Nenhum aluno encontrado.</p>`;
+        return;
+    }
 
-    setTimeout(() => {
-        corpo.classList.remove("fade-out");
-        corpo.innerHTML = "";
+    alunos.forEach(aluno => {
+        const accordionItem = document.createElement('div');
+        accordionItem.className = 'accordion-item';
+        accordionItem.dataset.alunoId = aluno.id;
 
-        if (alunos.length === 0) {
-            corpo.innerHTML = `<tr><td colspan="6" class="no-data">Nenhum aluno encontrado.</td></tr>`;
+        
+        const horariosFormatados = Array.isArray(aluno.horarios) && aluno.horarios.length > 0 
+            ? aluno.horarios.map(h => `<tr><td>${h.dia || '-'}</td><td>${h.horario || '-'}</td></tr>`).join('')
+            : '<tr><td colspan="2" class="no-data">Nenhum horário registrado.</td></tr>';
+
+        accordionItem.innerHTML = `
+            <div class="accordion-header">
+                <div class="toggle-btn">&gt;</div>
+                <div class="header-flex">
+                    <div class="aluno-nome">${aluno.nome || 'Nome não informado'}</div>
+                    <div class="summary-info">
+                        <span>${aluno.instituicao || 'N/A'}</span>
+                        <span>${aluno.curso || 'N/A'}</span>
+                        <span>${aluno.turno || 'N/A'}</span>
+                    </div>
+                </div>
+                <button class="delete-btn" title="Excluir" data-id="${aluno.id}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0,0,256,256">
+            <g fill="#ffffff" fill-rule="nonzero" stroke="none">
+              <g transform="scale(9.84615,9.84615)">
+                <path d="M11,-0.03125c-0.83594,0 -1.65625,0.16406 -2.25,0.75c-0.59375,0.58594 -0.78125,1.41797 -0.78125,2.28125h-3.96875c-0.55078,0 -1,0.44922 -1,1h-1v2h22v-2h-1c0,-0.55078 -0.44922,-1 -1,-1h-3.96875c0,-0.86328 -0.1875,-1.69531 -0.78125,-2.28125c-0.59375,-0.58594 -1.41406,-0.75 -2.25,-0.75zM11,2.03125h4c0.54688,0 0.71875,0.12891 0.78125,0.1875c0.0625,0.05859 0.1875,0.22266 0.1875,0.78125h-5.9375c0,-0.55859 0.125,-0.72266 0.1875,-0.78125c0.0625,-0.05859 0.23438,-0.1875 0.78125,-0.1875zM4,7v16c0,1.65234 1.34766,3 3,3h12c1.65234,0 3,-1.34766 3,-3v-16zM8,10h2v12h-2zM12,10h2v12h-2zM16,10h2v12h-2z"></path>
+              </g>
+            </g>
+          </svg>
+                </button>
+            </div>
+            <div class="accordion-content">
+                <div class="info-grid">
+                    <div class="info-item"><strong>Nome:</strong> ${aluno.nome || '-'}</div>
+                    <div class="info-item"><strong>Email:</strong> ${aluno.email || '-'}</div>
+                    <div class="info-item"><strong>Instituição:</strong> ${aluno.instituicao || '-'}</div>
+                    <div class="info-item"><strong>Curso:</strong> ${aluno.curso || '-'}</div>
+                    <div class="info-item"><strong>Período:</strong> ${aluno.periodo ? aluno.periodo + 'º' : '-'}</div>
+                    <div class="info-item"><strong>Turno:</strong> ${aluno.turno || '-'}</div>
+                    <div class="info-item"><strong>CPF:</strong> ${aluno.cpf || '-'}</div>
+                    <div class="info-item"><strong>Telefone:</strong> ${aluno.telefone || '-'}</div>
+                </div>
+                <div class="horarios">
+                    <h3>Horários Registrados</h3>
+                    <table>
+                        <thead><tr><th>Dia</th><th>Horário</th></tr></thead>
+                        <tbody>${horariosFormatados}</tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+        container.appendChild(accordionItem);
+    });
+
+    addAccordionListeners();
+}
+
+// ---------- ADICIONA EVENTOS AO ACCORDION ----------
+function addAccordionListeners() {
+    const container = document.getElementById("accordionContainer");
+
+    container.addEventListener('click', (e) => {
+        const deleteButton = e.target.closest('.delete-btn');
+        if (deleteButton) {
+            e.stopPropagation();
+            const alunoId = deleteButton.dataset.id;
+            excluirAluno(alunoId);
             return;
         }
 
-        for (const aluno of alunos) {
-            corpo.innerHTML += `
-                <tr>
-                    <td>${aluno.nome}</td>
-                    <td>${aluno.email}</td>
-                    <td>${aluno.instituicao}</td>
-                    <td>${aluno.ultimoLogin}</td>
-                    <td>${Array.isArray(aluno.horarios) ? aluno.horarios.join(", ") : "-"}</td>
-                    <td>
-                        <button class="delete-btn" data-id="${aluno.id}" title="Excluir">
-                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0,0,256,256">
-                                <g fill="#ffffff" fill-rule="nonzero" stroke="none">
-                                    <g transform="scale(9.84615,9.84615)">
-                                        <path d="M11,-0.03125c-0.83594,0 -1.65625,0.16406 -2.25,0.75c-0.59375,0.58594 -0.78125,1.41797 -0.78125,2.28125h-3.96875c-0.55078,0 -1,0.44922 -1,1h-1v2h22v-2h-1c0,-0.55078 -0.44922,-1 -1,-1h-3.96875c0,-0.86328 -0.1875,-1.69531 -0.78125,-2.28125c-0.59375,-0.58594 -1.41406,-0.75 -2.25,-0.75zM11,2.03125h4c0.54688,0 0.71875,0.12891 0.78125,0.1875c0.0625,0.05859 0.1875,0.22266 0.1875,0.78125h-5.9375c0,-0.55859 0.125,-0.72266 0.1875,-0.78125c0.0625,-0.05859 0.23438,-0.1875 0.78125,-0.1875zM4,7v16c0,1.65234 1.34766,3 3,3h12c1.65234,0 3,-1.34766 3,-3v-16zM8,10h2v12h-2zM12,10h2v12h-2zM16,10h2v12h-2z"></path>
-                                    </g>
-                                </g>
-                            </svg>
-                        </button>
-                    </td>
-                </tr>
-            `;
+        const header = e.target.closest('.accordion-header');
+        if (header) {
+            const item = header.parentElement;
+            item.classList.toggle('open');
         }
-
-        // adiciona novamente evento de exclusão
-        document.querySelectorAll('.delete-btn').forEach(button => {
-            button.addEventListener('click', (event) => {
-                const alunoIdParaExcluir = event.currentTarget.dataset.id;
-                excluirAluno(alunoIdParaExcluir);
-            });
-        });
-    }, 200);
+    });
 }
 
 // ---------- EXCLUI ALUNO ----------
@@ -102,8 +141,14 @@ async function excluirAluno(alunoId) {
 
             if (!res.ok) throw new Error("Erro ao excluir aluno");
 
-            alert("Aluno excluído com sucesso!");
-            carregarAlunos();
+            const resultado = await res.json();
+            alert(resultado.message || "Aluno excluído com sucesso!");
+
+            // Remove o item da lista local e do DOM
+            const itemParaRemover = document.querySelector(`.accordion-item[data-aluno-id="${alunoId}"]`);
+            if (itemParaRemover) itemParaRemover.remove();
+            listaAlunos = listaAlunos.filter(a => a.id !== alunoId);
+            atualizarGrafico(listaAlunos); // Atualiza o gráfico após a exclusão
         } catch (error) {
             console.error("Erro ao excluir aluno:", error);
             alert("Erro ao excluir aluno: " + error.message);
@@ -118,8 +163,7 @@ document.getElementById("barraPesquisa").addEventListener("keyup", (e) => {
         aluno.nome.toLowerCase().includes(termo) ||
         aluno.email.toLowerCase().includes(termo) ||
         aluno.instituicao.toLowerCase().includes(termo) ||
-        aluno.ultimoLogin.toLowerCase().includes(termo) ||
-        (Array.isArray(aluno.horarios) ? aluno.horarios.join(" ").toLowerCase() : "").includes(termo)
+        (aluno.curso && aluno.curso.toLowerCase().includes(termo))
     );
     renderizarAlunos(filtrados);
 });
@@ -164,33 +208,32 @@ function atualizarGrafico(alunos) {
             onClick: (evt, elements) => {
                 if (!elements.length) return;
                 const index = elements[0].index;
-                const instituicaoClicada = labels[index];
+                const instituicaoClicada = chartInstituicoes.data.labels[index];
 
                 if (instituicaoSelecionada === instituicaoClicada) {
-                    // já estava filtrando → volta ao normal
+                    
                     instituicaoSelecionada = null;
                     renderizarAlunos(listaAlunos);
+
+                    chartInstituicoes.data.labels = labels;
+                    chartInstituicoes.data.datasets[0].data = data;
                     chartInstituicoes.data.datasets[0].backgroundColor = [...coresOriginais];
-                    chartInstituicoes.options.elements.arc.borderWidth = 1;
                 } else {
-                    // ativa filtro
                     instituicaoSelecionada = instituicaoClicada;
                     const filtrados = listaAlunos.filter(a => {
                         return a.instituicao && a.instituicao.trim().toLowerCase() === instituicaoClicada.toLowerCase();
                     });
                     renderizarAlunos(filtrados);
 
-                    // pega a cor da fatia clicada
-                    const corSelecionada = coresOriginais[index];
+                    const originalIndex = labels.indexOf(instituicaoClicada);
+                    const corSelecionada = coresOriginais[originalIndex];
+                    const valorSelecionado = data[originalIndex];
 
-                    // deixa o gráfico inteiro daquela cor
-                    chartInstituicoes.data.datasets[0].backgroundColor = labels.map(() => corSelecionada);
-
-                    // remove divisórias
-                    chartInstituicoes.options.elements.arc.borderWidth = 0;
+                    chartInstituicoes.data.labels = [instituicaoClicada];
+                    chartInstituicoes.data.datasets[0].data = [valorSelecionado];
+                    chartInstituicoes.data.datasets[0].backgroundColor = [corSelecionada];
                 }
 
-                // anima suavemente
                 chartInstituicoes.update({
                     duration: 800,
                     easing: "easeInOutCubic"
