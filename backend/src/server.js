@@ -17,11 +17,11 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Middleware para JSON (req.body)
-app.use(express.json());
-
 // Servir arquivos estáticos da pasta frontend (HTML, CSS, JS, imagens)
 app.use(express.static(path.join(__dirname, "../../frontend")));
+
+// Middleware para JSON (req.body) - movido para depois do static para otimização
+app.use(express.json());
 
 // Rotas do backend
 app.use("/auth", authRoutes);
