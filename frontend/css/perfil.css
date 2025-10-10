@@ -109,20 +109,31 @@
   transform: scale(1.05);
 }
 
-/* Formulário do modal de Alterar Senha */
-.senha-form {
+/* Botão Atualizar E-mail */
+#btnAtualizarEmail {
+  background-color: #006680;
+  color: #fff;
+}
+
+#btnAtualizarEmail:hover {
+  background-color: #004d5c;
+  transform: scale(1.05);
+}
+
+/* Formulário do modal de Alterar Senha, Perfil e Email */
+.senha-form, .perfil-form, #formAtualizarEmail {
   display: flex;
   flex-direction: column;
   gap: 12px;
   margin-top: 20px;
 }
 
-.senha-form label {
+.senha-form label, .perfil-form label, #formAtualizarEmail label {
   font-weight: 500;
-  color: #336699; /* azul consistente */
+  color: #336699;
 }
 
-.senha-form input {
+.senha-form input, .perfil-form input, #formAtualizarEmail input {
   padding: 8px 12px;
   border: 1px solid #ccc;
   border-radius: 6px;
@@ -131,7 +142,7 @@
   box-sizing: border-box;
 }
 
-.senha-form button {
+.senha-form button, .perfil-form button, #formAtualizarEmail button {
   margin-top: 10px;
   background-color: #004d7a;
   color: #fff;
@@ -143,7 +154,7 @@
   transition: background 0.2s, transform 0.2s;
 }
 
-.senha-form button:hover {
+.senha-form button:hover, .perfil-form button:hover, #formAtualizarEmail button:hover {
   background-color: #00335c;
   transform: scale(1.03);
 }
@@ -190,42 +201,4 @@
 .perfil-btn:hover {
   background: #005f6b;
   transform: scale(1.05);
-}
-
-/* Modal Alterar Senha herda a mesma classe .modal e .modal-content */
-
-/* Formulário dentro do modal */
-.senha-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 15px;
-}
-
-.senha-form label {
-  font-weight: bold;
-  color: #004d7a;
-}
-
-.senha-form input {
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 0.95rem;
-}
-
-.senha-form button {
-  background-color: #008793;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 0;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
-  margin-top: 10px;
-}
-
-.senha-form button:hover {
-  background-color: #005f6b;
-  transform: scale(1.03);
 }

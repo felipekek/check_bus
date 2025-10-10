@@ -19,6 +19,7 @@
     <!-- Botões do modal -->
     <div class="perfil-modal-buttons">
       <button id="btnAtualizarPerfil">Atualizar Perfil</button>
+      <button id="btnAtualizarEmail">Atualizar E-mail</button> <!-- Novo botão -->
       <button id="btnAlterarSenha">Alterar Senha</button>
     </div>
   </div>
@@ -41,6 +42,56 @@
       <input type="password" id="confirmaNovaSenha" required>
 
       <button type="submit" id="btnSalvarSenha">Salvar</button>
+    </form>
+  </div>
+</div>
+
+<!-- Modal Atualizar Perfil -->
+<div id="modalAtualizarPerfil" class="modal">
+  <div class="modal-content">
+    <span class="close" id="btnFecharAtualizarPerfil">&times;</span>
+    <h2 style="color: #008793;">Atualizar Perfil</h2>
+
+    <form id="formAtualizarPerfil" class="senha-form">
+      <label for="nomeAtualizar">Nome:</label>
+      <input type="text" id="nomeAtualizar" required>
+
+      <label for="telefoneAtualizar">Telefone:</label>
+      <input type="text" id="telefoneAtualizar">
+
+      <label for="instituicaoAtualizar">Instituição:</label>
+      <input type="text" id="instituicaoAtualizar">
+
+      <label for="cursoAtualizar">Curso:</label>
+      <input type="text" id="cursoAtualizar">
+
+      <label for="turnoAtualizar">Turno:</label>
+      <input type="text" id="turnoAtualizar">
+
+      <label for="periodoAtualizar">Período:</label>
+      <input type="text" id="periodoAtualizar">
+
+      <button type="submit" id="btnSalvarPerfil">Salvar Alterações</button>
+    </form>
+  </div>
+</div>
+
+<!-- Modal Atualizar E-mail -->
+<div id="modalAtualizarEmail" class="modal">
+  <div class="modal-content">
+    <span id="btnFecharEmail" class="close">&times;</span>
+    <h2>Atualizar E-mail</h2>
+    <form id="formAtualizarEmail">
+      <label for="emailAtual">E-mail atual:</label>
+      <input type="email" id="emailAtual" required>
+
+      <label for="senhaAtualEmail">Senha atual:</label>
+      <input type="password" id="senhaAtualEmail" required>
+
+      <label for="novoEmail">Novo e-mail:</label>
+      <input type="email" id="novoEmail" required>
+
+      <button type="submit">Salvar</button>
     </form>
   </div>
 </div>
