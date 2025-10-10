@@ -1,6 +1,6 @@
 // backend/src/controllers/adminController.js
 
-import { db } from "../config/firebase-admin.js"; 
+import { db, auth as adminAuth } from "../config/firebase-admin.js";
 
 /**
  * Função: listarAlunos
@@ -35,14 +35,23 @@ export async function listarAlunos(req, res) {
         // 2.2 Organizar os horários em um array de strings
         const horarios = horariosSnap.docs.map((h) => {
           const d = h.data();
-          return `${d.titulo || ""} ${d.horario || ""}`.trim();
+          // Retornando objeto para manter a estrutura que o frontend espera
+          return {
+            dia: d.titulo || "Dia não informado",
+            horario: d.horario || "Horário não informado",
+          };
         });
 
         // 2.3 Retornar os dados completos do aluno
         return {
           id: alunoId,
           nome: aluno.nome || "-",
+          cpf: aluno.cpf || "-",
+          telefone: aluno.telefone || "-",
           email: aluno.email || "-",
+          curso: aluno.curso || "-",
+          turno: aluno.turno || "-",
+          periodo: aluno.periodo || "-",
           instituicao: aluno.instituicao || "-",
           ultimoLogin: aluno.ultimoLogin || "-",
           horarios: horarios.length > 0 ? horarios : [],
@@ -69,6 +78,9 @@ export async function excluirAluno(req, res) {
   try {
     const { id } = req.params;
 
+    // 0. Deletar o usuário do Firebase Auth (boa prática)
+    await adminAuth.deleteUser(id);
+
     // 1. Deletar o documento do aluno em "alunos"
     await db.collection("alunos").doc(id).delete();
 
@@ -86,7 +98,7 @@ export async function excluirAluno(req, res) {
 
     await batch.commit();
 
-    res.json({ success: true, message: "Aluno e horários excluídos com sucesso." });
+    res.json({ message: "Aluno e seus dados foram excluídos com sucesso." });
   } catch (err) {
     console.error("Erro ao excluir aluno:", err);
     res.status(500).json({ error: "Erro ao excluir aluno" });

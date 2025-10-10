@@ -57,9 +57,9 @@ function renderizarAlunos(alunos) {
         accordionItem.className = 'accordion-item';
         accordionItem.dataset.alunoId = aluno.id;
 
-        // Formata os horários para exibição
+        
         const horariosFormatados = Array.isArray(aluno.horarios) && aluno.horarios.length > 0 
-            ? aluno.horarios.map(h => `<tr><td>${h.dia}</td><td>${h.horario}</td></tr>`).join('')
+            ? aluno.horarios.map(h => `<tr><td>${h.dia || '-'}</td><td>${h.horario || '-'}</td></tr>`).join('')
             : '<tr><td colspan="2" class="no-data">Nenhum horário registrado.</td></tr>';
 
         accordionItem.innerHTML = `
@@ -114,16 +114,14 @@ function addAccordionListeners() {
     const container = document.getElementById("accordionContainer");
 
     container.addEventListener('click', (e) => {
-        // Evento para excluir aluno (delegação de evento)
         const deleteButton = e.target.closest('.delete-btn');
         if (deleteButton) {
-            e.stopPropagation(); // Impede que o accordion abra/feche
+            e.stopPropagation();
             const alunoId = deleteButton.dataset.id;
             excluirAluno(alunoId);
             return;
         }
 
-        // Evento para abrir/fechar o accordion
         const header = e.target.closest('.accordion-header');
         if (header) {
             const item = header.parentElement;
@@ -143,11 +141,14 @@ async function excluirAluno(alunoId) {
 
             if (!res.ok) throw new Error("Erro ao excluir aluno");
 
-            alert("Aluno excluído com sucesso!");
-            // Remove o item do DOM sem recarregar a página inteira
+            const resultado = await res.json();
+            alert(resultado.message || "Aluno excluído com sucesso!");
+
+            // Remove o item da lista local e do DOM
             const itemParaRemover = document.querySelector(`.accordion-item[data-aluno-id="${alunoId}"]`);
             if (itemParaRemover) itemParaRemover.remove();
-            listaAlunos = listaAlunos.filter(a => a.id !== alunoId); // Atualiza a lista local
+            listaAlunos = listaAlunos.filter(a => a.id !== alunoId);
+            atualizarGrafico(listaAlunos); // Atualiza o gráfico após a exclusão
         } catch (error) {
             console.error("Erro ao excluir aluno:", error);
             alert("Erro ao excluir aluno: " + error.message);
@@ -207,38 +208,32 @@ function atualizarGrafico(alunos) {
             onClick: (evt, elements) => {
                 if (!elements.length) return;
                 const index = elements[0].index;
-                // Pega o label da fatia clicada a partir dos dados atuais do gráfico
                 const instituicaoClicada = chartInstituicoes.data.labels[index];
 
                 if (instituicaoSelecionada === instituicaoClicada) {
-                    // Se já estava filtrando por esta instituição, volta ao normal
+                    
                     instituicaoSelecionada = null;
                     renderizarAlunos(listaAlunos);
 
-                    // Restaura os dados originais do gráfico
                     chartInstituicoes.data.labels = labels;
                     chartInstituicoes.data.datasets[0].data = data;
                     chartInstituicoes.data.datasets[0].backgroundColor = [...coresOriginais];
                 } else {
-                    // Ativa o filtro para a instituição clicada
                     instituicaoSelecionada = instituicaoClicada;
                     const filtrados = listaAlunos.filter(a => {
                         return a.instituicao && a.instituicao.trim().toLowerCase() === instituicaoClicada.toLowerCase();
                     });
                     renderizarAlunos(filtrados);
 
-                    // Encontra o índice original para pegar a cor correta
                     const originalIndex = labels.indexOf(instituicaoClicada);
                     const corSelecionada = coresOriginais[originalIndex];
                     const valorSelecionado = data[originalIndex];
 
-                    // Atualiza o gráfico para mostrar apenas a fatia selecionada
                     chartInstituicoes.data.labels = [instituicaoClicada];
                     chartInstituicoes.data.datasets[0].data = [valorSelecionado];
                     chartInstituicoes.data.datasets[0].backgroundColor = [corSelecionada];
                 }
 
-                // Anima a transição do gráfico
                 chartInstituicoes.update({
                     duration: 800,
                     easing: "easeInOutCubic"
