@@ -1,6 +1,7 @@
 // backend/src/controllers/adminController.js
 
-import { db, auth as adminAuth } from "../config/firebase-admin.js";
+import { db } from "../config/firebase-admin.js";
+import { getAuth } from "firebase-admin/auth";
 
 /**
  * Função: listarAlunos
@@ -79,7 +80,7 @@ export async function excluirAluno(req, res) {
     const { id } = req.params;
 
     // 0. Deletar o usuário do Firebase Auth (boa prática)
-    await adminAuth.deleteUser(id);
+    await getAuth().deleteUser(id);
 
     // 1. Deletar o documento do aluno em "alunos"
     await db.collection("alunos").doc(id).delete();
