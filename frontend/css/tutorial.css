@@ -11,11 +11,13 @@
 }
 
 .tutorial-highlight {
-  position: absolute;
-  border-radius: 8px;
-  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.65);
-  z-index: 1000;
-  transition: top 0.3s, left 0.3s, width 0.3s, height 0.3s;
+  position: relative;
+  z-index: 9999 !important;
+  box-shadow: 0 0 0 4px #fff, 0 0 0 8px #1976d2, 0 8px 32px rgba(0,0,0,0.25);
+  border-radius: 12px;
+  transition: box-shadow 0.3s, border-radius 0.3s;
+  outline: 2px solid #1976d2;
+  outline-offset: 4px;
 }
 
 .tutorial-popup {

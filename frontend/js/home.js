@@ -1,7 +1,8 @@
 // frontend/js/home.js
 import { db, auth } from "./firebase-config.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { collection, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { collection, getDocs, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { initTutorial } from "./tutorial.js";
 
 let userId = null;
 const grid = document.getElementById("menuGrid");
@@ -14,6 +15,23 @@ onAuthStateChanged(auth, async (user) => {
   }
 
   userId = user.uid;
+
+  // Verifica se é o primeiro login
+  let mostrarTutorial = false;
+  try {
+    const userDoc = await getDocs(collection(db, "usuarios"));
+    let usuario = null;
+    userDoc.forEach(docItem => {
+      if (docItem.id === userId) usuario = docItem.data();
+    });
+    if (usuario && usuario.primeiroLogin) {
+      mostrarTutorial = true;
+      // Atualiza o campo para não mostrar novamente
+      await setDoc(doc(db, "usuarios", userId), { primeiroLogin: false }, { merge: true });
+    }
+  } catch (e) {
+    console.error("Erro ao verificar primeiro login:", e);
+  }
 
   // Pega tipoUsuario do login (aluno ou admin)
   const tipoUsuario = localStorage.getItem("tipoUsuario") || "aluno";
@@ -55,6 +73,11 @@ onAuthStateChanged(auth, async (user) => {
   grid.style.visibility = "visible";
 
   carregarHorarios();
+
+  // Mostra tutorial só no primeiro login
+  if (mostrarTutorial) {
+    initTutorial(passosTutorial, "tutorialHomeVisto");
+  }
 });
 
 // Carrega horários do usuário
@@ -109,3 +132,28 @@ window.excluirHorario = async (docId) => {
 window.logout = () => {
   signOut(auth).then(() => window.location.href = "index.html");
 };
+
+const passosTutorial = [
+  {
+    element: "#menuGrid",
+    title: "Menu Principal",
+    text: "Aqui você acessa as principais funções do sistema: horários, GPS, relatórios e lista de alunos (se for admin).",
+    position: "bottom"
+  },
+  {
+    element: "#btnPerfil",
+    title: "Perfil",
+    text: "Clique aqui para visualizar e editar seus dados de perfil.",
+    position: "left"
+  },
+  {
+    element: "#btnFeedback",
+    title: "Feedback",
+    text: "Envie sugestões ou relate problemas para a equipe.",
+    position: "left"
+  }
+];
+
+window.addEventListener("DOMContentLoaded", () => {
+  initTutorial(passosTutorial, "tutorialHomeVisto");
+});

@@ -127,6 +127,21 @@ senhaInput.addEventListener("input", () => {
   }
 });
 
+function formatarTelefone(valor) {
+  valor = valor.replace(/\D/g, "");
+  if (valor.length > 11) valor = valor.slice(0, 11);
+  if (valor.length > 0) valor = "(" + valor;
+  if (valor.length > 3) valor = valor.slice(0, 3) + ") " + valor.slice(3);
+  if (valor.length > 10) valor = valor.slice(0, 10) + "-" + valor.slice(10);
+  return valor;
+}
+
+if (telefoneInput) {
+  telefoneInput.addEventListener("input", function (e) {
+    this.value = formatarTelefone(this.value);
+  });
+}
+
 // ===== Evento de envio do formulário =====
 form.addEventListener("submit", async (e) => {
   e.preventDefault();

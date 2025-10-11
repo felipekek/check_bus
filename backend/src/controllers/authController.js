@@ -101,6 +101,7 @@ export const cadastrarUsuario = async (req, res) => {
       telefone,
       periodo,
       criadoEm: new Date().toISOString(),
+      primeiroLogin: true // <-- Adicione esta linha!
     });
 
     res.status(201).json({
