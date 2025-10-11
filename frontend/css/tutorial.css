@@ -1,0 +1,94 @@
+/* Estilos do Tutorial Interativo */
+.tutorial-overlay {
+  display: none; /* Oculto por padrão */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.tutorial-highlight {
+  position: absolute;
+  border-radius: 8px;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.65);
+  z-index: 1000;
+  transition: top 0.3s, left 0.3s, width 0.3s, height 0.3s;
+}
+
+.tutorial-popup {
+  position: absolute;
+  background-color: #333;
+  color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  width: 300px;
+  z-index: 1001;
+  border: 1px solid #555;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: top 0.3s, left 0.3s;
+}
+
+.tutorial-popup h3 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+}
+
+.tutorial-popup p {
+  margin: 0 0 15px 0;
+  font-size: 14px;
+}
+
+.tutorial-popup-arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+/* Seta para baixo (popup em cima) */
+.tutorial-popup.bottom .tutorial-popup-arrow {
+  top: 100%;
+  left: 50%;
+  margin-left: -10px;
+  border-width: 10px 10px 0 10px;
+  border-color: #333 transparent transparent transparent;
+}
+
+/* Seta para cima (popup em baixo) */
+.tutorial-popup.top .tutorial-popup-arrow {
+  bottom: 100%;
+  left: 50%;
+  margin-left: -10px;
+  border-width: 0 10px 10px 10px;
+  border-color: transparent transparent #333 transparent;
+}
+
+.tutorial-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tutorial-navigation button {
+  background-color: #555;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.tutorial-navigation button:hover {
+  background-color: #777;
+}
+
+#tutorialNextBtn {
+    background-color: #3498db;
+}
+
+#tutorialNextBtn:hover {
+    background-color: #2980b9;
+}

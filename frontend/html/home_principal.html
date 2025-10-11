@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home Principal</title>
   <link rel="stylesheet" href="../css/home_principal.css">
+  <link rel="stylesheet" href="../css/tutorial.css">
   <link rel="stylesheet" href="../css/perfil.css">
   <link rel="stylesheet" href="../css/feedback.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -34,6 +35,21 @@
       <h2>Deixe seu Feedback</h2>
       <textarea id="feedbackText" placeholder="Escreva seu comentário aqui..."></textarea>
       <button id="sendFeedback">Enviar</button>
+    </div>
+  </div>
+
+  <!-- Estrutura do Tutorial Interativo -->
+  <div class="tutorial-overlay" id="tutorialOverlay">
+    <div class="tutorial-highlight" id="tutorialHighlight"></div>
+    <div class="tutorial-popup" id="tutorialPopup">
+        <div class="tutorial-popup-arrow" id="tutorialPopupArrow"></div>
+        <h3 id="tutorialTitle"></h3>
+        <p id="tutorialText"></p>
+        <div class="tutorial-navigation">
+            <button id="tutorialSkipBtn">Pular</button>
+            <span id="tutorialStepCounter"></span>
+            <button id="tutorialNextBtn">Próximo</button>
+        </div>
     </div>
   </div>
 
