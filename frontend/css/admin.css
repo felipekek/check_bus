@@ -14,6 +14,96 @@ h1 {
     color: #004d7a;
 }
 
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 18px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    overflow: hidden;
+    color: #222;
+}
+
+th, td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #e0e0e0;
+    text-align: left;
+    font-size: 15px;
+}
+
+th {
+    background: #008793;
+    color: #fff;
+    font-weight: 600;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+.voltar-btn {
+    margin-top: 24px;
+    background: #008793;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 28px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.voltar-btn:hover {
+    background: #00677a;
+}
+
+.no-data {
+    text-align: center;
+    color: #888;
+    padding: 30px 0;
+    font-size: 16px;
+}
+
+/* Botão de excluir com SVG da lixeira */
+.delete-btn {
+    background: #e74c3c;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 10px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.delete-btn:hover {
+    background: #c0392b;
+}
+
+.delete-btn svg {
+    width: 18px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.delete-btn svg path,
+.delete-btn svg line {
+    stroke: white;    /* cor branca */
+    stroke-width: 2;  /* espessura consistente */
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.delete-btn svg path:first-child {
+    stroke-width: 3.5; /* aumenta a espessura da tampa da lixeira */
+}
+
 .titulo-container {
     display: flex;
     justify-content: center;
@@ -96,198 +186,17 @@ h1 {
     opacity: 0.3; /* leve efeito de desfoque ao atualizar */
 }
 
-/* ================================= */
-/* ESTILOS DO ACCORDION DE ALUNOS    */
-/* ================================= */
-
-/* Item do Accordion */
-.accordion-item {
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  margin: 10px 0;
-  overflow: hidden;
-  background: #f9f9f9;
-  position: relative; /* necessário para o botão de excluir */
-  transition: box-shadow 0.3s ease, border-color 0.3s ease;
-}
-.accordion-item:hover {
-    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-    border-color: #008793;
+#corpoTabelaAlunos {
+  transition: opacity 0.4s ease-in-out;
 }
 
-/* Header do Accordion */
-.accordion-header {
-  display: flex;
-  align-items: center;
-  padding: 12px 15px;
-  cursor: pointer;
-  background: linear-gradient(90deg, #004d7a, #00677a);
-  color: white;
-  font-weight: bold;
-  position: relative;
-}
-
-.toggle-btn {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: #fff;
-  color: #004d7a;
-  margin-right: 12px;
-  font-weight: bold;
-  font-size: 16px;
-  user-select: none;
-  transition: transform 0.3s ease;
-}
-
-.accordion-item.open .toggle-btn {
-  transform: rotate(90deg);
-}
-
-/* Container flex do header: nome + resumo */
-.header-flex {
-  display: flex;
-  align-items: center;
-  flex: 1;
-  gap: 20px;
-  padding-right: 50px; /* Espaço para o botão de deletar não sobrepor o texto */
-}
-
-.aluno-nome {
-  text-align: left;
-  font-weight: bold;
-  flex: 1.5; /* ocupa um pouco mais de espaço */
-}
-
-/* Resumo no header */
-.summary-info {
-  display: flex;
-  flex: 3; /* ocupa mais espaço proporcional */
-  justify-content: space-between;
-  font-size: 15px;
-  color: #e0f7fa; /* Cor ciano bem clara para melhor contraste */
-  transition: all 0.5s ease;
-  padding: 0 20px;
-}
-
-.summary-info span {
-  flex: 1;
-  text-align: center;
-}
-
-.accordion-item.open .summary-info {
+#corpoTabelaAlunos.fade-out {
   opacity: 0;
-  transform: translateY(-20px);
-  height: 0;
-  overflow: hidden;
+}
+#corpoTabelaAlunos {
+  transition: opacity 0.4s ease-in-out;
 }
 
-/* Conteúdo do accordion */
-.accordion-content {
-  max-height: 0;
+#corpoTabelaAlunos.fade-out {
   opacity: 0;
-  overflow: hidden;
-  transition: max-height 0.6s ease, opacity 0.6s ease, padding 0.3s ease;
-  padding: 0 15px;
-  display: flex;
-  gap: 30px;
-  background: #fff;
-}
-
-.accordion-item.open .accordion-content {
-  max-height: 600px;
-  opacity: 1;
-  padding: 20px 15px;
-}
-
-/* Coluna esquerda: informações */
-.info-grid {
-  flex: 2;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px 30px;
-}
-
-.info-item {
-  background: #f8f9fa;
-  padding: 10px;
-  border-radius: 6px;
-  border-left: 3px solid #008793;
-}
-
-.info-item strong {
-  display: block;
-  margin-bottom: 4px;
-  color: #004d7a;
-}
-
-/* Coluna direita: horários */
-.horarios {
-  flex: 1;
-}
-
-.horarios h3 {
-  margin-top: 0;
-  margin-bottom: 10px;
-  color: #004d7a;
-  text-align: center;
-}
-
-/* Tabela de horários dentro do accordion */
-.horarios table {
-  width: 100%;
-  border-collapse: collapse;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-}
-.horarios th, .horarios td {
-  padding: 8px;
-  text-align: center;
-  border-bottom: 1px solid #eee;
-  font-size: 14px;
-}
-.horarios th {
-  background: linear-gradient(90deg, #004d7a, #008793);
-  color: white;
-  font-weight: 600;
-}
-
-
-/* Botão de excluir */
-.delete-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: none;
-  background: #e74c3c;
-  color: #fff;
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  transition: transform 0.2s ease, background 0.2s ease;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  right: 15px; /* sempre no canto direito */
-}
-
-.delete-btn:hover {
-  background: #c0392b;
-  transform: translateY(-50%) scale(1.1);
-}
-
-/* Estilos para o ícone SVG da lixeira dentro do botão */
-.delete-btn svg path,
-.delete-btn svg line {
-    stroke: white;    /* cor branca */
-    stroke-width: 2;  /* espessura consistente */
-    stroke-linecap: round;
-    stroke-linejoin: round;
 }

@@ -77,23 +77,6 @@ cpfInput.addEventListener("input", function (e) {
   }
 });
 
-// ===== Máscara Telefone =====
-telefoneInput.addEventListener("input", function (e) {
-  let value = e.target.value.replace(/\D/g, "");
-  if (value.length > 11) {
-    value = value.slice(0, 11);
-  }
-
-  // Aplica a máscara (xx) xxxxx-xxxx
-  if (value.length > 6) {
-    value = value.replace(/^(\d{2})(\d{5})(\d{1,4})/, "($1) $2-$3");
-  } else if (value.length > 2) {
-    value = value.replace(/^(\d{2})(\d{1,5})/, "($1) $2");
-  }
-
-  e.target.value = value;
-});
-
 // ===== Validações em tempo real =====
 nomeInput.addEventListener("input", () => {
   if (nomeInput.value.trim().length < 3) {
