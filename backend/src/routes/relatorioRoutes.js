@@ -1,6 +1,7 @@
+// backend/src/routes/relatorioRoutes.js
 import express from "express";
 import { listarRelatorios, excluirRelatorio } from "../controllers/relatorioController.js";
-import { gerarPDF } from "../controllers/pdfController.js"; // função correta
+import { gerarPDF } from "../controllers/pdfController.js";
 import { verificarAdmin } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
@@ -11,7 +12,7 @@ router.get("/", verificarAdmin, listarRelatorios);
 // DELETE /relatorios/:id → exclui registro pelo ID (somente admin)
 router.delete("/:id", verificarAdmin, excluirRelatorio);
 
-// GET /relatorios/pdf → gera e baixa PDF (somente admin)
+// GET /relatorios/pdf → gera e baixa PDF (com ou sem filtros)
 router.get("/pdf", verificarAdmin, gerarPDF);
 
 export default router;

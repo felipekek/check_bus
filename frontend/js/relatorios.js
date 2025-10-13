@@ -1,7 +1,13 @@
+/**
+ * frontend/js/relatorios.js
+ * Página de Relatórios (Admin)
+ * Lista, filtra, exclui registros e permite gerar PDFs completos ou filtrados.
+ */
+
 const token = localStorage.getItem("token");
 const tipoUsuario = localStorage.getItem("tipoUsuario");
 
-// Controle de acesso
+// 🔒 Controle de acesso (apenas admin)
 if (!token || tipoUsuario !== "admin") {
   window.location.href = "index.html";
 }
@@ -13,6 +19,9 @@ const listaDiv = document.getElementById("lista");
 
 let registros = []; // Armazena os registros carregados
 
+/**
+ * Carrega relatórios do backend
+ */
 async function carregarRelatorios() {
   listaDiv.innerHTML = `
     <table id="tabela-relatorios">
@@ -51,6 +60,9 @@ async function carregarRelatorios() {
   }
 }
 
+/**
+ * Preenche filtros fixos
+ */
 function preencherFiltros() {
   const instituicoes = ["SENAI", "UEFS", "IFBA", "UNEFS"];
   const turnos = ["Manhã", "Tarde", "Noite"];
@@ -73,12 +85,18 @@ function preencherFiltros() {
   });
 }
 
+/**
+ * Formata data no formato DD/MM/YYYY
+ */
 function formatarData(dataISO) {
   if (!dataISO) return "";
   const partes = dataISO.split("-");
   return `${partes[2]}/${partes[1]}/${partes[0]}`;
 }
 
+/**
+ * Renderiza a tabela de registros
+ */
 function renderizarLista() {
   const tbody = document.querySelector("#tabela-relatorios tbody");
   tbody.innerHTML = "";
@@ -135,6 +153,9 @@ function renderizarLista() {
   });
 }
 
+/**
+ * Exclui um relatório por ID
+ */
 async function excluirRelatorio(id) {
   try {
     const res = await fetch(`/relatorios/${id}`, {
@@ -148,7 +169,7 @@ async function excluirRelatorio(id) {
   }
 }
 
-// Filtros e pesquisa
+/* ======== FILTROS E PESQUISA ======== */
 filtroInstituicao.addEventListener("change", renderizarLista);
 filtroTurno.addEventListener("change", renderizarLista);
 filtroData.addEventListener("change", renderizarLista);
@@ -163,14 +184,14 @@ document.getElementById("barraPesquisa").addEventListener("keyup", function() {
   });
 });
 
-// Logout
+/* ======== LOGOUT ======== */
 window.logout = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("tipoUsuario");
   window.location.href = "index.html";
 };
 
-// Menu lateral
+/* ======== MENU LATERAL ======== */
 window.toggleMenu = () => {
   const sidebar = document.getElementById("sidebar");
   const overlay = document.getElementById("overlay");
@@ -181,10 +202,10 @@ window.toggleMenu = () => {
   menuBtn.classList.toggle("hidden");
 };
 
-// Inicializa
+/* ======== INICIALIZAÇÃO ======== */
 carregarRelatorios();
 
-// Modal de download
+/* ======== MODAL DE DOWNLOAD ======== */
 const modal = document.getElementById("modalRelatorio");
 document.getElementById("botaoBaixarRelatorio").addEventListener("click", () => {
   modal.style.display = "block";
@@ -196,7 +217,7 @@ window.addEventListener("click", (event) => {
   if (event.target === modal) modal.style.display = "none";
 });
 
-// Checkbox "Todas as opções"
+/* ======== CHECKBOX "TODAS AS OPÇÕES" ======== */
 const checkboxTodas = document.getElementById("checkboxTodas");
 const checkboxes = document.querySelectorAll(".checkbox-coluna");
 
@@ -211,31 +232,58 @@ checkboxes.forEach(cb => {
   });
 });
 
-// Baixar PDF com colunas selecionadas
+/* ======== GERAR PDF (FILTRADO) ======== */
 document.getElementById("confirmarDownload").addEventListener("click", async () => {
   try {
+    // 1️⃣ Colunas selecionadas
     const colunasSelecionadas = Array.from(document.querySelectorAll(".checkbox-coluna:checked"))
       .map(cb => cb.dataset.chave);
 
-    // Se nenhuma coluna estiver marcada, baixa todas
     const colunas = colunasSelecionadas.length > 0 
       ? colunasSelecionadas 
       : ["aluno","idCartao","curso","instituicao","periodo","turno","data","horario"];
 
-    const res = await fetch(`/relatorios/pdf?colunas=${colunas.join(",")}`, {
-      headers: { "Authorization": `Bearer ${token}` }
-    });
+    // 2️⃣ Linhas visíveis (após filtros)
+    const linhasVisiveis = Array.from(document.querySelectorAll("#tabela-relatorios tbody tr"))
+      .filter(tr => tr.style.display !== "none" && !tr.classList.contains("no-data"))
+      .map(tr => {
+        const celulas = tr.querySelectorAll("td");
+        return {
+          aluno: celulas[0]?.textContent || "-",
+          idCartao: celulas[1]?.textContent || "-",
+          curso: celulas[2]?.textContent || "-",
+          instituicao: celulas[3]?.textContent || "-",
+          periodo: celulas[4]?.textContent || "-",
+          turno: celulas[5]?.textContent || "-",
+          data: celulas[6]?.textContent || "-",
+          horario: celulas[7]?.textContent || "-"
+        };
+      });
 
-    if (!res.ok) {
-      const error = await res.json();
-      throw new Error(error.error || "Erro ao gerar PDF");
+    // 3️⃣ Se nada filtrado, avisa
+    if (linhasVisiveis.length === 0) {
+      alert("Nenhum registro filtrado encontrado para baixar.");
+      return;
     }
 
+    // 4️⃣ Envia para backend
+    const res = await fetch(`/relatorios/pdf-filtrado`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify({ colunas, registros: linhasVisiveis })
+    });
+
+    if (!res.ok) throw new Error("Erro ao gerar PDF filtrado");
+
+    // 5️⃣ Baixa o arquivo
     const blob = await res.blob();
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "relatorios.pdf";
+    a.download = "relatorios_filtrados.pdf";
     document.body.appendChild(a);
     a.click();
     a.remove();

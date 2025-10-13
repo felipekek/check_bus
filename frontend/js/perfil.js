@@ -1,14 +1,17 @@
 // frontend/js/perfil.js
+
 import { auth, db } from "./firebase-config.js";
-import { 
-  onAuthStateChanged, 
-  updatePassword, 
+import {
+  onAuthStateChanged,
+  updatePassword,
   updateEmail,
-  reauthenticateWithCredential, 
-  EmailAuthProvider 
+  reauthenticateWithCredential,
+  EmailAuthProvider,
+  sendEmailVerification
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
+/** Controle de inicialização dos modais para não duplicar listeners */
 let modalCarregado = false;
 let perfilIniciado = false;
 let atualizarPerfilIniciado = false;
@@ -149,9 +152,13 @@ function initAlterarSenha() {
 
     try {
       const user = auth.currentUser;
+      if (!user) return alert("Usuário não autenticado.");
+
+      /** Reautentica e depois altera a senha */
       const cred = EmailAuthProvider.credential(user.email, senhaAtual);
       await reauthenticateWithCredential(user, cred);
       await updatePassword(user, novaSenha);
+
       alert("Senha alterada com sucesso!");
       modalSenha.style.display = "none";
       formSenha.reset();
@@ -210,16 +217,21 @@ function initAtualizarPerfil() {
 
 /**
  * Inicializa o modal de Atualizar E-mail
- * 
- * - Reautentica o usuário com a senha atual;
- * - Atualiza o e-mail no Firebase Authentication;
- * - Atualiza o e-mail também na coleção do Firestore (alunos).
+ *
+ * Fluxo:
+ * 1) Verifica se o provedor permite alteração (somente contas com login por senha);
+ * 2) Reautentica usando a senha atual;
+ * 3) Atualiza o e-mail no Authentication;
+ * 4) Envia e-mail de verificação para o novo e-mail;
+ * 5) Atualiza o campo email no Firestore (coleção "alunos").
+ */
+/**
+ * Inicializa o modal de Atualizar E-mail
  */
 function initAtualizarEmail() {
   const modalEmail = document.getElementById("modalAtualizarEmail");
   const btnFecharEmail = document.getElementById("btnFecharEmail");
   const formEmail = document.getElementById("formAtualizarEmail");
-
   const btnAbrirEmail = document.getElementById("btnAtualizarEmail");
 
   if (!modalEmail || !btnFecharEmail || !formEmail || !btnAbrirEmail) return;
@@ -241,20 +253,55 @@ function initAtualizarEmail() {
     if (!user) return alert("Usuário não autenticado.");
 
     const senhaAtual = document.getElementById("senhaAtualEmail").value;
-    const novoEmail = document.getElementById("novoEmail").value;
+    const novoEmail = document.getElementById("novoEmail").value.trim();
+
+    if (!senhaAtual || !novoEmail) return alert("Preencha a senha atual e o novo e-mail.");
 
     try {
+      // Verifica se o usuário tem login por senha
+      const hasPasswordProvider = user.providerData.some(p => p.providerId === "password");
+      if (!hasPasswordProvider) {
+        return alert("Esta conta não permite alteração de e-mail via senha. Faça login usando o provedor original e altere o e-mail lá.");
+      }
+
+      // Se o e-mail for o mesmo, avisa e sai
+      if (user.email === novoEmail) {
+        return alert("O novo e-mail é igual ao atual.");
+      }
+
+      // Reautenticação
       const cred = EmailAuthProvider.credential(user.email, senhaAtual);
       await reauthenticateWithCredential(user, cred);
+
+      // Atualiza e-mail no Firebase Auth
       await updateEmail(user, novoEmail);
+
+      // Envia e-mail de verificação
+      await sendEmailVerification(user);
+
+      // Atualiza no Firestore
       await updateDoc(doc(db, "alunos", user.uid), { email: novoEmail });
 
-      alert("E-mail atualizado com sucesso!");
+      alert("E-mail atualizado! Verifique sua caixa de entrada para confirmar a verificação.");
       modalEmail.style.display = "none";
       document.getElementById("emailUsuario").textContent = novoEmail;
+      formEmail.reset();
     } catch (err) {
       console.error("Erro ao atualizar e-mail:", err);
-      alert("Erro ao atualizar e-mail: " + err.message);
+      const code = err.code || "";
+
+      if (code.includes("requires-recent-login")) {
+        alert("Por segurança, é necessário que você faça login novamente antes de atualizar o e-mail. Faça logout e entre novamente.");
+      } else if (code.includes("email-already-in-use")) {
+        alert("O e-mail informado já está em uso por outra conta.");
+      } else if (code.includes("invalid-email")) {
+        alert("E-mail inválido. Verifique o formato.");
+      } else if (code.includes("operation-not-allowed")) {
+        alert("Atualização de e-mail não permitida. Verifique as configurações do Firebase Authentication.");
+      } else {
+        alert("Erro ao atualizar e-mail: " + (err.message || err));
+      }
     }
   });
 }
+
