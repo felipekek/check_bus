@@ -1,3 +1,4 @@
+// --- Autenticação local ---
 const token = localStorage.getItem("token");
 const tipoUsuario = localStorage.getItem("tipoUsuario");
 
@@ -6,6 +7,26 @@ if (!token || tipoUsuario !== "motorista") {
   alert("Acesso negado!");
   window.location.href = "index.html";
 }
+
+// --- Importações Firebase ---
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+// --- Configuração do Firebase ---
+const firebaseConfig = {
+  apiKey: "SUA_API_KEY_AQUI",
+  authDomain: "SEU_DOMINIO.firebaseapp.com",
+  projectId: "SEU_PROJECT_ID",
+  storageBucket: "SEU_BUCKET.appspot.com",
+  messagingSenderId: "SEU_SENDER_ID",
+  appId: "SEU_APP_ID"
+};
+
+// --- Inicializa o Firebase ---
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 // ---------- MENU ----------
 window.toggleMenu = () => {
@@ -20,12 +41,14 @@ window.toggleMenu = () => {
 
 // ---------- LOGOUT ----------
 window.logout = () => {
-  localStorage.clear();
-  window.location.href = "index.html";
+  signOut(auth).then(() => {
+    localStorage.clear();
+    window.location.href = "index.html";
+  });
 };
 
 // ---------- MAPA ----------
-let map = L.map("map").setView([-23.5505, -46.6333], 13); // São Paulo por padrão
+let map = L.map("map").setView([-23.5505, -46.6333], 13); // São Paulo
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19,
 }).addTo(map);
@@ -33,60 +56,66 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 let busMarker = null;
 
 // ---------- FUNÇÃO DE LOCALIZAÇÃO ----------
-async function atualizarLocalizacao(lat, lng) {
-  // Atualiza marcador no mapa
+async function atualizarLocalizacao(uid, lat, lng) {
   if (busMarker) map.removeLayer(busMarker);
 
-  busMarker = L.marker([lat, lng], {
-    icon: L.icon({
-      iconUrl: "../img/bus.png",
-      iconSize: [40, 40],
-    }),
-  })
+  // Ícone personalizado
+  const busIcon = L.icon({
+    iconUrl: "../img/bus-icon.svg",
+    iconSize: [40, 40],
+  });
+
+  busMarker = L.marker([lat, lng], { icon: busIcon })
     .addTo(map)
     .bindPopup("Ônibus em movimento 🚌")
     .openPopup();
 
   map.setView([lat, lng], 15);
 
-  // Envia localização ao backend
   try {
-    await fetch("/motorista/localizacao", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ latitude: lat, longitude: lng }),
+    await setDoc(doc(db, "motoristas_localizacao", uid), {
+      latitude: lat,
+      longitude: lng,
+      atualizadoEm: serverTimestamp(),
     });
-    console.log("Localização atualizada com sucesso!");
+    console.log("📍 Localização salva no Firestore!");
   } catch (err) {
-    console.error("Erro ao enviar localização:", err);
+    console.error("Erro ao salvar localização:", err);
   }
 }
 
 // ---------- CAPTURA LOCALIZAÇÃO ----------
-function getLocation() {
+function getLocation(uid) {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const lat = pos.coords.latitude;
         const lng = pos.coords.longitude;
-        atualizarLocalizacao(lat, lng);
+        atualizarLocalizacao(uid, lat, lng);
       },
       (err) => {
         alert("Erro ao obter localização: " + err.message);
       }
     );
   } else {
-    alert("Geolocalização não é suportada neste navegador.");
+    alert("Geolocalização não suportada neste navegador.");
   }
 }
 
-// ---------- EVENTOS ----------
-document.getElementById("btnLocalizar").addEventListener("click", getLocation);
+// ---------- EVENTOS E AUTENTICAÇÃO ----------
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    alert("Acesso negado! Faça login novamente.");
+    window.location.href = "index.html";
+    return;
+  }
 
-// Atualiza automaticamente a cada 15 segundos
-setInterval(() => {
-  getLocation();
-}, 15000);
+  const uid = user.uid;
+  console.log("Motorista autenticado:", user.email);
+
+  // Botão manual
+  document.getElementById("btnLocalizar").addEventListener("click", () => getLocation(uid));
+
+  // Atualização automática a cada 15 segundos
+  setInterval(() => getLocation(uid), 15000);
+});
