@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel do Motorista</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/painel_motorista.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+  <!-- Menu lateral -->
+  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+  <div class="sidebar" id="sidebar">
+    <button onclick="location.href='painel_motorista.html'">Painel</button>
+    <button onclick="location.href='gps_motorista.html'">Abrir GPS</button>
+    <button onclick="logout()" class="logout">Sair</button>
+  </div>
+
+  <!-- Conteúdo principal -->
+  <main class="main-content">
+    <h1>Painel do Motorista</h1>
+    <p class="welcome-msg">Bem-vindo, <span id="nomeMotorista">Motorista</span> 👋</p>
+
+    <section class="info-box">
+      <h2>Suas Informações</h2>
+      <ul id="infoMotorista">
+        <li><strong>E-mail:</strong> <span id="emailMotorista">...</span></li>
+        <li><strong>Categoria CNH:</strong> <span id="cnhCategoria">...</span></li>
+        <li><strong>Status de Requisitos:</strong> <span id="statusRequisitos">...</span></li>
+      </ul>
+    </section>
+
+    <section class="rota-box">
+      <h2>Suas Rotas</h2>
+      <p>Rotas associadas a você aparecerão aqui.</p>
+      <table id="tabelaRotas">
+        <thead>
+          <tr>
+            <th>Nome da Rota</th>
+            <th>Horário</th>
+            <th>Ponto Inicial</th>
+            <th>Ponto Final</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="4" class="no-data">Carregando rotas...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script type="module" src="../js/painel_motorista.js"></script>
+</body>
+</html>

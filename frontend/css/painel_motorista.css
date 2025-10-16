@@ -1,0 +1,73 @@
+.main-content {
+  max-width: 800px;
+  margin: 80px auto;
+  padding: 24px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  color: #222;
+}
+
+h1 {
+  color: #004d7a;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.welcome-msg {
+  text-align: center;
+  font-size: 18px;
+  color: #555;
+  margin-bottom: 24px;
+}
+
+.info-box, .rota-box {
+  margin-bottom: 30px;
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
+
+.info-box h2, .rota-box h2 {
+  color: #004d7a;
+  margin-bottom: 10px;
+}
+
+#infoMotorista {
+  list-style: none;
+  padding: 0;
+  font-size: 15px;
+}
+
+#infoMotorista li {
+  margin-bottom: 6px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th, td {
+  text-align: left;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #004d7a;
+  color: white;
+}
+
+tr:hover {
+  background-color: #f0f8ff;
+}
+
+.no-data {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  padding: 12px;
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GPS do Motorista</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/gps_motor.css" />
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+</head>
+<body>
+  <!-- Menu lateral -->
+  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+  <div class="sidebar" id="sidebar">
+    <button onclick="location.href='painel_motorista.html'">Painel</button>
+    <button onclick="location.href='gps_motorista.html'">GPS</button>
+    <button onclick="logout()" class="logout">Sair</button>
+  </div>
+
+  <!-- Conteúdo principal -->
+  <main class="main-content">
+    <h1>Localização do Ônibus 🚌</h1>
+    <p class="info-msg">Clique no botão abaixo para atualizar sua localização atual no mapa.</p>
+    <div id="map"></div>
+
+    <div class="buttons">
+      <button id="btnLocalizar">Atualizar Localização</button>
+    </div>
+  </main>
+
+  <!-- Script principal -->
+  <script type="module" src="../js/gps_motor.js"></script>
+</body>
+</html>

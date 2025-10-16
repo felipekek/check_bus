@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadastrar Motorista</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+  <link rel="stylesheet" href="../css/cadast_motorista.css" />
+</head>
+<body>
+  <div class="form-container">
+    <h1>Cadastro de Motorista</h1>
+
+    <form id="formMotorista">
+      <label for="nome">Nome completo</label>
+      <input type="text" id="nome" required />
+
+      <label for="email">E-mail</label>
+      <input type="email" id="email" required />
+
+      <label for="cnh">Número da CNH</label>
+      <input type="text" id="cnh" required />
+
+      <label for="categoria">Categoria da CNH</label>
+      <select id="categoria" required>
+        <option value="">Selecione</option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+        <option value="E">E</option>
+      </select>
+
+      <div class="checkbox-group">
+        <label><input type="checkbox" id="curso" /> Concluiu curso de Transporte Coletivo</label><br>
+        <label><input type="checkbox" id="experiencia" /> Possui experiência prévia em categoria B ou C</label><br>
+        <label><input type="checkbox" id="infracoes" /> Sem infrações graves/gravíssimas nos últimos 12 meses</label><br>
+        <label><input type="checkbox" id="aptidao" /> Apto nos exames físicos e mentais</label>
+      </div>
+
+      <button type="submit">Cadastrar Motorista</button>
+    </form>
+  </div>
+
+  <script type="module" src="../js/cadast_motorista.js"></script>
+</body>
+</html>
