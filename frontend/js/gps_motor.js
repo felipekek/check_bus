@@ -65,7 +65,7 @@ async function atualizarLocalizacao(uid, lat, lng) {
     iconSize: [40, 40],
   });
 
-  busMarker = L.marker([lat, lng], { icon: busIcon })
+  busMarker = L.marker([lat, lng],)
     .addTo(map)
     .bindPopup("Ônibus em movimento 🚌")
     .openPopup();
