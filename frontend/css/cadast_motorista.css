@@ -29,10 +29,6 @@ input, select {
   font-size: 12px;
 }
 
-.checkbox-group {
-  margin-top: 12px;
-}
-
 button {
   margin-top: 22px;
   width: 100%;
@@ -49,3 +45,67 @@ button:hover {
   background: #007a99;
 }
 
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 24px;
+  margin-top: 10px;
+  padding: 12px 16px;
+  background: #f8fafc;
+  border: 1px solid #dce3e8;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+/* Grupo de checkboxes estilizado */
+.checkbox-group:hover {
+  border-color: #004d7a;
+  background: #f1f7fa;
+}
+
+/* Cada checkbox individual */
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: #333;
+  font-weight: 500;
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.checkbox-group label:hover {
+  color: #004d7a;
+}
+
+/* Checkbox customizado */
+.checkbox-group input[type="checkbox"] {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  display: inline-block;
+  position: relative;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  background-color: #fff;
+}
+
+.checkbox-group input[type="checkbox"]:hover {
+  border-color: #007a99;
+}
+
+.checkbox-group input[type="checkbox"]:checked {
+  background-color: #004d7a;
+  border-color: #004d7a;
+}
+
+.checkbox-group input[type="checkbox"]:checked::after {
+  content: '✔';
+  position: absolute;
+  top: -2px;
+  left: 3px;
+  font-size: 13px;
+  color: white;
+}
