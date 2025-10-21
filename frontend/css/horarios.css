@@ -122,7 +122,7 @@ main {
   border-radius: 8px;
 }
 
-/* ======== DIAS ======== */
+/* ======== DIAS DA SEMANA ======== */
 .dias-container {
   display: flex;
   justify-content: space-between;
@@ -147,8 +147,72 @@ main {
   color: white;
 }
 
+.dia-btn:disabled {
+  background-color: #f8d7da;
+  color: #a71d2a;
+  cursor: not-allowed;
+}
+
+/* ======== CALENDÁRIO ======== */
+.calendar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.calendar-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.calendar-nav button {
+  background-color: #0077b6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  width: 100%;
+  padding-top: 8px;
+}
+
+.day {
+  text-align: center;
+  padding: 10px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.day.weekend {
+  background-color: #f8d7da; /* vermelho claro */
+  color: #a71d2a;
+  cursor: not-allowed;
+}
+
+.day.active {
+  background-color: #e0f8e9; /* verde claro */
+  color: #006400;
+}
+
+.day.selected {
+  background-color: #0077b6; /* azul */
+  color: white;
+}
+
 /* ======== BOTÃO SALVAR ======== */
-.salvar-btn {
+.salvar-btn,
+.save-button {
   width: 100%;
   padding: 12px;
   background-color: #0077b6;
@@ -162,7 +226,8 @@ main {
   transition: 0.3s;
 }
 
-.salvar-btn:hover {
+.salvar-btn:hover,
+.save-button:hover {
   background-color: #005f91;
 }
 
@@ -200,7 +265,7 @@ main {
 }
 
 .editar-btn {
-  background-color: #0077b6; /* azul */
+  background-color: #0077b6;
   color: #fff;
 }
 
@@ -209,7 +274,7 @@ main {
 }
 
 .excluir-btn {
-  background-color: #ff6b6b; /* vermelho */
+  background-color: #ff6b6b;
   color: #fff;
 }
 
@@ -235,5 +300,9 @@ main {
 
   header h1 {
     font-size: 1.2rem;
+  }
+
+  .calendar {
+    font-size: 0.9rem;
   }
 }
