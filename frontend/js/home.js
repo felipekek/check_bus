@@ -49,7 +49,7 @@ onAuthStateChanged(auth, async (user) => {
   const adminButtons = [
     { icon: 'fa-book-open', text: 'Relatórios', href: 'relatorios.html', tipo: 'admin' },
     { icon: 'fa-users', text: 'Lista de Alunos', href: 'admin.html', tipo: 'admin' },
-    { icon: 'fa-user-plus', text: 'Cadastrar Motorista', href: 'cadast_motorista.html', tipo: 'admin' }
+    { icon: 'fa-user-plus', text: 'Cadastrar Motorista', href: 'cadast_motorista.html', tipo: 'admin' } 
   ];
 
   const allButtons = [...defaultButtons, ...adminButtons];
