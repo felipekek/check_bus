@@ -105,31 +105,6 @@ function renderizarAlunos(alunos) {
         `;
         container.appendChild(accordionItem);
     });
-
-    addAccordionListeners();
-}
-
-// ---------- ADICIONA EVENTOS AO ACCORDION ----------
-function addAccordionListeners() {
-    const container = document.getElementById("accordionContainer");
-
-    container.addEventListener('click', (e) => {
-        // Evento para excluir aluno (delegação de evento)
-        const deleteButton = e.target.closest('.delete-btn');
-        if (deleteButton) {
-            e.stopPropagation(); // Impede que o accordion abra/feche
-            const alunoId = deleteButton.dataset.id;
-            excluirAluno(alunoId);
-            return;
-        }
-
-        // Evento para abrir/fechar o accordion
-        const header = e.target.closest('.accordion-header');
-        if (header) {
-            const item = header.parentElement;
-            item.classList.toggle('open');
-        }
-    });
 }
 
 // ---------- EXCLUI ALUNO ----------
@@ -158,7 +133,18 @@ async function excluirAluno(alunoId) {
 // ---------- FILTRO DE PESQUISA ----------
 document.getElementById("barraPesquisa").addEventListener("keyup", (e) => {
     const termo = e.target.value.toLowerCase();
-    const filtrados = listaAlunos.filter(aluno => 
+    
+    let alunosParaFiltrar = listaAlunos;
+
+    // Se uma instituição estiver selecionada no gráfico, pré-filtra a lista
+    if (instituicaoSelecionada) {
+        alunosParaFiltrar = listaAlunos.filter(a => 
+            a.instituicao && a.instituicao.trim().toLowerCase() === instituicaoSelecionada.toLowerCase()
+        );
+    }
+
+    // Aplica o filtro de pesquisa na lista (original ou pré-filtrada)
+    const filtrados = alunosParaFiltrar.filter(aluno => 
         aluno.nome.toLowerCase().includes(termo) ||
         aluno.email.toLowerCase().includes(termo) ||
         aluno.instituicao.toLowerCase().includes(termo) ||
@@ -268,3 +254,22 @@ window.toggleMenu = () => {
 
 // ---------- INICIALIZA ----------
 carregarAlunos();
+
+// Adiciona o listener do accordion UMA VEZ, usando delegação de eventos
+document.getElementById("accordionContainer").addEventListener('click', (e) => {
+    // Evento para excluir aluno
+    const deleteButton = e.target.closest('.delete-btn');
+    if (deleteButton) {
+        e.stopPropagation(); // Impede que o accordion abra/feche
+        const alunoId = deleteButton.dataset.id;
+        excluirAluno(alunoId);
+        return;
+    }
+
+    // Evento para abrir/fechar o accordion
+    const header = e.target.closest('.accordion-header');
+    if (header) {
+        const item = header.parentElement;
+        item.classList.toggle('open');
+    }
+});
