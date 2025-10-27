@@ -1,4 +1,3 @@
-// backend/src/server.js
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -6,9 +5,9 @@ import { fileURLToPath } from "url";
 import authRoutes from "./routes/authRoutes.js";
 import horariosRoutes from "./routes/horariosRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
-import relatorioRoutes from "./routes/relatorioRoutes.js"; // rota de relatórios
-import pdfRoutes from "./routes/pdfRoutes.js"; // rota para gerar PDF
-import feedbackRoutes from "./routes/feedbackRoutes.js"; // nova rota para feedback
+import relatorioRoutes from "./routes/relatorioRoutes.js";
+import pdfRoutes from "./routes/pdfRoutes.js";
+import feedbackRoutes from "./routes/feedbackRoutes.js";
 import staffRoutes from "./routes/staffRoutes.js";
 
 const app = express();
@@ -17,7 +16,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(express.static(path.join(__dirname, "../../frontend")));
-
 app.use(express.json());
 
 app.use("/auth", authRoutes);

@@ -228,6 +228,17 @@ function initAtualizarPerfil() {
 /**
  * Inicializa o modal de Atualizar E-mail
  */
+/**
+ * Inicializa o modal de Atualizar E-mail
+ *
+ * Fluxo:
+ * 1) Garante que o usuário está autenticado;
+ * 2) Verifica se o provedor permite alteração (login por senha);
+ * 3) Reautentica usando a senha atual;
+ * 4) Atualiza o e-mail no Authentication;
+ * 5) Envia e-mail de verificação para o novo e-mail;
+ * 6) Atualiza o campo email no Firestore (coleção "alunos").
+ */
 function initAtualizarEmail() {
   const modalEmail = document.getElementById("modalAtualizarEmail");
   const btnFecharEmail = document.getElementById("btnFecharEmail");
@@ -236,17 +247,20 @@ function initAtualizarEmail() {
 
   if (!modalEmail || !btnFecharEmail || !formEmail || !btnAbrirEmail) return;
 
-  // Abrir modal de e-mail
+  // --- Abrir modal de e-mail ---
   btnAbrirEmail.addEventListener("click", () => {
-    document.getElementById("emailAtual").value = auth.currentUser?.email || "";
+    const user = auth.currentUser;
+    if (!user) return alert("Usuário não autenticado.");
+
+    document.getElementById("emailAtual").value = user.email || "";
     modalEmail.style.display = "block";
   });
 
-  // Fechar modal
+  // --- Fechar modal ---
   btnFecharEmail.addEventListener("click", () => modalEmail.style.display = "none");
   window.addEventListener("click", (e) => { if (e.target === modalEmail) modalEmail.style.display = "none"; });
 
-  // Enviar formulário
+  // --- Enviar formulário ---
   formEmail.addEventListener("submit", async (e) => {
     e.preventDefault();
     const user = auth.currentUser;
@@ -269,23 +283,24 @@ function initAtualizarEmail() {
         return alert("O novo e-mail é igual ao atual.");
       }
 
-      // Reautenticação
+      // --- Reautenticação ---
       const cred = EmailAuthProvider.credential(user.email, senhaAtual);
       await reauthenticateWithCredential(user, cred);
 
-      // Atualiza e-mail no Firebase Auth
+      // --- Atualiza e-mail no Firebase Auth ---
       await updateEmail(user, novoEmail);
 
-      // Envia e-mail de verificação
+      // --- Envia e-mail de verificação ---
       await sendEmailVerification(user);
 
-      // Atualiza no Firestore
+      // --- Atualiza no Firestore ---
       await updateDoc(doc(db, "alunos", user.uid), { email: novoEmail });
 
       alert("E-mail atualizado! Verifique sua caixa de entrada para confirmar a verificação.");
       modalEmail.style.display = "none";
       document.getElementById("emailUsuario").textContent = novoEmail;
       formEmail.reset();
+
     } catch (err) {
       console.error("Erro ao atualizar e-mail:", err);
       const code = err.code || "";

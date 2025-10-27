@@ -7,8 +7,23 @@
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="stylesheet" href="../css/admin.css" />
   <link rel="stylesheet" href="../css/cadast_motorista.css" />
+  <link rel="stylesheet" href="../css/perfil.css" />
+  <link rel="stylesheet" href="../css/draw.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
+  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+  <div class="sidebar" id="sidebar">
+    <button onclick="location.href='home_principal.html'">Principal</button>
+    <button onclick="location.href='seus_horarios.html'">Seus Horários</button>
+    <button onclick="location.href='horarios.html'">Lista de Horários</button>
+    <button onclick="location.href='gps.html'">Abrir GPS</button>
+    <button onclick="location.href='relatorios.html'">Relatório</button>
+    <button onclick="location.href='index.html'" class="logout">Sair</button>
+  </div>
+
   <div class="form-container">
     <h1>Cadastro de Motorista</h1>
 
@@ -48,5 +63,25 @@
   </div>
 
   <script type="module" src="../js/cadast_motorista.js"></script>
+  <script>
+    // Toggle do menu lateral (igual ao admin)
+    window.toggleMenu = function() {
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
+      const menuBtn = document.querySelector(".menu-btn");
+      if (!sidebar || !overlay) return;
+      sidebar.classList.toggle("active");
+      overlay.classList.toggle("active");
+      if (menuBtn) menuBtn.classList.toggle("hidden");
+    };
+  </script>
+
+  <script type="module">
+    // Carrega modal de perfil e associa botão (mesma lógica usada no admin)
+    import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
+    carregarModalPerfil();
+    const btnPerfil = document.getElementById("btnPerfil");
+    if (btnPerfil) btnPerfil.addEventListener("click", abrirPerfil);
+  </script>
 </body>
 </html>

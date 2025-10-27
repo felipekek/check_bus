@@ -1,6 +1,6 @@
 /**
  * ==========================================================
- * Controller responsável pelo login e cadastro do usuário
+ * Controller responsável pelo login, cadastro e atualização do usuário
  * Sistema: CheckBus
  * Autor: Luís Felipe (TCC)
  * ----------------------------------------------------------
@@ -12,8 +12,11 @@ import { auth, db } from "../config/firebase-config.js";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  updateEmail,
+  reauthenticateWithCredential,
+  EmailAuthProvider,
 } from "firebase/auth";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 
 /**
  * FUNÇÃO: loginUsuario
@@ -101,7 +104,7 @@ export const cadastrarUsuario = async (req, res) => {
       telefone,
       periodo,
       criadoEm: new Date().toISOString(),
-      primeiroLogin: true // <-- Adicione esta linha!
+      primeiroLogin: true,
     });
 
     res.status(201).json({
@@ -134,6 +137,62 @@ export const cadastrarUsuario = async (req, res) => {
 };
 
 /**
+ * FUNÇÃO: atualizarEmailUsuario
+ * ----------------------------------------------------------
+ * Atualiza o e-mail do usuário (Auth + Firestore)
+ */
+export const atualizarEmailUsuario = async (req, res) => {
+  const { uid, novoEmail, senhaAtual } = req.body;
+
+  try {
+    // Busca usuário logado
+    const user = auth.currentUser;
+    if (!user) {
+      return res.status(401).json({ erro: "Usuário não autenticado." });
+    }
+
+    // Reautentica para segurança
+    const credential = EmailAuthProvider.credential(user.email, senhaAtual);
+    await reauthenticateWithCredential(user, credential);
+
+    // Atualiza no Firebase Authentication
+    await updateEmail(user, novoEmail);
+
+    // Atualiza também no Firestore
+    await updateDoc(doc(db, "alunos", uid), {
+      email: novoEmail,
+      atualizadoEm: new Date().toISOString(),
+    });
+
+    res.status(200).json({
+      mensagem: "E-mail atualizado com sucesso!",
+      novoEmail,
+    });
+  } catch (error) {
+    console.error("Erro ao atualizar e-mail:", error);
+
+    let mensagemAmigavel = "Erro ao atualizar e-mail.";
+
+    switch (error.code) {
+      case "auth/invalid-email":
+        mensagemAmigavel = "O novo e-mail informado é inválido.";
+        break;
+      case "auth/email-already-in-use":
+        mensagemAmigavel = "Este e-mail já está sendo usado por outra conta.";
+        break;
+      case "auth/wrong-password":
+        mensagemAmigavel = "Senha incorreta. Não foi possível confirmar identidade.";
+        break;
+      case "auth/requires-recent-login":
+        mensagemAmigavel = "É necessário refazer o login para alterar o e-mail.";
+        break;
+    }
+
+    res.status(400).json({ erro: mensagemAmigavel });
+  }
+};
+
+/**
  * FUNÇÃO: getUsuario
  * ----------------------------------------------------------
  * Retorna dados de um aluno pelo UID
@@ -148,10 +207,7 @@ export const getUsuario = async (req, res) => {
     }
 
     const userData = userDoc.data();
-    res.status(200).json({
-      nome: userData.nome,
-      cpf: userData.cpf,
-    });
+    res.status(200).json(userData);
   } catch (error) {
     console.error("Erro ao buscar usuário:", error);
     res.status(500).json({ erro: "Erro ao buscar usuário." });

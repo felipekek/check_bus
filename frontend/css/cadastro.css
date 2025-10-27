@@ -72,3 +72,20 @@ h1 {
   }
 }
 
+
+  /* Botão enviar */
+button {
+  background: #4a90e2;
+  color: #fff;
+  font-size: 16px;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background: #357ab7;
+  transform: scale(1.03);
+}
