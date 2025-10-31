@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cadastrar Motorista</title>
+  <title>Cadastro de Ônibus/Motorista</title>
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="stylesheet" href="../css/admin.css" />
   <link rel="stylesheet" href="../css/cadast_motorista.css" />
@@ -64,7 +64,6 @@
 
   <script type="module" src="../js/cadast_motorista.js"></script>
   <script>
-    // Toggle do menu lateral (igual ao admin)
     window.toggleMenu = function() {
       const sidebar = document.getElementById("sidebar");
       const overlay = document.getElementById("overlay");
@@ -77,7 +76,6 @@
   </script>
 
   <script type="module">
-    // Carrega modal de perfil e associa botão (mesma lógica usada no admin)
     import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
     carregarModalPerfil();
     const btnPerfil = document.getElementById("btnPerfil");

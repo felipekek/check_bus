@@ -12,16 +12,12 @@
 </head>
 <body>
 
-  <!-- Botão do menu lateral -->
   <button class="menu-btn" onclick="toggleMenu()">☰</button>
 
-  <!-- Overlay para fechar o menu ao clicar fora -->
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-  <!-- Menu lateral de navegação (vazio, será preenchido pelo JS) -->
   <div class="sidebar" id="sidebar"></div>
 
-  <!-- Lista de horários do aluno -->
   <div class="container">
     <h1>Seus Horários:</h1>
     <div class="horarios-lista" id="horariosLista">
@@ -29,19 +25,15 @@
     </div>
   </div>
 
-<!-- Botão Perfil -->
 <button class="perfil-btn" id="btnPerfil">
   <i class="fa fa-user"></i> Perfil
 </button>
 
-  <!-- Scripts -->
   <script type="module">
     import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
 
-    // Injeta o modal do perfil na página
     carregarModalPerfil();
 
-    // Adiciona evento ao botão Perfil para abrir o modal
     const btnPerfil = document.getElementById("btnPerfil");
     btnPerfil.addEventListener("click", abrirPerfil);
   </script>

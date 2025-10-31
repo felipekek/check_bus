@@ -1,7 +1,6 @@
 const token = localStorage.getItem("token");
 const tipoUsuario = localStorage.getItem("tipoUsuario");
 
-// Redireciona se não for admin
 if (!token || tipoUsuario !== "admin") {
   alert("Acesso negado!");
   window.location.href = "index.html";
@@ -24,7 +23,6 @@ form.addEventListener("submit", async (e) => {
     tipo: "motorista"
   };
 
-  // Verifica os requisitos legais
   motorista.requisitosValidados =
     motorista.cnhCategoria === "D" &&
     motorista.cursoColetivo &&

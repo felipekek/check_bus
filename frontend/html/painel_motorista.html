@@ -13,7 +13,6 @@
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
 <body>
-  <!-- Menu lateral -->
   <button class="menu-btn" onclick="toggleMenu()">☰</button>
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
@@ -26,7 +25,6 @@
     <button onclick="location.href='index.html'" class="logout">Sair</button>
   </div>
 
-  <!-- Conteúdo principal -->
   <main class="main-content">
     <h1>Painel do Motorista</h1>
     <p class="welcome-msg">Bem-vindo, <span id="nomeMotorista">Motorista</span> 👋</p>
@@ -58,7 +56,6 @@
       </table>
     </section>
 
-    <!-- Garanta que exista o botão de Perfil (id igual ao usado no módulo perfil.js) -->
     <button class="perfil-btn" id="btnPerfil">
       <i class="fa fa-user"></i> Perfil
     </button>
@@ -67,7 +64,6 @@
   <script type="module" src="../js/painel_motorista.js"></script>
 
   <script>
-    // Função de toggle do menu lateral (draw) — mesma implementação do admin
     window.toggleMenu = function() {
       const sidebar = document.getElementById("sidebar");
       const overlay = document.getElementById("overlay");
@@ -80,7 +76,6 @@
   </script>
 
   <script type="module">
-    // Carrega modal de perfil e associa botão — mesmo padrão do admin
     import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
     carregarModalPerfil();
     const btnPerfil = document.getElementById("btnPerfil");

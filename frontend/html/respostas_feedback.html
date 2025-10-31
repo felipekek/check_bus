@@ -37,7 +37,6 @@
     const barraPesquisa = document.getElementById("barraPesquisa");
     let feedbacks = [];
 
-    // Carrega feedbacks do backend Node
     async function carregarFeedbacks() {
       try {
         const resposta = await fetch("http://localhost:3000/api/feedbacks");
