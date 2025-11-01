@@ -63,6 +63,7 @@
           <span>21:00</span>
         </label>
       </div>
+
       <div class="personalizado-container">
         <label>
           <input type="checkbox" id="personalizadoToggle" />
@@ -79,6 +80,7 @@
           </div>
         </div>
       </div>
+
       <button class="salvar-btn">Salvar</button>
     </section>
 
@@ -106,7 +108,8 @@
           <button type="button" onclick="changeMonth(1)">&#8594;</button>
         </div>
         <div class="calendar" id="calendar"></div>
-        <button type="button" class="save-button" onclick="saveSelectedDays()">Salvar</button>
+        <!-- removido onclick inline; JS agora adiciona o listener -->
+        <button type="button" class="save-button">Salvar</button>
       </div>
     </section>
 
@@ -117,14 +120,11 @@
     </section>
   </main>
 
-  <!-- Botão Perfil (igual ao admin) -->
   <button class="perfil-btn" id="btnPerfil">
     <i class="fa fa-user"></i> Perfil
   </button>
 
-  <!-- SCRIPTS -->
   <script>
-    // Menu lateral (draw) — mantido aqui para garantir funcionamento igual ao admin
     window.toggleMenu = function() {
       const sidebar = document.getElementById("sidebar");
       const overlay = document.getElementById("overlay");
@@ -136,7 +136,6 @@
   </script>
 
   <script type="module">
-    // Modal do perfil (mesma abordagem da página admin)
     import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
     carregarModalPerfil();
     const btnPerfil = document.getElementById("btnPerfil");
