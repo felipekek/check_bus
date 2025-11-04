@@ -2,10 +2,16 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Horários - Check Bus</title>
+
+  <!-- Gradiente + tipografia -->
   <link rel="stylesheet" href="../css/style.css" />
+
+  <!-- CSS desta página -->
   <link rel="stylesheet" href="../css/horarios.css" />
+
+  <!-- Demais estilos (se existirem no projeto) -->
   <link rel="stylesheet" href="../css/perfil.css" />
   <link rel="stylesheet" href="../css/draw.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -24,105 +30,148 @@
     <button onclick="location.href='index.html'" class="logout">Sair</button>
   </div>
 
-  <header>
-    <h1>Horários</h1>
-  </header>
-  
-  <main>
-    <!-- ====== SEÇÃO DE HORÁRIOS ====== -->
-    <section class="card">
-      <h2>Seleção de Horários</h2>
-      <div class="linha-cabecalho">
-        <span>Turno</span>
-        <span>Saída</span>
-        <span>Chegada prevista</span>
-      </div>
-      <div class="tabela-fixa">
-        <label class="linha">
-          <span class="col-turno">
-            <input type="radio" name="turno" value="Manhã" />
-            <span>Manhã</span>
-          </span>
-          <span>06:00</span>
-          <span>14:00</span>
-        </label>
-        <label class="linha">
-          <span class="col-turno">
-            <input type="radio" name="turno" value="Tarde" />
-            <span>Tarde</span>
-          </span>
-          <span>11:30</span>
-          <span>18:00</span>
-        </label>
-        <label class="linha">
-          <span class="col-turno">
-            <input type="radio" name="turno" value="Noite" />
-            <span>Noite</span>
-          </span>
-          <span>18:00</span>
-          <span>21:00</span>
-        </label>
-      </div>
+  <div class="container container--wide">
+    <header>
+      <h1>Horários</h1>
+    </header>
 
-      <div class="personalizado-container">
-        <label>
-          <input type="checkbox" id="personalizadoToggle" />
-          <span>Usar horário personalizado</span>
-        </label>
-        <div id="personalizadoCampos" class="personalizado-campos">
-          <div class="input-group">
-            <label for="saidaPersonalizada">Saída:</label>
-            <input type="time" id="saidaPersonalizada" />
-          </div>
-          <div class="input-group">
-            <label for="chegadaPersonalizada">Chegada prevista:</label>
-            <input type="time" id="chegadaPersonalizada" />
+    <main>
+      <!-- ====== SELEÇÃO DE HORÁRIOS ====== -->
+      <section class="card">
+        <h2>Seleção de Horários</h2>
+
+        <div class="linha-cabecalho">
+          <span>Turno</span>
+          <span>Saída</span>
+          <span>Chegada prevista</span>
+        </div>
+
+        <div class="tabela-fixa">
+          <label class="linha">
+            <span class="col-turno">
+              <input type="radio" name="turno" value="Manhã" />
+              <span>Manhã</span>
+            </span>
+            <span>06:00</span>
+            <span>14:00</span>
+          </label>
+          <label class="linha">
+            <span class="col-turno">
+              <input type="radio" name="turno" value="Tarde" />
+              <span>Tarde</span>
+            </span>
+            <span>11:30</span>
+            <span>18:00</span>
+          </label>
+          <label class="linha">
+            <span class="col-turno">
+              <input type="radio" name="turno" value="Noite" />
+              <span>Noite</span>
+            </span>
+            <span>18:00</span>
+            <span>21:00</span>
+          </label>
+        </div>
+
+        <div class="personalizado-container">
+          <label class="switch-line">
+            <input type="checkbox" id="personalizadoToggle" />
+            <span>Usar horário personalizado</span>
+          </label>
+          <div id="personalizadoCampos" class="personalizado-campos">
+            <div class="input-group">
+              <label for="saidaPersonalizada">Saída:</label>
+              <input type="time" id="saidaPersonalizada" />
+            </div>
+            <div class="input-group">
+              <label for="chegadaPersonalizada">Chegada prevista:</label>
+              <input type="time" id="chegadaPersonalizada" />
+            </div>
           </div>
         </div>
-      </div>
 
-      <button class="salvar-btn">Salvar</button>
-    </section>
+        <hr class="divisor" />
 
-    <!-- ====== SEÇÃO DE DIAS ====== -->
-    <section class="card">
-      <h2>Dias da Semana</h2>
-      <div class="dias-container">
-        <button class="dia-btn" data-dia="0">D</button>
-        <button class="dia-btn" data-dia="1">S</button>
-        <button class="dia-btn" data-dia="2">T</button>
-        <button class="dia-btn" data-dia="3">Q</button>
-        <button class="dia-btn" data-dia="4">Q</button>
-        <button class="dia-btn" data-dia="5">S</button>
-        <button class="dia-btn" data-dia="6">S</button>
-      </div>
-    </section>
+        <h3 class="subtitulo">Aplicar por dias da semana</h3>
+        <div class="chips" id="chips">
+          <button class="chip" data-dia="1">Seg</button>
+          <button class="chip" data-dia="2">Ter</button>
+          <button class="chip" data-dia="3">Qua</button>
+          <button class="chip" data-dia="4">Qui</button>
+          <button class="chip" data-dia="5">Sex</button>
+          <button class="chip" data-dia="0" disabled>Dom</button>
+          <button class="chip" data-dia="6" disabled>Sáb</button>
+        </div>
 
-    <!-- ====== CALENDÁRIO ====== -->
-    <section class="card">
-      <h2>Calendário</h2>
-      <div class="calendar-container">
+        <div class="toolbar">
+          <button class="btn" id="btnWeekdays">Seg–Sex</button>
+          <button class="btn" id="btnClearChips">Limpar seleção</button>
+          <button class="btn primary" id="btnApplyChips">Aplicar ao mês atual</button>
+        </div>
+      </section>
+
+      <!-- ====== CALENDÁRIO ====== -->
+      <section class="card">
+        <div class="legend">
+          <span class="pill"><span class="dot av"></span>Tem ônibus</span>
+          <span class="pill"><span class="dot no"></span>Sem ônibus</span>
+          <span class="pill"><span class="dot go"></span>Você vai</span>
+          <span class="pill">
+            <span class="dot" style="background-image:linear-gradient(135deg,#0077b6 0 50%, #e0f8e9 50% 100%);border:1px solid #a9ccff;"></span>
+            Vai + tem ônibus
+          </span>
+        </div>
+
         <div class="calendar-nav">
-          <button type="button" onclick="changeMonth(-1)">&#8592;</button>
+          <button id="prev" aria-label="Mês anterior">◀</button>
           <span id="calendar-month-year"></span>
-          <button type="button" onclick="changeMonth(1)">&#8594;</button>
+          <button id="next" aria-label="Próximo mês">▶</button>
         </div>
-        <div class="calendar" id="calendar"></div>
-        <!-- removido onclick inline; JS agora adiciona o listener -->
-        <button type="button" class="save-button">Salvar</button>
-      </div>
-    </section>
 
-    <!-- ====== LISTA DE HORÁRIOS SALVOS ====== -->
-    <section class="card">
-      <h2>Horários Salvos</h2>
-      <div id="horariosSalvos"></div>
-    </section>
-  </main>
+        <div class="calendar" id="calendar"></div>
+
+        <div class="toolbar">
+          <button class="btn" id="btnCopyPrev">Copiar do mês anterior</button>
+          <button class="btn danger" id="btnClear">Limpar mês</button>
+          <button class="btn primary" id="btnSave">Salvar escolhas</button>
+        </div>
+      </section>
+
+      <!-- ====== LISTA + ESTATÍSTICAS ====== -->
+      <section class="card card--full">
+        <div class="stats">
+          <div class="stat">
+            <small>Total de dias no mês</small>
+            <b id="statTotal">0</b>
+          </div>
+          <div class="stat">
+            <small>Por turno</small>
+            <b id="statTurnos">–</b>
+          </div>
+        </div>
+
+        <h2>Seus dias salvos</h2>
+
+        <!-- Cabeçalho (desktop) -->
+        <div class="linha-horario header" aria-hidden="true">
+          <span>Data</span>
+          <span>Turno</span>
+          <span>Saída</span>
+          <span>Chegada</span>
+          <span>Ações</span>
+        </div>
+
+        <!-- Lista (vira cards no mobile) -->
+        <div id="horariosSalvos" class="lista" aria-live="polite"></div>
+      </section>
+    </main>
+  </div>
 
   <button class="perfil-btn" id="btnPerfil">
     <i class="fa fa-user"></i> Perfil
   </button>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script>
     window.toggleMenu = function() {

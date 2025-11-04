@@ -1,269 +1,619 @@
+// frontend/js/horarios.js
+// =======================================================
+// Integração com backend + Firebase Auth
+// =======================================================
+import { auth } from "./firebase-config.js";
+
+// Se o backend serve o frontend na mesma origem, deixe "".
+// Se roda separado, use: const API_BASE = "http://localhost:3000";
+const API_BASE = "";
+
+// Helpers de auth
+async function getIdToken() {
+  const user = auth.currentUser;
+  if (!user) throw new Error("Usuário não autenticado");
+  return await user.getIdToken();
+}
+function getUid() {
+  const user = auth.currentUser;
+  if (!user) throw new Error("Usuário não autenticado");
+  return user.uid;
+}
+
+// =======================================================
+// Estado e configuração
+// =======================================================
 let currentDate = new Date();
-let selectedDays = [];
-let selectedWeekDays = [];
-let horariosSalvos = [];
+
+const LS_CAL = "cb_calendar_state";         // estado aluno (dias 'going' + schedule)
+const LS_ADMIN = "cb_admin_state";          // oferta admin (available | no_bus)
+const LS_CHOICES = "cb_student_choices_me"; // snapshot (opcional)
+
+function load(k) { try { return JSON.parse(localStorage.getItem(k)) || {}; } catch { return {}; } }
+function save(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+
+let calendarState = load(LS_CAL);
+let adminState = load(LS_ADMIN);
+let choices = load(LS_CHOICES);
+
+// pendências de remoção (para só apagar no Firebase ao salvar)
+const pendingRemovals = {}; // { [ym]: Set<dateKey> }
+function markRemoval(ym, dateKey) {
+  if (!pendingRemovals[ym]) pendingRemovals[ym] = new Set();
+  pendingRemovals[ym].add(dateKey);
+}
+function unmarkRemoval(ym, dateKey) {
+  if (pendingRemovals[ym]) {
+    pendingRemovals[ym].delete(dateKey);
+    if (pendingRemovals[ym].size === 0) delete pendingRemovals[ym];
+  }
+}
+function listRemovals(ym) {
+  return Array.from(pendingRemovals[ym] || []);
+}
+function clearRemovals(ym) {
+  delete pendingRemovals[ym];
+}
 
 const holidays = [
-  '2025-01-01', '2025-04-21', '2025-05-01',
-  '2025-09-07', '2025-10-12', '2025-11-02',
-  '2025-11-15', '2025-12-25'
+  "2025-01-01","2025-04-21","2025-05-01","2025-09-07",
+  "2025-10-12","2025-11-02","2025-11-15","2025-12-25"
 ];
 
-// DOM elements
-const calendarioContainer = document.getElementById('calendar');
-const monthYearElem = document.getElementById('calendar-month-year');
-const salvarBtn = document.querySelector('.salvar-btn');      // botão principal
-const saveCalendarBtn = document.querySelector('.save-button'); // botão abaixo do calendário
-const horariosSalvosContainer = document.getElementById('horariosSalvos');
-const radioTurnos = document.querySelectorAll('input[name="turno"]');
-const personalizadoToggle = document.getElementById('personalizadoToggle');
-const personalizadoCampos = document.getElementById('personalizadoCampos');
-const saidaPersonalizadaInput = document.getElementById('saidaPersonalizada');
-const chegadaPersonalizadaInput = document.getElementById('chegadaPersonalizada');
-const diaBtns = document.querySelectorAll('.dia-btn');
+// =======================================================
+// Utils
+// =======================================================
+function ymKey(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  return `${y}-${m}`;
+}
+function dateKey(y, m, d) {
+  return `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+}
+function isWeekend(date) { return date.getDay() === 0 || date.getDay() === 6; }
+function isHoliday(date) { return holidays.includes(date.toISOString().split("T")[0]); }
+function toast(msg) {
+  const toastEl = document.getElementById("toast");
+  if (!toastEl) return;
+  toastEl.textContent = msg;
+  toastEl.classList.add("show");
+  setTimeout(() => toastEl.classList.remove("show"), 1800);
+}
 
+// =======================================================
+// Backend <-> Front helpers
+// =======================================================
+function ensureMonth(ym) {
+  if (!adminState[ym]) {
+    adminState[ym] = {};
+    const [y, m] = ym.split("-").map(Number);
+    const last = new Date(y, m, 0).getDate();
+    for (let d = 1; d <= last; d++) {
+      const dt = new Date(y, m - 1, d);
+      const k = dateKey(y, m, d);
+      adminState[ym][k] = (isWeekend(dt) || isHoliday(dt)) ? "no_bus" : "available";
+    }
+    save(LS_ADMIN, adminState);
+  }
+  if (!calendarState[ym]) calendarState[ym] = {};
+}
+
+function buildDaysPayloadFromCalendar(ym) {
+  const monthMap = calendarState[ym] || {};
+  const out = {};
+  Object.keys(monthMap).forEach((k) => {
+    const v = monthMap[k];
+    if (v && v.state === "going" && v.schedule) {
+      out[k] = { state: "going", schedule: v.schedule };
+    }
+  });
+  return out;
+}
+
+function mergeBackendDaysIntoLocal(ym, daysFromBackend = {}) {
+  if (!calendarState[ym]) calendarState[ym] = {};
+  Object.keys(calendarState[ym]).forEach((k) => {
+    if (calendarState[ym][k]?.state === "going") delete calendarState[ym][k];
+  });
+  Object.entries(daysFromBackend).forEach(([date, val]) => {
+    if (val?.state === "going" && val?.schedule) {
+      calendarState[ym][date] = { state: "going", schedule: val.schedule };
+    }
+  });
+  save(LS_CAL, calendarState);
+}
+
+async function loadAdminMonth(ym) {
+  try {
+    const token = await getIdToken();
+    const res = await fetch(`${API_BASE}/horarios/admin/${ym}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    if (!res.ok) return;
+    const data = await res.json();
+    adminState[ym] = data.days || {};
+    save(LS_ADMIN, adminState);
+  } catch (e) {
+    console.error("loadAdminMonth:", e);
+  }
+}
+
+async function loadUserMonthFromBackend(ym) {
+  try {
+    const uid = getUid();
+    const token = await getIdToken();
+    const res = await fetch(`${API_BASE}/horarios/user/${uid}/${ym}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    if (!res.ok) return;
+    const data = await res.json();
+    mergeBackendDaysIntoLocal(ym, data.days || {});
+  } catch (e) {
+    console.error("loadUserMonthFromBackend:", e);
+  }
+}
+
+// DELETE em lote: apaga um conjunto de datas no backend
+async function backendDeleteDates(ym, dates) {
+  if (!dates || dates.length === 0) return;
+  const uid = getUid();
+  const token = await getIdToken();
+
+  for (const date of dates) {
+    const res = await fetch(`${API_BASE}/horarios/user/${uid}/${ym}/${date}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    if (!res.ok) {
+      const e = await res.json().catch(() => ({}));
+      throw new Error(e.erro || `Falha ao apagar a data ${date}`);
+    }
+  }
+}
+
+// =======================================================
+// Render do calendário
+// =======================================================
 function renderCalendar() {
+  const calendarioContainer = document.getElementById("calendar");
+  const monthYearElem = document.getElementById("calendar-month-year");
   if (!calendarioContainer || !monthYearElem) return;
-  calendarioContainer.innerHTML = '';
+
+  calendarioContainer.innerHTML = "";
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
+  const ym = ymKey(currentDate);
+
+  ensureMonth(ym);
 
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
 
-  monthYearElem.textContent = `${firstDay.toLocaleString('default', { month: 'long' })} ${year}`;
+  monthYearElem.textContent = `${firstDay.toLocaleString("pt-BR", { month: "long" })} ${year}`;
 
-  // espaços para alinhamento
+  const dows = ["D", "S", "T", "Q", "Q", "S", "S"];
+  dows.forEach((d) => {
+    const el = document.createElement("div");
+    el.textContent = d;
+    el.className = "dow";
+    calendarioContainer.appendChild(el);
+  });
+
   for (let i = 0; i < firstDay.getDay(); i++) {
-    calendarioContainer.appendChild(document.createElement('div'));
+    calendarioContainer.appendChild(document.createElement("div"));
   }
 
   for (let day = 1; day <= lastDay.getDate(); day++) {
-    const date = new Date(year, month, day);
-    const dateStr = date.toISOString().split('T')[0];
-    const dayElem = document.createElement('div');
-    dayElem.classList.add('day');
+    const dKey = dateKey(year, month + 1, day);
+    const offer = adminState[ym][dKey] || "available";
+    const slot = calendarState[ym][dKey];
 
-    // bloqueia sáb/dom/feriados
-    if (date.getDay() === 0 || date.getDay() === 6 || holidays.includes(dateStr)) {
-      dayElem.classList.add('weekend');
-    } else {
-      if (selectedDays.includes(dateStr)) dayElem.classList.add('selected');
-      else dayElem.classList.add('active');
-
-      dayElem.addEventListener('click', () => toggleSelectDay(dateStr, dayElem));
-    }
-
+    const dayElem = document.createElement("div");
+    dayElem.classList.add("day");
+    dayElem.dataset.date = dKey;
     dayElem.textContent = day;
+
+    if (offer === "no_bus") dayElem.classList.add("no-bus", "locked");
+    else if (slot?.state === "going") dayElem.classList.add("mixed");
+    else dayElem.classList.add("available");
+
+    dayElem.addEventListener("click", () => {
+      const offerNow = adminState[ym][dKey] || "available";
+      if (offerNow === "no_bus") return toast("Não há ônibus nesse dia.");
+
+      // Seleção de turno/horário (lemos da UI atual)
+      const radioTurnos = document.querySelectorAll('input[name="turno"]');
+      const personalizadoToggle = document.getElementById("personalizadoToggle");
+      const saidaPersonalizadaInput = document.getElementById("saidaPersonalizada");
+      const chegadaPersonalizadaInput = document.getElementById("chegadaPersonalizada");
+
+      const schedule = (() => {
+        let turnoSelecionado = null;
+        radioTurnos.forEach((r) => { if (r.checked) turnoSelecionado = r.value; });
+
+        if (personalizadoToggle?.checked) {
+          const saida = saidaPersonalizadaInput?.value;
+          const chegada = chegadaPersonalizadaInput?.value;
+          if (!saida || !chegada) return null;
+          return { turno: "Personalizado", saida, chegada, personalizado: true };
+        } else {
+          if (!turnoSelecionado) return null;
+          let saida = "", chegada = "";
+          if (turnoSelecionado === "Manhã") { saida = "06:00"; chegada = "14:00"; }
+          if (turnoSelecionado === "Tarde") { saida = "11:30"; chegada = "18:00"; }
+          if (turnoSelecionado === "Noite")  { saida = "18:00"; chegada = "21:00"; }
+          return { turno: turnoSelecionado, saida, chegada, personalizado: false };
+        }
+      })();
+
+      const cur = calendarState[ym][dKey]?.state || "available";
+      if (cur === "available") {
+        if (!schedule) return toast("Escolha um turno ou informe horário.");
+        calendarState[ym][dKey] = { state: "going", schedule };
+        // Se estava marcado para remover e voltou a "going", remove da fila de remoção
+        unmarkRemoval(ym, dKey);
+      } else {
+        // virou disponível -> apaga local e agenda remoção no backend (só ao Salvar)
+        calendarState[ym][dKey] = { state: "available" };
+        markRemoval(ym, dKey);
+      }
+
+      save(LS_CAL, calendarState);
+      atualizarListaHorarios();
+      renderCalendar();
+    });
+
     calendarioContainer.appendChild(dayElem);
   }
 }
 
-function toggleSelectDay(dateStr, elem) {
-  const index = selectedDays.indexOf(dateStr);
-  if (index > -1) {
-    selectedDays.splice(index, 1);
-    elem.classList.remove('selected');
-    elem.classList.add('active');
-  } else {
-    selectedDays.push(dateStr);
-    elem.classList.remove('active');
-    elem.classList.add('selected');
+// =======================================================
+// Ações de backend auxiliares
+// =======================================================
+async function backendClearMonth(ym) {
+  const token = await getIdToken();
+  const uid = getUid();
+  const res = await fetch(`${API_BASE}/horarios/user/${uid}/${ym}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.erro || "Falha ao limpar mês.");
   }
 }
 
-function changeMonth(delta) {
-  currentDate.setMonth(currentDate.getMonth() + delta);
-  renderCalendar();
+// =======================================================
+// Lista e estatísticas (responsivo)
+// =======================================================
+function criarLinha(dataStr, schedule) {
+  const linha = document.createElement("div");
+  linha.className = "linha-horario";
+
+  const sData = document.createElement("span"); sData.dataset.label = "Data"; sData.textContent = dataStr;
+  const sTurno = document.createElement("span"); sTurno.dataset.label = "Turno"; sTurno.textContent = schedule.turno;
+  const sSaida = document.createElement("span"); sSaida.dataset.label = "Saída"; sSaida.textContent = schedule.saida;
+  const sChegada = document.createElement("span"); sChegada.dataset.label = "Chegada"; sChegada.textContent = schedule.chegada;
+
+  const acoes = document.createElement("span");
+  acoes.className = "acoes-container";
+
+  const btnEditar = document.createElement("button");
+  btnEditar.className = "editar-btn";
+  btnEditar.textContent = "Editar";
+
+  const btnExcluir = document.createElement("button");
+  btnExcluir.className = "excluir-btn";
+  btnExcluir.textContent = "Excluir";
+
+  btnEditar.addEventListener("click", () => {
+    const ym = ymKey(currentDate);
+    const slot = (calendarState[ym] || {})[dataStr];
+    const personalizadoToggle = document.getElementById("personalizadoToggle");
+    const personalizadoCampos = document.getElementById("personalizadoCampos");
+    const saidaPersonalizadaInput = document.getElementById("saidaPersonalizada");
+    const chegadaPersonalizadaInput = document.getElementById("chegadaPersonalizada");
+    const radioTurnos = document.querySelectorAll('input[name="turno"]');
+
+    if (slot?.schedule) {
+      if (personalizadoToggle && personalizadoCampos && saidaPersonalizadaInput && chegadaPersonalizadaInput) {
+        if (slot.schedule.personalizado) {
+          personalizadoToggle.checked = true;
+          personalizadoCampos.style.display = "block";
+          saidaPersonalizadaInput.value = slot.schedule.saida || "";
+          chegadaPersonalizadaInput.value = slot.schedule.chegada || "";
+          radioTurnos.forEach((r) => (r.checked = false));
+        } else {
+          personalizadoToggle.checked = false;
+          personalizadoCampos.style.display = "none";
+          saidaPersonalizadaInput.value = "";
+          chegadaPersonalizadaInput.value = "";
+          radioTurnos.forEach((r) => (r.checked = (r.value === slot.schedule.turno)));
+        }
+      }
+    }
+    // volta esse dia para "available" local (para você poder reescolher)
+    calendarState[ym][dataStr] = { state: "available" };
+    // agenda remoção no backend quando salvar
+    markRemoval(ym, dataStr);
+
+    save(LS_CAL, calendarState);
+    renderCalendar();
+    atualizarListaHorarios();
+  });
+
+  // ⬇ EXCLUIR: apaga local e TAMBÉM no Firebase imediatamente
+  btnExcluir.addEventListener("click", async () => {
+    try {
+      const ym = ymKey(currentDate);
+      const uid = getUid();
+      const token = await getIdToken();
+      const res = await fetch(`${API_BASE}/horarios/user/${uid}/${ym}/${dataStr}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error("Falha ao excluir dia no servidor.");
+
+      // depois atualiza o local/UX:
+      delete calendarState[ym][dataStr];
+      save(LS_CAL, calendarState);
+      // garantir que não fique pendência desse dia
+      unmarkRemoval(ym, dataStr);
+
+      renderCalendar();
+      atualizarListaHorarios();
+      toast("Dia excluído!");
+    } catch (e) {
+      console.error(e);
+      toast("Não foi possível excluir no servidor.");
+    }
+  });
+
+  acoes.append(btnEditar, btnExcluir);
+  linha.append(sData, sTurno, sSaida, sChegada, acoes);
+  return linha;
 }
 
 function atualizarListaHorarios() {
+  const horariosSalvosContainer = document.getElementById("horariosSalvos");
+  const statTotal = document.getElementById("statTotal");
+  const statTurnos = document.getElementById("statTurnos");
   if (!horariosSalvosContainer) return;
-  horariosSalvosContainer.innerHTML = '';
 
-  if (horariosSalvos.length === 0) {
-    horariosSalvosContainer.innerHTML = '<p style="opacity:0.7">Nenhum horário salvo.</p>';
+  horariosSalvosContainer.innerHTML = "";
+
+  const ym = ymKey(currentDate);
+  const map = calendarState[ym] || {};
+  const entries = Object.keys(map)
+    .filter((k) => map[k].state === "going" && map[k].schedule)
+    .sort();
+
+  if (entries.length === 0) {
+    horariosSalvosContainer.innerHTML = '<p style="opacity:.7">Nenhum horário salvo.</p>';
+    if (statTotal) statTotal.textContent = "0";
+    if (statTurnos) statTurnos.textContent = "–";
     return;
   }
 
-  // exibe todos os itens salvos (inclui "Dia da Semana X" como você já estava salvando)
-  horariosSalvos.forEach((h, index) => {
-    const linha = document.createElement('div');
-    linha.className = 'linha-horario';
-    linha.innerHTML = `
-      <span>${h.data}</span>
-      <span>${h.turno}</span>
-      <span>${h.saida}</span>
-      <span>${h.chegada}</span>
-      <button class="editar-btn" data-index="${index}">Editar</button>
-      <button class="excluir-btn" data-index="${index}">Excluir</button>
-    `;
-    horariosSalvosContainer.appendChild(linha);
+  const turnosCount = {};
+  entries.forEach((dataStr) => {
+    const { schedule } = map[dataStr];
+    turnosCount[schedule.turno] = (turnosCount[schedule.turno] || 0) + 1;
+    horariosSalvosContainer.appendChild(criarLinha(dataStr, schedule));
   });
 
-  // ligar eventos editar/excluir
-  document.querySelectorAll('.editar-btn').forEach(btn => {
-    btn.onclick = () => {
-      const idx = Number(btn.dataset.index);
-      const item = horariosSalvos[idx];
-      if (!item) return;
+  if (statTotal) statTotal.textContent = String(entries.length);
+  if (statTurnos) {
+    const parts = Object.entries(turnosCount).map(([t, c]) => `${t}: ${c}`);
+    statTurnos.textContent = parts.join(" · ");
+  }
+}
 
-      // load into UI for edit: se for data real, preenche seleção do calendário; se for dia da semana, marca o botão correspondente
-      // para simplicidade aqui vamos só remover o item e permitir re-criar (como você tinha antes)
-      horariosSalvos.splice(idx, 1);
-
-      // se item.data for data ISO (yyyy-mm-dd), coloca em selectedDays para editar
-      if (/^\d{4}-\d{2}-\d{2}$/.test(item.data)) {
-        selectedDays = [item.data];
-        renderCalendar();
-      } else if (/^Dia da Semana (\d)/.test(item.data)) {
-        const m = item.data.match(/^Dia da Semana (\d)/);
-        if (m) {
-          const num = Number(m[1]);
-          document.querySelectorAll('.dia-btn').forEach(btn => {
-            if (Number(btn.dataset.dia) === num) btn.classList.add('selecionado');
-          });
-        }
-      }
-
-      // preenche turnos/personalizado
-      if (item.personalizado) {
-        personalizadoToggle.checked = true;
-        personalizadoCampos.style.display = 'block';
-        saidaPersonalizadaInput.value = item.saida;
-        chegadaPersonalizadaInput.value = item.chegada;
-        radioTurnos.forEach(r => r.checked = false);
+// =======================================================
+// Wire-up de botões/controles (com checagens)
+// =======================================================
+function wireUI() {
+  // Personalizado toggle
+  const personalizadoToggle = document.getElementById("personalizadoToggle");
+  const personalizadoCampos = document.getElementById("personalizadoCampos");
+  if (personalizadoToggle && personalizadoCampos) {
+    personalizadoToggle.addEventListener("change", () => {
+      if (personalizadoToggle.checked) {
+        personalizadoCampos.style.display = "block";
+        document.querySelectorAll('input[name="turno"]').forEach((r) => (r.checked = false));
       } else {
-        personalizadoToggle.checked = false;
-        personalizadoCampos.style.display = 'none';
-        saidaPersonalizadaInput.value = '';
-        chegadaPersonalizadaInput.value = '';
-        radioTurnos.forEach(r => r.checked = (r.value === item.turno));
+        personalizadoCampos.style.display = "none";
       }
-
-      atualizarListaHorarios();
-    };
-  });
-
-  document.querySelectorAll('.excluir-btn').forEach(btn => {
-    btn.onclick = () => {
-      const idx = Number(btn.dataset.index);
-      if (!Number.isFinite(idx)) return;
-      if (confirm('Deseja realmente excluir este horário?')) {
-        horariosSalvos.splice(idx, 1);
-        atualizarListaHorarios();
-      }
-    };
-  });
-}
-
-// função central que faz o saving (chamada por ambos os botões)
-function handleSave() {
-  // coleta dos dias da semana selecionados
-  const diasSelecionados = document.querySelectorAll('.dia-btn.selecionado');
-  selectedWeekDays = Array.from(diasSelecionados).map(btn => Number(btn.dataset.dia));
-
-  if (selectedDays.length === 0 && selectedWeekDays.length === 0) {
-    alert('Selecione pelo menos um dia da semana ou um dia no calendário.');
-    return;
-  }
-
-  // turno
-  let turnoSelecionado = null;
-  radioTurnos.forEach(r => {
-    if (r.checked) turnoSelecionado = r.value;
-  });
-
-  let saida = '';
-  let chegada = '';
-  let personalizado = false;
-
-  if (personalizadoToggle.checked) {
-    saida = saidaPersonalizadaInput.value;
-    chegada = chegadaPersonalizadaInput.value;
-    personalizado = true;
-    if (!saida || !chegada) {
-      alert('Preencha os horários personalizados.');
-      return;
-    }
-  } else {
-    if (!turnoSelecionado) {
-      alert('Selecione um turno ou use horário personalizado.');
-      return;
-    }
-    switch (turnoSelecionado) {
-      case 'Manhã': saida = '06:00'; chegada = '14:00'; break;
-      case 'Tarde': saida = '11:30'; chegada = '18:00'; break;
-      case 'Noite': saida = '18:00'; chegada = '21:00'; break;
-    }
-  }
-
-  // adiciona os dias do calendário
-  selectedDays.forEach(dataStr => {
-    const existe = horariosSalvos.some(h => h.data === dataStr && h.saida === saida && h.chegada === chegada);
-    if (!existe) {
-      horariosSalvos.push({
-        data: dataStr,
-        turno: personalizado ? 'Personalizado' : turnoSelecionado,
-        saida, chegada, personalizado
-      });
-    }
-  });
-
-  // adiciona os dias da semana (salva como referência textual)
-  selectedWeekDays.forEach(diaNum => {
-    const label = `Dia da Semana ${diaNum}`;
-    const existe = horariosSalvos.some(h => h.data === label && h.saida === saida && h.chegada === chegada);
-    if (!existe) {
-      horariosSalvos.push({
-        data: label,
-        turno: personalizado ? 'Personalizado' : turnoSelecionado,
-        saida, chegada, personalizado
-      });
-    }
-  });
-
-  // limpar seleções e UI
-  selectedDays = [];
-  selectedWeekDays = [];
-  document.querySelectorAll('.dia-btn').forEach(btn => btn.classList.remove('selecionado'));
-  renderCalendar();
-
-  personalizadoToggle.checked = false;
-  personalizadoCampos.style.display = 'none';
-  saidaPersonalizadaInput.value = '';
-  chegadaPersonalizadaInput.value = '';
-  radioTurnos.forEach(r => r.checked = false);
-
-  atualizarListaHorarios();
-}
-
-// conecta os dois botões à mesma função
-if (salvarBtn) salvarBtn.addEventListener('click', handleSave);
-if (saveCalendarBtn) saveCalendarBtn.addEventListener('click', handleSave);
-
-if (personalizadoToggle) {
-  personalizadoToggle.addEventListener('change', () => {
-    personalizadoCampos.style.display = personalizadoToggle.checked ? 'block' : 'none';
-    if (personalizadoToggle.checked) radioTurnos.forEach(r => r.checked = false);
-  });
-}
-
-diaBtns.forEach(btn => {
-  const dia = Number(btn.dataset.dia);
-  if (dia === 0 || dia === 6) {
-    btn.disabled = true;
-    btn.style.opacity = 0.5;
-    btn.style.cursor = 'not-allowed';
-  } else {
-    btn.addEventListener('click', () => {
-      btn.classList.toggle('selecionado');
     });
   }
-});
 
-document.addEventListener('DOMContentLoaded', () => {
-  renderCalendar();
-  atualizarListaHorarios();
+  // Chips
+  const chipsWrap = document.getElementById("chips");
+  const btnWeekdays = document.getElementById("btnWeekdays");
+  const btnClearChips = document.getElementById("btnClearChips");
+  const btnApplyChips = document.getElementById("btnApplyChips");
+
+  chipsWrap?.querySelectorAll(".chip:not([disabled])").forEach((ch) => {
+    ch.addEventListener("click", () => ch.classList.toggle("is-on"));
+  });
+  btnWeekdays?.addEventListener("click", () => {
+    chipsWrap?.querySelectorAll(".chip").forEach((ch) => {
+      if (!ch.hasAttribute("disabled")) ch.classList.toggle("is-on", ["1","2","3","4","5"].includes(ch.dataset.dia));
+    });
+  });
+  btnClearChips?.addEventListener("click", () => {
+    chipsWrap?.querySelectorAll(".chip").forEach((ch) => ch.classList.remove("is-on"));
+  });
+  btnApplyChips?.addEventListener("click", () => {
+    const radioTurnos = document.querySelectorAll('input[name="turno"]');
+    const personalizadoToggle = document.getElementById("personalizadoToggle");
+    const saidaPersonalizadaInput = document.getElementById("saidaPersonalizada");
+    const chegadaPersonalizadaInput = document.getElementById("chegadaPersonalizada");
+
+    const schedule = (() => {
+      let turnoSelecionado = null;
+      radioTurnos.forEach((r) => { if (r.checked) turnoSelecionado = r.value; });
+      if (personalizadoToggle?.checked) {
+        const saida = saidaPersonalizadaInput?.value;
+        const chegada = chegadaPersonalizadaInput?.value;
+        if (!saida || !chegada) return null;
+        return { turno: "Personalizado", saida, chegada, personalizado: true };
+      } else {
+        if (!turnoSelecionado) return null;
+        let saida = "", chegada = "";
+        if (turnoSelecionado === "Manhã") { saida = "06:00"; chegada = "14:00"; }
+        if (turnoSelecionado === "Tarde") { saida = "11:30"; chegada = "18:00"; }
+        if (turnoSelecionado === "Noite")  { saida = "18:00"; chegada = "21:00"; }
+        return { turno: turnoSelecionado, saida, chegada, personalizado: false };
+      }
+    })();
+
+    if (!schedule) { toast("Escolha um turno/horário."); return; }
+
+    const selected = Array.from(chipsWrap?.querySelectorAll(".chip.is-on") || [])
+      .map((ch) => +ch.dataset.dia);
+
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    const last = new Date(year, month + 1, 0).getDate();
+    const ym = ymKey(currentDate);
+    ensureMonth(ym);
+
+    for (let d = 1; d <= last; d++) {
+      const dt = new Date(year, month, d);
+      const k = dateKey(year, month + 1, d);
+      if (selected.includes(dt.getDay()) && (adminState[ym][k] || "available") === "available") {
+        calendarState[ym][k] = { state: "going", schedule: { ...schedule } };
+        // se tinha remoção pendente para essa data, tirar
+        unmarkRemoval(ym, k);
+      }
+    }
+
+    save(LS_CAL, calendarState);
+    atualizarListaHorarios();
+    renderCalendar();
+    toast("Aplicado ao mês atual.");
+  });
+
+  // Navegação mês
+  const btnPrev = document.getElementById("prev");
+  const btnNext = document.getElementById("next");
+  btnPrev?.addEventListener("click", async () => {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    const ym = ymKey(currentDate);
+    await loadAdminMonth(ym);
+    await loadUserMonthFromBackend(ym);
+    renderCalendar();
+    atualizarListaHorarios();
+  });
+  btnNext?.addEventListener("click", async () => {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    const ym = ymKey(currentDate);
+    await loadAdminMonth(ym);
+    await loadUserMonthFromBackend(ym);
+    renderCalendar();
+    atualizarListaHorarios();
+  });
+
+  // Toolbar: Limpar, Copiar, Salvar
+  const btnClear = document.getElementById("btnClear");
+  const btnCopyPrev = document.getElementById("btnCopyPrev");
+  const btnSave = document.getElementById("btnSave");
+
+  btnClear?.addEventListener("click", async () => {
+    const ym = ymKey(currentDate);
+    try {
+      await backendClearMonth(ym);
+      delete calendarState[ym];
+      save(LS_CAL, calendarState);
+      delete choices[ym];
+      save(LS_CHOICES, choices);
+      clearRemovals(ym);
+      atualizarListaHorarios();
+      renderCalendar();
+      toast("Mês limpo com sucesso!");
+    } catch (e) {
+      console.error(e);
+      toast("Erro ao limpar mês.");
+    }
+  });
+
+  btnCopyPrev?.addEventListener("click", async () => {
+    try {
+      const toYm = ymKey(currentDate);
+      const prevDate = new Date(currentDate);
+      prevDate.setMonth(prevDate.getMonth() - 1);
+      const fromYm = ymKey(prevDate);
+      const uid = getUid();
+      const token = await getIdToken();
+      const res = await fetch(`${API_BASE}/horarios/user/copy`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ uid, fromYm, toYm })
+      });
+      if (!res.ok) throw new Error("Falha na cópia no servidor.");
+      await loadUserMonthFromBackend(toYm);
+      renderCalendar();
+      atualizarListaHorarios();
+      toast("Copiado do mês anterior.");
+    } catch (e) {
+      console.error(e);
+      toast("Não foi possível copiar do mês anterior.");
+    }
+  });
+
+  // SALVAR: 1º apaga as datas pendentes; 2º salva os 'going' atuais
+  btnSave?.addEventListener("click", async () => {
+    try {
+      const ym = ymKey(currentDate);
+      const uid = getUid();
+      const token = await getIdToken();
+
+      // 1) apagar datas pendentes
+      const removals = listRemovals(ym);
+      if (removals.length) {
+        await backendDeleteDates(ym, removals);
+        clearRemovals(ym);
+      }
+
+      // 2) salvar dias 'going' do mês
+      const days = buildDaysPayloadFromCalendar(ym);
+      const res = await fetch(`${API_BASE}/horarios/user/${uid}/${ym}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ days })
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      toast("Escolhas salvas no servidor!");
+    } catch (e) {
+      console.error(e);
+      toast("Falha ao salvar no servidor.");
+    }
+  });
+}
+
+// =======================================================
+// Init
+// =======================================================
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    await new Promise((resolve) => {
+      const unsub = auth.onAuthStateChanged(() => { unsub(); resolve(); });
+    });
+
+    wireUI();
+
+    const ym = ymKey(currentDate);
+    await loadAdminMonth(ym);
+    await loadUserMonthFromBackend(ym);
+
+    renderCalendar();
+    atualizarListaHorarios();
+  } catch (e) {
+    console.error("Init horarios.js:", e);
+    toast("Erro ao iniciar a página de horários.");
+  }
 });

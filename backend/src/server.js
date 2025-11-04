@@ -1,4 +1,6 @@
+// server.js (somente trechos relevantes)
 import express from "express";
+import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -11,16 +13,17 @@ import feedbackRoutes from "./routes/feedbackRoutes.js";
 import staffRoutes from "./routes/staffRoutes.js";
 
 const app = express();
+app.use(cors());                 // <— útil no dev
+app.use(express.json());
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(express.static(path.join(__dirname, "../../frontend")));
-app.use(express.json());
 
 app.use("/auth", authRoutes);
 app.use("/auth/staff", staffRoutes);
-app.use("/horarios", horariosRoutes);
+app.use("/horarios", horariosRoutes);   // <— inclui V1 + V2
 app.use("/admin", adminRoutes);
 app.use("/relatorios", relatorioRoutes);
 app.use("/relatorios", pdfRoutes);
@@ -37,8 +40,6 @@ app.get("/:page", (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
-});
+app.listen(PORT, () => console.log(`Servidor rodando em http://localhost:${PORT}`));
 
 export default app;
