@@ -1,6 +1,5 @@
-/* Estilos do Tutorial Interativo */
 .tutorial-overlay {
-  display: none; /* Oculto por padrão */
+  display: none;
   position: fixed;
   top: 0;
   left: 0;
@@ -50,7 +49,6 @@
   border-style: solid;
 }
 
-/* Seta para baixo (popup em cima) */
 .tutorial-popup.bottom .tutorial-popup-arrow {
   top: 100%;
   left: 50%;
@@ -59,7 +57,6 @@
   border-color: #333 transparent transparent transparent;
 }
 
-/* Seta para cima (popup em baixo) */
 .tutorial-popup.top .tutorial-popup-arrow {
   bottom: 100%;
   left: 50%;

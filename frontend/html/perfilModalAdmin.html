@@ -1,28 +1,23 @@
 <div id="modalPerfil" class="modal">
   <div class="modal-content">
     <span id="btnFecharPerfil" class="close">&times;</span>
-    <h2 style="color: #008793;">Meu Perfil</h2>
+    <h2 style="color: #008793;">Perfil do Administrador</h2>
 
     <div class="perfil-card">
       <p><strong>Nome:</strong> <span id="nomeUsuario">Carregando...</span></p>
       <p><strong>Email:</strong> <span id="emailUsuario">Carregando...</span></p>
       <p><strong>ID do Usuário:</strong> <span id="idUsuario">Carregando...</span></p>
       <p><strong>CPF:</strong> <span id="cpfUsuario">Carregando...</span></p>
-      <p><strong>Instituição:</strong> <span id="instituicaoUsuario">Carregando...</span></p>
-      <p><strong>Telefone:</strong> <span id="telefoneUsuario">Carregando...</span></p>
-      <p><strong>Curso:</strong> <span id="cursoUsuario">Carregando...</span></p>
-      <p><strong>Turno:</strong> <span id="turnoUsuario">Carregando...</span></p>
-      <p><strong>Período:</strong> <span id="periodoUsuario">Carregando...</span></p>
     </div>
 
     <div class="perfil-modal-buttons">
-      <button id="btnAtualizarPerfil">Atualizar Perfil</button>
       <button id="btnAtualizarEmail">Atualizar E-mail</button>
       <button id="btnAlterarSenha">Alterar Senha</button>
     </div>
   </div>
 </div>
 
+<!-- Modal alterar senha -->
 <div id="modalAlterarSenha" class="modal">
   <div class="modal-content">
     <span class="close" id="btnFecharSenha">&times;</span>
@@ -43,35 +38,7 @@
   </div>
 </div>
 
-<div id="modalAtualizarPerfil" class="modal">
-  <div class="modal-content">
-    <span class="close" id="btnFecharAtualizarPerfil">&times;</span>
-    <h2 style="color: #008793;">Atualizar Perfil</h2>
-
-    <form id="formAtualizarPerfil" class="senha-form">
-      <label for="nomeAtualizar">Nome:</label>
-      <input type="text" id="nomeAtualizar" required>
-
-      <label for="telefoneAtualizar">Telefone:</label>
-      <input type="text" id="telefoneAtualizar">
-
-      <label for="instituicaoAtualizar">Instituição:</label>
-      <input type="text" id="instituicaoAtualizar">
-
-      <label for="cursoAtualizar">Curso:</label>
-      <input type="text" id="cursoAtualizar">
-
-      <label for="turnoAtualizar">Turno:</label>
-      <input type="text" id="turnoAtualizar">
-
-      <label for="periodoAtualizar">Período:</label>
-      <input type="text" id="periodoAtualizar">
-
-      <button type="submit" id="btnSalvarPerfil">Salvar Alterações</button>
-    </form>
-  </div>
-</div>
-
+<!-- Modal atualizar e-mail -->
 <div id="modalAtualizarEmail" class="modal">
   <div class="modal-content">
     <span id="btnFecharEmail" class="close">&times;</span>

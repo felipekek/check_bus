@@ -20,7 +20,9 @@ let atualizarEmailIniciado = false;
 export async function carregarModalPerfil() {
   if (modalCarregado) return;
   try {
-    const resposta = await fetch("../perfilModal.html"); // ajuste se necessário
+    const tipoUsuario = localStorage.getItem("tipoUsuario");
+    const modalPath = tipoUsuario === "admin" ? "../html/perfilModalAdmin.html" : "../html/perfilModal.html";
+    const resposta = await fetch(modalPath);
     const html = await resposta.text();
     document.body.insertAdjacentHTML("beforeend", html);
 
@@ -40,11 +42,13 @@ export async function carregarModalPerfil() {
     if (btnAtualizarPerfil && modalAtualizar) {
       btnAtualizarPerfil.addEventListener("click", () => {
         document.getElementById("nomeAtualizar").value = document.getElementById("nomeUsuario").textContent;
-        document.getElementById("telefoneAtualizar").value = document.getElementById("telefoneUsuario").textContent;
-        document.getElementById("instituicaoAtualizar").value = document.getElementById("instituicaoUsuario").textContent;
-        document.getElementById("cursoAtualizar").value = document.getElementById("cursoUsuario").textContent;
-        document.getElementById("turnoAtualizar").value = document.getElementById("turnoUsuario").textContent;
-        document.getElementById("periodoAtualizar").value = document.getElementById("periodoUsuario").textContent;
+        if(tipoUsuario !== "admin") {
+          document.getElementById("telefoneAtualizar").value = document.getElementById("telefoneUsuario").textContent;
+          document.getElementById("instituicaoAtualizar").value = document.getElementById("instituicaoUsuario").textContent;
+          document.getElementById("cursoAtualizar").value = document.getElementById("cursoUsuario").textContent;
+          document.getElementById("turnoAtualizar").value = document.getElementById("turnoUsuario").textContent;
+          document.getElementById("periodoAtualizar").value = document.getElementById("periodoUsuario").textContent;
+        }
         modalAtualizar.style.display = "block";
       });
       initAtualizarPerfil();
@@ -87,19 +91,23 @@ async function carregarDadosUsuario() {
 
     await syncEmailFirestoreSeMudou(user);
 
+    const tipoUsuario = localStorage.getItem("tipoUsuario");
     const campos = { emailUsuario: user.email || "Não informado", idUsuario: user.uid };
     try {
-      const userRef = doc(db, "alunos", user.uid);
+      const collectionName = tipoUsuario === "admin" ? "admin" : "alunos";
+      const userRef = doc(db, collectionName, user.uid);
       const snap = await getDoc(userRef);
       if (snap.exists()) {
         const dados = snap.data();
         campos.nomeUsuario = dados.nome || "Não informado";
         campos.cpfUsuario = dados.cpf || "Não informado";
-        campos.instituicaoUsuario = dados.instituicao || "Não informado";
-        campos.telefoneUsuario = dados.telefone || "Não informado";
-        campos.cursoUsuario = dados.curso || "Não informado";
-        campos.turnoUsuario = dados.turno || "Não informado";
-        campos.periodoUsuario = dados.periodo || "Não informado";
+        if (tipoUsuario !== "admin") {
+          campos.instituicaoUsuario = dados.instituicao || "Não informado";
+          campos.telefoneUsuario = dados.telefone || "Não informado";
+          campos.cursoUsuario = dados.curso || "Não informado";
+          campos.turnoUsuario = dados.turno || "Não informado";
+          campos.periodoUsuario = dados.periodo || "Não informado";
+        }
       }
 
       for (const id in campos) {
