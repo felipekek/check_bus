@@ -5,7 +5,6 @@
   font-family: 'Inter', Arial, sans-serif; 
 }
 
-
 body {
   background: linear-gradient(to right, #004d7a, #008793); 
   min-height: 100vh;      
@@ -14,19 +13,17 @@ body {
   overflow-x: hidden;     
 }
 
-
 .container {
   background-color: #fff;
-  padding: 40px 40px 20px 40px; /* top, right, bottom, left */
+  padding: 40px 40px 20px 40px;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   width: 90%;
-  max-width: 600px; /* aumente aqui, por exemplo para 500px */
+  max-width: 600px;
   margin: 60px auto 0;
   color: #333;
   text-align: center;
 }
-
 
 h1, h2, h3 {
   color: #004d7a;         
@@ -44,13 +41,11 @@ form {
   gap: 15px;              
 }
 
-
 label {
   text-align: left;       
   font-weight: 600;       
   font-size: 14px;        
 }
-
 
 input, select, textarea {
   padding: 10px;          
@@ -60,7 +55,6 @@ input, select, textarea {
   font-family: inherit;   
 }
 
-  /* Botão enviar */
 button {
   background: #4a90e2;
   color: #fff;
@@ -89,7 +83,7 @@ a:hover {
 
 p {
   margin-top: 12px;
-  margin-bottom: 2px;  /* diminui o espaço abaixo */
+  margin-bottom: 2px;
   font-size: 14px;
 }
 
@@ -99,24 +93,20 @@ p {
   font-weight: bold;      
 }
 
-
 .hidden {
   display: none !important; 
 }
 
-
-/* estilização do botão esqueceu a senha */
-
 .esqueceu-senha-link {
   display: block;
-  margin-top: -5px;         /* diminui o espaço acima */
-  margin-left: 0;          /* garante alinhamento à esquerda */
-  width: fit-content;      /* só ocupa o necessário */
+  margin-top: -5px;      
+  margin-left: 0;   
+  width: fit-content;   
   text-align: left;
   font-size: 14px;
   color: #004d7a; 
   text-decoration: none;
-  padding-left: 0;         /* remove recuo extra */
+  padding-left: 0;     
 }
 
 .esqueceu-senha-link:hover {
@@ -124,8 +114,7 @@ p {
   text-decoration: underline;
 }
 
-/*imagem da logo */
-.img{
+.img {
 width: 130px;
 height: auto;
 margin-top: -33px;
