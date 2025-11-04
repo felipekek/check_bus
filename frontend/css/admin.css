@@ -284,3 +284,16 @@ h1 {
     stroke-linecap: round;
     stroke-linejoin: round;
 }
+
+/* Destaque para ocorrências da busca */
+mark.hl {
+  background: #ffe08a;      /* amarelinho */
+  padding: 0 2px;
+  border-radius: 3px;
+}
+
+/* No cabeçalho (fundo escuro), trocamos a cor do texto pra manter contraste */
+.accordion-header mark.hl {
+  background: #53fade;
+  color: #002b36;
+}
