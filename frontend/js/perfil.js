@@ -1,46 +1,42 @@
-// frontend/js/perfil.js
-
 import { auth, db } from "./firebase-config.js";
 import {
   onAuthStateChanged,
   updatePassword,
-  updateEmail,
   reauthenticateWithCredential,
   EmailAuthProvider,
-  sendEmailVerification
+  verifyBeforeUpdateEmail,
+  fetchSignInMethodsForEmail,
+  reauthenticateWithPopup,
+  GoogleAuthProvider,
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-/** Controle de inicialização dos modais para não duplicar listeners */
 let modalCarregado = false;
 let perfilIniciado = false;
 let atualizarPerfilIniciado = false;
 let atualizarEmailIniciado = false;
 
-/**
- * Carrega o modal do perfil principal
- */
+// Carrega modal de perfil
 export async function carregarModalPerfil() {
   if (modalCarregado) return;
-
   try {
-    const resposta = await fetch("../perfilModal.html");
+    const resposta = await fetch("../perfilModal.html"); // ajuste se necessário
     const html = await resposta.text();
     document.body.insertAdjacentHTML("beforeend", html);
 
     const modal = document.getElementById("modalPerfil");
     const btnFechar = document.getElementById("btnFecharPerfil");
 
-    if (btnFechar) btnFechar.addEventListener("click", () => { modal.style.display = "none"; });
-    window.addEventListener("click", (e) => { if (e.target === modal) modal.style.display = "none"; });
+    if (btnFechar) btnFechar.addEventListener("click", () => (modal.style.display = "none"));
+    window.addEventListener("click", (e) => {
+      if (e.target === modal) modal.style.display = "none";
+    });
 
-    // --- BOTÕES DO MODAL ---
     const btnAtualizarPerfil = document.getElementById("btnAtualizarPerfil");
     const btnAlterarSenha = document.getElementById("btnAlterarSenha");
     const btnAtualizarEmail = document.getElementById("btnAtualizarEmail");
     const modalAtualizar = document.getElementById("modalAtualizarPerfil");
 
-    // Atualizar informações gerais do perfil
     if (btnAtualizarPerfil && modalAtualizar) {
       btnAtualizarPerfil.addEventListener("click", () => {
         document.getElementById("nomeAtualizar").value = document.getElementById("nomeUsuario").textContent;
@@ -54,13 +50,11 @@ export async function carregarModalPerfil() {
       initAtualizarPerfil();
     }
 
-    // Alterar senha
     if (!perfilIniciado && btnAlterarSenha) {
       initAlterarSenha();
       perfilIniciado = true;
     }
 
-    // Atualizar e-mail
     if (!atualizarEmailIniciado && btnAtualizarEmail) {
       initAtualizarEmail();
       atualizarEmailIniciado = true;
@@ -74,9 +68,7 @@ export async function carregarModalPerfil() {
   }
 }
 
-/**
- * Abre o modal do perfil
- */
+// Abre modal principal
 export async function abrirPerfil() {
   if (!modalCarregado) {
     const carregou = await carregarModalPerfil();
@@ -84,21 +76,18 @@ export async function abrirPerfil() {
   }
 
   const modal = document.getElementById("modalPerfil");
-  if (!modal) return;
-
   modal.style.display = "block";
   carregarDadosUsuario();
 }
 
-/**
- * Carrega os dados do usuário no modal principal
- */
+// Carrega dados do usuário
 async function carregarDadosUsuario() {
   onAuthStateChanged(auth, async (user) => {
     if (!user) return;
 
-    const campos = { emailUsuario: user.email || "Não informado", idUsuario: user.uid };
+    await syncEmailFirestoreSeMudou(user);
 
+    const campos = { emailUsuario: user.email || "Não informado", idUsuario: user.uid };
     try {
       const userRef = doc(db, "alunos", user.uid);
       const snap = await getDoc(userRef);
@@ -123,20 +112,33 @@ async function carregarDadosUsuario() {
   });
 }
 
-/**
- * Inicializa o modal de Alterar Senha
- */
+// Sincroniza o email do Auth com o Firestore
+async function syncEmailFirestoreSeMudou(user) {
+  try {
+    const ref = doc(db, "alunos", user.uid);
+    const snap = await getDoc(ref);
+    if (snap.exists()) {
+      const dados = snap.data() || {};
+      if (dados.email !== user.email) {
+        await updateDoc(ref, { email: user.email });
+      }
+    }
+  } catch (e) {
+    console.warn("Não foi possível sincronizar o e-mail no Firestore agora:", e);
+  }
+}
+
+// Alterar senha
 function initAlterarSenha() {
-  const btnAlterarSenha = document.getElementById("btnAlterarSenha");
   const modalSenha = document.getElementById("modalAlterarSenha");
   const btnFecharSenha = document.getElementById("btnFecharSenha");
   const formSenha = document.getElementById("formAlterarSenha");
 
-  if (!btnAlterarSenha || !modalSenha || !btnFecharSenha || !formSenha) return;
-
-  btnAlterarSenha.addEventListener("click", () => { modalSenha.style.display = "block"; });
-  btnFecharSenha.addEventListener("click", () => { modalSenha.style.display = "none"; });
-  window.addEventListener("click", (e) => { if (e.target === modalSenha) modalSenha.style.display = "none"; });
+  document.getElementById("btnAlterarSenha").addEventListener("click", () => (modalSenha.style.display = "block"));
+  btnFecharSenha.addEventListener("click", () => (modalSenha.style.display = "none"));
+  window.addEventListener("click", (e) => {
+    if (e.target === modalSenha) modalSenha.style.display = "none";
+  });
 
   formSenha.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -144,101 +146,65 @@ function initAlterarSenha() {
     const novaSenha = document.getElementById("novaSenha").value;
     const confirmaNovaSenha = document.getElementById("confirmaNovaSenha").value;
 
-    if (!senhaAtual || !novaSenha || !confirmaNovaSenha)
-      return alert("Preencha todos os campos!");
-
-    if (novaSenha !== confirmaNovaSenha)
-      return alert("As senhas não coincidem!");
+    if (novaSenha !== confirmaNovaSenha) return alert("As senhas não coincidem!");
 
     try {
       const user = auth.currentUser;
-      if (!user) return alert("Usuário não autenticado.");
-
-      /** Reautentica e depois altera a senha */
       const cred = EmailAuthProvider.credential(user.email, senhaAtual);
       await reauthenticateWithCredential(user, cred);
       await updatePassword(user, novaSenha);
-
       alert("Senha alterada com sucesso!");
       modalSenha.style.display = "none";
       formSenha.reset();
     } catch (err) {
-      console.error(err);
       alert("Erro ao alterar senha: " + err.message);
+      console.error(err);
     }
   });
 }
 
-/**
- * Inicializa o modal de Atualizar Perfil
- */
+// Atualizar perfil
 function initAtualizarPerfil() {
   if (atualizarPerfilIniciado) return;
   atualizarPerfilIniciado = true;
 
-  const modalAtualizar = document.getElementById("modalAtualizarPerfil");
-  const btnFecharAtualizar = document.getElementById("btnFecharAtualizarPerfil");
-  const formAtualizar = document.getElementById("formAtualizarPerfil");
+  const modal = document.getElementById("modalAtualizarPerfil");
+  const btnFechar = document.getElementById("btnFecharAtualizarPerfil");
+  const form = document.getElementById("formAtualizarPerfil");
 
-  if (!modalAtualizar || !btnFecharAtualizar || !formAtualizar) return;
+  btnFechar.addEventListener("click", () => (modal.style.display = "none"));
+  window.addEventListener("click", (e) => {
+    if (e.target === modal) modal.style.display = "none";
+  });
 
-  btnFecharAtualizar.addEventListener("click", () => { modalAtualizar.style.display = "none"; });
-  window.addEventListener("click", (e) => { if (e.target === modalAtualizar) modalAtualizar.style.display = "none"; });
-
-  formAtualizar.addEventListener("submit", async (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const user = auth.currentUser;
-    if (!user) return alert("Usuário não autenticado.");
-
-    const nome = document.getElementById("nomeAtualizar").value.trim();
-    const telefone = document.getElementById("telefoneAtualizar").value.trim();
-    const instituicao = document.getElementById("instituicaoAtualizar").value.trim();
-    const curso = document.getElementById("cursoAtualizar").value.trim();
-    const turno = document.getElementById("turnoAtualizar").value.trim();
-    const periodo = document.getElementById("periodoAtualizar").value.trim();
+    const dados = {
+      nome: document.getElementById("nomeAtualizar").value.trim(),
+      telefone: document.getElementById("telefoneAtualizar").value.trim(),
+      instituicao: document.getElementById("instituicaoAtualizar").value.trim(),
+      curso: document.getElementById("cursoAtualizar").value.trim(),
+      turno: document.getElementById("turnoAtualizar").value.trim(),
+      periodo: document.getElementById("periodoAtualizar").value.trim(),
+    };
 
     try {
-      await updateDoc(doc(db, "alunos", user.uid), { nome, telefone, instituicao, curso, turno, periodo });
+      await updateDoc(doc(db, "alunos", user.uid), dados);
       alert("Perfil atualizado com sucesso!");
-      modalAtualizar.style.display = "none";
-
-      document.getElementById("nomeUsuario").textContent = nome;
-      document.getElementById("telefoneUsuario").textContent = telefone;
-      document.getElementById("instituicaoUsuario").textContent = instituicao;
-      document.getElementById("cursoUsuario").textContent = curso;
-      document.getElementById("turnoUsuario").textContent = turno;
-      document.getElementById("periodoUsuario").textContent = periodo;
+      modal.style.display = "none";
+      Object.entries(dados).forEach(([k, v]) => {
+        const id = k + "Usuario";
+        const el = document.getElementById(id);
+        if (el) el.textContent = v;
+      });
     } catch (err) {
-      console.error("Erro ao atualizar perfil:", err);
-      alert("Erro ao atualizar perfil. Tente novamente.");
+      alert("Erro ao atualizar perfil: " + err.message);
+      console.error(err);
     }
   });
 }
 
-/**
- * Inicializa o modal de Atualizar E-mail
- *
- * Fluxo:
- * 1) Verifica se o provedor permite alteração (somente contas com login por senha);
- * 2) Reautentica usando a senha atual;
- * 3) Atualiza o e-mail no Authentication;
- * 4) Envia e-mail de verificação para o novo e-mail;
- * 5) Atualiza o campo email no Firestore (coleção "alunos").
- */
-/**
- * Inicializa o modal de Atualizar E-mail
- */
-/**
- * Inicializa o modal de Atualizar E-mail
- *
- * Fluxo:
- * 1) Garante que o usuário está autenticado;
- * 2) Verifica se o provedor permite alteração (login por senha);
- * 3) Reautentica usando a senha atual;
- * 4) Atualiza o e-mail no Authentication;
- * 5) Envia e-mail de verificação para o novo e-mail;
- * 6) Atualiza o campo email no Firestore (coleção "alunos").
- */
 function initAtualizarEmail() {
   const modalEmail = document.getElementById("modalAtualizarEmail");
   const btnFecharEmail = document.getElementById("btnFecharEmail");
@@ -247,71 +213,62 @@ function initAtualizarEmail() {
 
   if (!modalEmail || !btnFecharEmail || !formEmail || !btnAbrirEmail) return;
 
-  // --- Abrir modal de e-mail ---
+  // Abrir modal
   btnAbrirEmail.addEventListener("click", () => {
     const user = auth.currentUser;
     if (!user) return alert("Usuário não autenticado.");
-
     document.getElementById("emailAtual").value = user.email || "";
     modalEmail.style.display = "block";
   });
 
-  // --- Fechar modal ---
-  btnFecharEmail.addEventListener("click", () => modalEmail.style.display = "none");
-  window.addEventListener("click", (e) => { if (e.target === modalEmail) modalEmail.style.display = "none"; });
+  // Fechar modal
+  btnFecharEmail.addEventListener("click", () => (modalEmail.style.display = "none"));
+  window.addEventListener("click", (e) => {
+    if (e.target === modalEmail) modalEmail.style.display = "none";
+  });
 
-  // --- Enviar formulário ---
+  // Submeter formulário
   formEmail.addEventListener("submit", async (e) => {
     e.preventDefault();
+
     const user = auth.currentUser;
     if (!user) return alert("Usuário não autenticado.");
 
-    const senhaAtual = document.getElementById("senhaAtualEmail").value;
+    const emailAtual = document.getElementById("emailAtual").value.trim();
+    const senhaAtual = document.getElementById("senhaAtualEmail").value.trim();
     const novoEmail = document.getElementById("novoEmail").value.trim();
 
-    if (!senhaAtual || !novoEmail) return alert("Preencha a senha atual e o novo e-mail.");
+    if (!emailAtual || !senhaAtual || !novoEmail) {
+      return alert("Preencha todos os campos.");
+    }
+    if (emailAtual === novoEmail) {
+      return alert("O novo e-mail é igual ao atual.");
+    }
 
     try {
-      // Verifica se o usuário tem login por senha
-      const hasPasswordProvider = user.providerData.some(p => p.providerId === "password");
-      if (!hasPasswordProvider) {
-        return alert("Esta conta não permite alteração de e-mail via senha. Faça login usando o provedor original e altere o e-mail lá.");
-      }
-
-      // Se o e-mail for o mesmo, avisa e sai
-      if (user.email === novoEmail) {
-        return alert("O novo e-mail é igual ao atual.");
-      }
-
-      // --- Reautenticação ---
-      const cred = EmailAuthProvider.credential(user.email, senhaAtual);
+      // Reautentica o usuário com a senha informada
+      const cred = EmailAuthProvider.credential(emailAtual, senhaAtual);
       await reauthenticateWithCredential(user, cred);
 
-      // --- Atualiza e-mail no Firebase Auth ---
-      await updateEmail(user, novoEmail);
+      // Envia link de verificação antes de alterar o e-mail
+      await verifyBeforeUpdateEmail(user, novoEmail);
 
-      // --- Envia e-mail de verificação ---
-      await sendEmailVerification(user);
-
-      // --- Atualiza no Firestore ---
-      await updateDoc(doc(db, "alunos", user.uid), { email: novoEmail });
-
-      alert("E-mail atualizado! Verifique sua caixa de entrada para confirmar a verificação.");
+      alert("Um link de verificação foi enviado para o novo e-mail. Confirme para concluir a atualização.");
       modalEmail.style.display = "none";
-      document.getElementById("emailUsuario").textContent = novoEmail;
       formEmail.reset();
-
     } catch (err) {
       console.error("Erro ao atualizar e-mail:", err);
       const code = err.code || "";
 
-      if (code.includes("requires-recent-login")) {
-        alert("Por segurança, é necessário que você faça login novamente antes de atualizar o e-mail. Faça logout e entre novamente.");
-      } else if (code.includes("email-already-in-use")) {
-        alert("O e-mail informado já está em uso por outra conta.");
-      } else if (code.includes("invalid-email")) {
-        alert("E-mail inválido. Verifique o formato.");
-      } else if (code.includes("operation-not-allowed")) {
+      if (code.includes("auth/invalid-credential") || code.includes("auth/invalid-login-credentials")) {
+        alert("Senha incorreta. Verifique e tente novamente.");
+      } else if (code.includes("auth/requires-recent-login")) {
+        alert("Por segurança, faça login novamente antes de alterar o e-mail.");
+      } else if (code.includes("auth/email-already-in-use")) {
+        alert("O novo e-mail informado já está em uso.");
+      } else if (code.includes("auth/invalid-email")) {
+        alert("Formato de e-mail inválido.");
+      } else if (code.includes("auth/operation-not-allowed")) {
         alert("Atualização de e-mail não permitida. Verifique as configurações do Firebase Authentication.");
       } else {
         alert("Erro ao atualizar e-mail: " + (err.message || err));
@@ -319,4 +276,3 @@ function initAtualizarEmail() {
     }
   });
 }
-
