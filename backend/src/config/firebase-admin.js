@@ -1,28 +1,50 @@
+// backend/src/config/firebase-admin.js
 import admin from "firebase-admin";
+import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
-import url from "url";
 
-const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
+dotenv.config();
 
+/**
+ * Cria as credenciais do Firebase a partir do .env ou arquivo local.
+ */
 function makeCredentials() {
-  // 1) Se GOOGLE_APPLICATION_CREDENTIALS apontar para um arquivo, use-o
-  const gacPath = process.env.GOOGLE_APPLICATION_CREDENTIALS;
-  if (gacPath && fs.existsSync(gacPath)) {
-    return admin.credential.cert(JSON.parse(fs.readFileSync(gacPath, "utf8")));
+  // 1️⃣ Se existir a variável FIREBASE_SERVICE_ACCOUNT no .env, usa ela
+  if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+    try {
+      // Converte a string JSON do .env em objeto
+      const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+
+      // Corrige o formato da chave privada (remove escapes \n)
+      if (serviceAccount.private_key) {
+        serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, "\n");
+      }
+
+      return admin.credential.cert(serviceAccount);
+    } catch (err) {
+      console.error("❌ Erro ao interpretar FIREBASE_SERVICE_ACCOUNT do .env:", err);
+    }
   }
 
-  // 2) Se existir serviceAccountKey.json ao lado deste arquivo, use-o
-  const serviceAccountPath = path.resolve(__dirname, "../../serviceAccountKey.json");
-  if (fs.existsSync(serviceAccountPath)) {
-    const serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, "utf8"));
-    return admin.credential.cert(serviceAccount);
+  // 2️⃣ Caso contrário, tenta achar o arquivo local (para ambiente de desenvolvimento)
+  try {
+    const serviceAccountPath = path.resolve(process.cwd(), "serviceAccountKey.json");
+    if (fs.existsSync(serviceAccountPath)) {
+      const serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, "utf8"));
+      return admin.credential.cert(serviceAccount);
+    } else {
+      console.warn("⚠️ serviceAccountKey.json não encontrado no projeto.");
+    }
+  } catch (e) {
+    console.warn("⚠️ Falha ao ler serviceAccountKey.json:", e);
   }
 
-  // 3) Fallback: Application Default Credentials (ex.: quando roda no GCP)
+  // 3️⃣ Fallback: Application Default Credentials (para GCP, etc.)
   return admin.credential.applicationDefault();
 }
 
+// Inicializa o Firebase Admin
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: makeCredentials(),

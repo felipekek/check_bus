@@ -76,10 +76,15 @@ app.use((err, _req, res, _next) => {
   res.status(500).json({ error: "Erro interno do servidor." });
 });
 
-/* ---------- Start ---------- */
+/* ---------- Start (local) ---------- */
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
-});
+
+// Na Vercel, NÃO devemos abrir porta. Exportamos o app.
+// Rodar local: NODE_ENV=development npm run dev
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`Servidor rodando em http://localhost:${PORT}`);
+  });
+}
 
 export default app;
