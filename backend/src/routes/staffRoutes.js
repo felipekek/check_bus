@@ -1,19 +1,12 @@
 // backend/src/routes/staffRoutes.js
-// ============================================================
-// Rotas para gerenciar dados de administradores (staff)
-// Sistema: CheckBus
-// Autor: Luís Felipe (TCC)
-// ============================================================
+// Rotas auxiliares para staff (opcional; hoje você já usa custom claim admin)
 
 import express from "express";
 import { getStaffUsuario } from "../controllers/staffController.js";
 
 const router = express.Router();
 
-/**
- * @route GET /auth/staff/:email
- * @desc Buscar dados de um administrador pelo email
- */
+// Busca dados de staff por e-mail (coleção "staff")
 router.get("/:email", getStaffUsuario);
 
 export default router;

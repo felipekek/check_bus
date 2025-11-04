@@ -1,24 +1,14 @@
-/**
- * Rotas para gerenciamento dos feedbacks
- * Sistema: CheckBus
- * Autor: Luís Felipe (TCC)
- */
-
+// backend/src/routes/feedbackRoutes.js
 import express from "express";
 import { enviarFeedback, listarFeedbacks } from "../controllers/feedbackController.js";
+import { requireAdmin } from "../middlewares/requireAdmin.js";
 
 const router = express.Router();
 
-/**
- * @route POST /feedback
- * @desc Enviar um novo feedback (usuário ou admin)
- */
+// Envia feedback (qualquer usuário)
 router.post("/", enviarFeedback);
 
-/**
- * @route GET /feedback
- * @desc Listar todos os feedbacks (painel do admin)
- */
-router.get("/", listarFeedbacks);
+// Lista feedbacks (somente admin) — proteja o painel
+router.get("/", requireAdmin, listarFeedbacks);
 
 export default router;

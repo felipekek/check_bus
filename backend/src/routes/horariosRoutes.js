@@ -1,55 +1,53 @@
 // backend/src/routes/horariosRoutes.js
 import express from "express";
 import {
-  // Legado
+  // Legado (listaHorarios por usuário)
   salvarHorario,
   listarHorarios,
   excluirHorario,
-  // Admin
+
+  // Calendário (Admin)
   adminGetMonth,
   adminSetMonth,
-  // Usuário (novo modelo)
+
+  // Calendário (Usuário)
   userGetMonth,
   userSetMonth,
   userToggleDay,
   userCopyMonth,
   userClearMonth,
-  // NOVO: excluir uma data específica do mês
   userDeleteDate,
 } from "../controllers/horariosController.js";
 
-import {
-  requireAuth,
-  requireAdmin,
-  mustBeSelf,
-  mustMatchBodyUid,
-} from "../middlewares/authMiddleware.js";
+import { requireAdmin } from "../middlewares/requireAdmin.js";
 
 const router = express.Router();
 
 /* ========= ROTAS ANTIGAS (LEGADO) ========= */
-router.post("/salvar", requireAuth, salvarHorario);
-router.get("/listar/:userId", requireAuth, listarHorarios);
-router.delete("/excluir", requireAuth, excluirHorario);
+// (Se quiser proteger, depois criamos um requireAuth)
+router.post("/salvar", salvarHorario);
+router.get("/listar/:userId", listarHorarios);
+router.delete("/excluir", excluirHorario);
 
-/* ========= ROTAS NOVAS ========= */
-// --- ADMIN ---
-router.get("/admin/:ym", requireAuth, requireAdmin, adminGetMonth);
-router.put("/admin/:ym", requireAuth, requireAdmin, adminSetMonth);
+/* ========= CALENDÁRIO - ADMIN ========= */
+router.get("/admin/:ym", requireAdmin, adminGetMonth);
+router.put("/admin/:ym", requireAdmin, adminSetMonth);
 
-// --- USUÁRIO ---
-// Apagar UMA data específica do mês do usuário (coloque ANTES da rota de mês)
-router.delete("/user/:uid/:ym/:date", requireAuth, mustBeSelf, userDeleteDate);
+/* ========= CALENDÁRIO - USUÁRIO ========= */
+// (Podemos adicionar requireAuth/mustBeSelf depois, se desejar)
+router.get("/user/:uid/:ym", userGetMonth);
+router.put("/user/:uid/:ym", userSetMonth);
 
-// Buscar e salvar mês
-router.get("/user/:uid/:ym", requireAuth, mustBeSelf, userGetMonth);
-router.put("/user/:uid/:ym", requireAuth, mustBeSelf, userSetMonth);
+// Alterna um dia específico
+router.patch("/user/:uid/:ym/:date", userToggleDay);
 
-// Alternar um dia e copiar mês
-router.patch("/user/:uid/:ym/:date", requireAuth, mustBeSelf, userToggleDay);
-router.post("/user/copy", requireAuth, mustMatchBodyUid, userCopyMonth);
+// Exclui uma data específica do mês
+router.delete("/user/:uid/:ym/:date", userDeleteDate);
 
-// Apagar/limpar o mês inteiro do usuário
-router.delete("/user/:uid/:ym", requireAuth, mustBeSelf, userClearMonth);
+// Copia um mês para outro
+router.post("/user/copy", userCopyMonth);
+
+// Limpa o mês inteiro do usuário
+router.delete("/user/:uid/:ym", userClearMonth);
 
 export default router;

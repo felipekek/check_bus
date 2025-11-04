@@ -1,7 +1,8 @@
+// backend/src/controllers/adminController.js
 import { db } from "../config/firebase-admin.js";
 import { getAuth } from "firebase-admin/auth";
 
-export async function listarAlunos(req, res) {
+export async function listarAlunos(_req, res) {
   try {
     const alunosSnap = await db.collection("alunos").get();
     if (alunosSnap.empty) return res.json([]);
@@ -52,10 +53,13 @@ export async function excluirAluno(req, res) {
   try {
     const { id } = req.params;
 
+    // Apaga usuário do Auth
     await getAuth().deleteUser(id);
 
+    // Apaga doc do aluno
     await db.collection("alunos").doc(id).delete();
 
+    // Apaga subcoleção de horários
     const horariosSnap = await db
       .collection("horarios")
       .doc(id)
@@ -63,10 +67,7 @@ export async function excluirAluno(req, res) {
       .get();
 
     const batch = db.batch();
-    horariosSnap.docs.forEach((doc) => {
-      batch.delete(doc.ref);
-    });
-
+    horariosSnap.docs.forEach((doc) => batch.delete(doc.ref));
     await batch.commit();
 
     res.json({ message: "Aluno e seus dados foram excluídos com sucesso." });

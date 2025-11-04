@@ -1,15 +1,5 @@
-// ============================================================
-// Rotas de autenticação e dados de usuários (alunos e admins)
-// Sistema: CheckBus
-// Autor: Luís Felipe (TCC)
-// ------------------------------------------------------------
-// Endpoints:
-//  - POST /auth/login             → Login de usuário
-//  - POST /auth/cadastro          → Cadastro de aluno
-//  - POST /auth/atualizar-email   → Atualiza o e-mail do aluno
-//  - GET  /auth/usuario/:uid      → Retorna dados de um aluno
-//  - GET  /auth/staff/:uid        → Retorna dados de um administrador
-// ============================================================
+// backend/src/routes/authRoutes.js
+// Endpoints de autenticação/cadastro e leitura básica de perfis
 
 import express from "express";
 import {
@@ -28,13 +18,13 @@ router.post("/login", loginUsuario);
 // Cadastro
 router.post("/cadastro", cadastrarUsuario);
 
-// Atualizar e-mail
+// Atualiza e-mail (fluxo com reautenticação por senha no controller)
 router.post("/atualizar-email", atualizarEmailUsuario);
 
-// Buscar dados do aluno pelo UID
+// Dados do aluno por UID
 router.get("/usuario/:uid", getUsuario);
 
-// Buscar dados do administrador (staff) pelo UID
+// Dados do staff por UID (mantido para compatibilidade)
 router.get("/staff/:uid", getStaffUsuario);
 
 export default router;

@@ -3,45 +3,28 @@ import { db } from "../config/firebase-admin.js";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 
-/**
- * Formata datas no formato DD/MM/YYYY
- */
 function formatarData(dataISO) {
   if (!dataISO) return "-";
-  const partes = dataISO.split("-");
-  if (partes.length !== 3) return dataISO;
-  return `${partes[2]}/${partes[1]}/${partes[0]}`;
+  const p = dataISO.split("-");
+  return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : dataISO;
 }
 
-/**
- * GET /relatorios/pdf
- * Gera o PDF completo ou filtrado via query string
- */
+// GET /relatorios/pdf
 export async function gerarPDF(req, res) {
   try {
-    const {
-      colunas,
-      dataInicial,
-      dataFinal,
-      curso,
-      turno,
-      instituicao
-    } = req.query;
+    const { colunas, dataInicial, dataFinal, curso, turno, instituicao } = req.query;
 
     const colunasSelecionadas = colunas
       ? colunas.split(",")
       : ["aluno", "idCartao", "curso", "instituicao", "periodo", "turno", "data", "horario"];
 
     let query = db.collection("acessos");
-
-    if (dataInicial && dataFinal)
-      query = query
-        .where("data", ">=", dataInicial)
-        .where("data", "<=", dataFinal);
+    if (dataInicial && dataFinal) {
+      query = query.where("data", ">=", dataInicial).where("data", "<=", dataFinal);
+    }
 
     const snapshot = await query.orderBy("data", "desc").get();
-    if (snapshot.empty)
-      return res.status(404).json({ error: "Nenhum registro encontrado" });
+    if (snapshot.empty) return res.status(404).json({ error: "Nenhum registro encontrado" });
 
     const lista = await Promise.all(
       snapshot.docs.map(async (docSnap) => {
@@ -53,7 +36,7 @@ export async function gerarPDF(req, res) {
           instituicao: "-",
           periodo: "-",
           turno: "-",
-          horario: "-"
+          horario: "-",
         };
 
         if (dados.uid) {
@@ -73,31 +56,27 @@ export async function gerarPDF(req, res) {
           periodo: alunoData.periodo || "-",
           turno: alunoData.turno || "-",
           data: formatarData(dados.data) || "-",
-          horario: dados.horario || "-"
+          horario: dados.horario || "-",
         };
       })
     );
 
-    const registrosFiltrados = lista.filter((r) => r !== null);
-    if (!registrosFiltrados.length)
+    const registrosFiltrados = lista.filter(Boolean);
+    if (!registrosFiltrados.length) {
       return res.status(404).json({ error: "Nenhum registro após filtro" });
+    }
 
     gerarPDFBase(res, registrosFiltrados, colunasSelecionadas);
-
   } catch (err) {
     console.error("Erro ao gerar PDF:", err);
     res.status(500).json({ error: "Erro ao gerar PDF" });
   }
 }
 
-/**
- * POST /relatorios/pdf-filtrado
- * Gera o PDF com base nos registros visíveis e colunas selecionadas
- */
+// POST /relatorios/pdf-filtrado
 export async function gerarPDFFiltrado(req, res) {
   try {
     const { colunas, registros } = req.body;
-
     if (!registros || !Array.isArray(registros) || registros.length === 0) {
       return res.status(400).json({ error: "Nenhum registro fornecido" });
     }
@@ -108,16 +87,12 @@ export async function gerarPDFFiltrado(req, res) {
         : ["aluno", "idCartao", "curso", "instituicao", "periodo", "turno", "data", "horario"];
 
     gerarPDFBase(res, registros, colunasSelecionadas);
-
   } catch (err) {
     console.error("Erro ao gerar PDF filtrado:", err);
     res.status(500).json({ error: "Erro ao gerar PDF filtrado" });
   }
 }
 
-/**
- * Função auxiliar para gerar o PDF com base nos dados e colunas
- */
 function gerarPDFBase(res, registros, colunasSelecionadas) {
   const doc = new jsPDF({ orientation: "landscape" });
 
@@ -129,29 +104,26 @@ function gerarPDFBase(res, registros, colunasSelecionadas) {
     periodo: "Período",
     turno: "Turno",
     data: "Data",
-    horario: "Horário"
+    horario: "Horário",
   };
 
-  const colunasCabecalho = colunasSelecionadas.map((c) => todasColunas[c]);
-  const linhas = registros.map((r) => colunasSelecionadas.map((c) => r[c] || "-"));
+  const head = [colunasSelecionadas.map((c) => todasColunas[c])];
+  const body = registros.map((r) => colunasSelecionadas.map((c) => r[c] || "-"));
 
-  // Cabeçalho
   doc.setFontSize(14);
   doc.text("Relatório de Acessos - CheckBus", 14, 15);
   doc.setFontSize(10);
   doc.text(`Gerado em: ${new Date().toLocaleString("pt-BR")}`, 14, 22);
 
-  // Tabela
   autoTable(doc, {
-    head: [colunasCabecalho],
-    body: linhas,
+    head,
+    body,
     styles: { fontSize: 9, cellPadding: 2 },
     headStyles: { fillColor: [52, 73, 94], textColor: 255, halign: "center" },
     theme: "grid",
-    startY: 28
+    startY: 28,
   });
 
-  // Enviar PDF
   const pdfBuffer = Buffer.from(doc.output("arraybuffer"));
   res.setHeader("Content-Type", "application/pdf");
   res.setHeader("Content-Disposition", "attachment; filename=relatorio.pdf");

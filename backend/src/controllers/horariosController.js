@@ -2,32 +2,21 @@
 import { db } from "../config/firebase-admin.js";
 import { FieldValue } from "firebase-admin/firestore";
 
-/* ===========================
-   HELPERS
-=========================== */
-const YM_RE   = /^\d{4}-(0[1-9]|1[0-2])$/;                         // "2025-11"
-const DATE_RE = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;   // "2025-11-03"
+/* ===== Helpers ===== */
+const YM_RE   = /^\d{4}-(0[1-9]|1[0-2])$/;                       // "2025-11"
+const DATE_RE = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/; // "2025-11-03"
 
 function nowTS() {
-  // serverTimestamp (lado servidor) via Admin SDK
   return FieldValue.serverTimestamp ? FieldValue.serverTimestamp() : new Date();
 }
 
-/**
- * Espelha os dias "going" do mês no modelo antigo:
- *   horarios/{uid}/listaHorarios/{auto}
- *   titulo:  "<Turno> (<YYYY-MM-DD>)"
- *   horario: "<Saída>-<Chegada>"
- */
 async function mirrorMonthToLegacy(uid, mergedDays) {
   const resumoRef = db.collection("horarios").doc(uid).collection("listaHorarios");
 
-  // Apaga tudo que havia antes (lista simples legado)
   const antigos = await resumoRef.get();
   const deletions = antigos.docs.map((d) => d.ref.delete());
   if (deletions.length) await Promise.all(deletions);
 
-  // Recria a lista a partir do estado atual (mergedDays)
   const novos = [];
   for (const [date, val] of Object.entries(mergedDays || {})) {
     if (val?.state === "going" && val?.schedule?.saida && val?.schedule?.chegada) {
@@ -39,9 +28,7 @@ async function mirrorMonthToLegacy(uid, mergedDays) {
   if (novos.length) await Promise.all(novos);
 }
 
-/* ===========================
-   V1 (LEGADO) – compat
-=========================== */
+/* ===== V1 legado ===== */
 export const salvarHorario = async (req, res) => {
   try {
     const { userId, titulo, horario, horarioId } = req.body;
@@ -98,11 +85,8 @@ export const excluirHorario = async (req, res) => {
   }
 };
 
-/* ===========================
-   V2 – Calendário por mês
-=========================== */
+/* ===== V2 – Calendário por mês ===== */
 
-/** ADMIN: Get mês */
 export async function adminGetMonth(req, res) {
   try {
     const { ym } = req.params;
@@ -117,15 +101,12 @@ export async function adminGetMonth(req, res) {
   }
 }
 
-/** ADMIN: Atualiza mês */
 export async function adminSetMonth(req, res) {
   try {
     const { ym } = req.params;
     const { days } = req.body || {};
     if (!YM_RE.test(ym)) return res.status(400).json({ erro: "ym inválido." });
-    if (!days || typeof days !== "object") {
-      return res.status(400).json({ erro: "days ausente." });
-    }
+    if (!days || typeof days !== "object") return res.status(400).json({ erro: "days ausente." });
 
     const docRef = db.collection("calendars_admin").doc(ym);
     await docRef.set({ days, updatedAt: nowTS() }, { merge: true });
@@ -136,7 +117,6 @@ export async function adminSetMonth(req, res) {
   }
 }
 
-/** USER: Get mês */
 export async function userGetMonth(req, res) {
   try {
     const { uid, ym } = req.params;
@@ -156,7 +136,6 @@ export async function userGetMonth(req, res) {
   }
 }
 
-/** USER: Atualiza mês inteiro (merge) */
 export async function userSetMonth(req, res) {
   try {
     const { uid, ym } = req.params;
@@ -164,9 +143,7 @@ export async function userSetMonth(req, res) {
 
     if (!uid) return res.status(400).json({ erro: "uid ausente." });
     if (!YM_RE.test(ym)) return res.status(400).json({ erro: "ym inválido." });
-    if (!days || typeof days !== "object") {
-      return res.status(400).json({ erro: "days ausente." });
-    }
+    if (!days || typeof days !== "object") return res.status(400).json({ erro: "days ausente." });
 
     const docRef = db.collection("calendars_user").doc(uid).collection("months").doc(ym);
     const snap = await docRef.get();
@@ -174,8 +151,6 @@ export async function userSetMonth(req, res) {
     const merged = { ...prev, ...days };
 
     await docRef.set({ days: merged, updatedAt: nowTS() }, { merge: true });
-
-    // Espelha no modelo legado
     await mirrorMonthToLegacy(uid, merged);
 
     res.json({ mensagem: "Calendário do usuário salvo.", uid, ym });
@@ -185,7 +160,6 @@ export async function userSetMonth(req, res) {
   }
 }
 
-/** USER: Alterna um dia (state e schedule) */
 export async function userToggleDay(req, res) {
   try {
     const { uid, ym, date } = req.params;
@@ -207,8 +181,6 @@ export async function userToggleDay(req, res) {
     }
 
     await docRef.set({ days: next, updatedAt: nowTS() }, { merge: true });
-
-    // Espelha no legado
     await mirrorMonthToLegacy(uid, next);
 
     res.json({ mensagem: "Dia atualizado.", uid, ym, date });
@@ -218,7 +190,6 @@ export async function userToggleDay(req, res) {
   }
 }
 
-/** USER: Copia mês anterior para o atual, respeitando admin */
 export async function userCopyMonth(req, res) {
   try {
     const { uid, fromYm, toYm } = req.body || {};
@@ -250,8 +221,6 @@ export async function userCopyMonth(req, res) {
     }
 
     await toRef.set({ days: nextTo, updatedAt: nowTS() }, { merge: true });
-
-    // Espelha no legado
     await mirrorMonthToLegacy(uid, nextTo);
 
     res.json({ mensagem: "Cópia realizada.", uid, fromYm, toYm });
@@ -261,18 +230,15 @@ export async function userCopyMonth(req, res) {
   }
 }
 
-/** USER: Apagar/Limpar MÊS do usuário */
 export async function userClearMonth(req, res) {
   try {
     const { uid, ym } = req.params;
     if (!uid) return res.status(400).json({ erro: "uid ausente." });
     if (!YM_RE.test(ym)) return res.status(400).json({ erro: "ym inválido." });
 
-    // Apaga o doc do mês (modelo novo)
     const docRef = db.collection("calendars_user").doc(uid).collection("months").doc(ym);
     await docRef.delete();
 
-    // Espelha no legado: zera lista
     await mirrorMonthToLegacy(uid, {});
 
     return res.json({ mensagem: "Mês do usuário apagado.", uid, ym });
@@ -282,7 +248,6 @@ export async function userClearMonth(req, res) {
   }
 }
 
-/** USER: Apagar UMA data do mês do usuário */
 export async function userDeleteDate(req, res) {
   try {
     const { uid, ym, date } = req.params;
@@ -294,7 +259,6 @@ export async function userDeleteDate(req, res) {
     const snap = await docRef.get();
     const prev = snap.exists ? snap.data().days || {} : {};
 
-    // Se já não existe, retorna OK (idempotente)
     if (!prev[date]) {
       return res.json({ mensagem: "Dia já estava ausente.", uid, ym, date });
     }
@@ -303,8 +267,6 @@ export async function userDeleteDate(req, res) {
     delete next[date];
 
     await docRef.set({ days: next, updatedAt: nowTS() }, { merge: true });
-
-    // Espelha no legado
     await mirrorMonthToLegacy(uid, next);
 
     res.json({ mensagem: "Dia excluído.", uid, ym, date });

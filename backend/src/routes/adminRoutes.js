@@ -1,13 +1,14 @@
+// backend/src/routes/adminRoutes.js
 import express from "express";
 import { listarAlunos, excluirAluno } from "../controllers/adminController.js";
-import { verificarAdmin } from "../middlewares/authMiddleware.js";
+import { requireAdmin } from "../middlewares/requireAdmin.js";
 
 const router = express.Router();
 
-// GET /admin → lista todos os alunos (só admin)
-router.get("/", verificarAdmin, listarAlunos);
+// Lista todos os alunos (somente admin)
+router.get("/", requireAdmin, listarAlunos);
 
-// DELETE /admin/:id → exclui aluno pelo id (só admin)
-router.delete("/:id", verificarAdmin, excluirAluno);
+// Exclui aluno (Auth + Firestore + horários) (somente admin)
+router.delete("/:id", requireAdmin, excluirAluno);
 
 export default router;
