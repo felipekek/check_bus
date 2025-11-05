@@ -8,9 +8,6 @@
     "start": "node src/server.js",
     "dev": "nodemon src/server.js"
   },
-  "keywords": [],
-  "author": "Felipe de Brito",
-  "license": "ISC",
   "dependencies": {
     "axios": "^1.5.0",
     "body-parser": "^1.20.2",
@@ -19,8 +16,8 @@
     "express": "^4.19.2",
     "firebase": "^10.12.3",
     "firebase-admin": "^12.0.0",
-    "jspdf": "^2.5.1",
-    "jspdf-autotable": "^3.8.1",
+    "jspdf": "^3.0.3",
+    "jspdf-autotable": "^5.0.2",
     "moment": "^2.30.1",
     "multer": "^1.4.5-lts.1",
     "pdfkit": "^0.13.0"

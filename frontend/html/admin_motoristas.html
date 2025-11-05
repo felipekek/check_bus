@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gerenciar Motoristas</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+  <link rel="stylesheet" href="../css/admin_motoristas.css" />
+  <link rel="stylesheet" href="../css/perfil.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/draw.css" />
+</head>
+<body>
+  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+  <div class="sidebar" id="sidebar">
+    <button onclick="location.href='home_principal.html'">Principal</button>
+    <button onclick="location.href='cadast_motorista.html'">Cadastrar Motorista</button>
+    <button onclick="location.href='admin_motoristas.html'">Gerenciar Motoristas</button>
+    <button onclick="location.href='admin.html'">Gerenciar Alunos</button>
+    <button onclick="location.href='horarios.html'">Lista de Horários</button>
+    <button onclick="location.href='gps.html'">Abrir GPS</button>
+    <button onclick="location.href='relatorios.html'">Relatório</button>
+    <button onclick="location.href='index.html'" class="logout">Sair</button>
+  </div>
+
+  <div class="alunos-container">
+  <div class="titulo-container">
+    <h1><i class="fa fa-bus"></i> Gerenciar Motoristas</h1>
+    <input type="text" id="barraPesquisa" placeholder="Pesquisar motorista...">
+  </div>
+
+  <section id="motoristasContainer">
+    <p class="no-data">Carregando motoristas...</p>
+  </section>
+ </div>
+</div>
+
+  <button class="perfil-btn" id="btnPerfil">
+    <i class="fa fa-user"></i> Perfil
+  </button>
+
+  <!-- Scripts -->
+  <script type="module" src="../js/admin_motoristas.js"></script>
+
+  <script type="module">
+    import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
+    carregarModalPerfil();
+
+    const btnPerfil = document.getElementById("btnPerfil");
+    btnPerfil.addEventListener("click", abrirPerfil);
+  </script>
+
+  <script>
+    window.toggleMenu = function() {
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
+      const menuBtn = document.querySelector(".menu-btn");
+      if (!sidebar || !overlay) return;
+      sidebar.classList.toggle("active");
+      overlay.classList.toggle("active");
+      menuBtn.classList.toggle("hidden");
+    };
+  </script>
+</body>
+</html>
