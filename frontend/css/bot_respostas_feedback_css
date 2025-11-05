@@ -1,0 +1,56 @@
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to right, #006994, #009fe3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.titulo {
+  color: white;
+  font-size: 26px;
+  font-weight: bold;
+  margin-bottom: 40px;
+}
+
+.menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.botao {
+  background: #217ca3;
+  color: white;
+  width: 160px;
+  height: 120px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+}
+
+.botao:hover {
+  background: #2c8fc0;
+  transform: scale(1.05);
+}
+
+.botao i {
+  font-size: 36px;
+  margin-bottom: 10px;
+  color: white; /* estrela branca */
+}
+
+.botao span {
+  font-weight: bold;
+  font-size: 15px;
+}
