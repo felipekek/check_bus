@@ -1,30 +1,26 @@
-import mongoose from "mongoose";
+import { getFirestore } from "firebase-admin/firestore";
 
-const usuarioSchema = new mongoose.Schema({
-  nome: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  senha: {
-    type: String,
-    required: true,
-  },
-  tipoUsuario: {
-    type: String,
-    enum: ["motorista", "passageiro", "admin"],
-    required: true,
-  },
-  criadoEm: {
-    type: Date,
-    default: Date.now,
-  },
-});
+const db = getFirestore();
+const usuariosRef = db.collection("usuarios");
 
-const Usuario = mongoose.model("Usuario", usuarioSchema);
+/* Lista todos os motoristas */
+export async function listarMotoristas() {
+  const snapshot = await usuariosRef.where("tipoUsuario", "==", "motorista").get();
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+}
 
-export default Usuario;
+/* Exclui um motorista pelo ID do documento no Firestore */
+export async function excluirMotorista(id) {
+  await usuariosRef.doc(id).delete();
+}
+
+/* Lista todos os alunos */
+export async function listarAlunos() {
+  const snapshot = await usuariosRef.where("tipoUsuario", "==", "passageiro").get();
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+}
+
+/* Exclui um aluno */
+export async function excluirAluno(id) {
+  await usuariosRef.doc(id).delete();
+}
