@@ -1,125 +1,111 @@
-// tutorial.js
-let passoAtual = 0;
+export function initTutorial(passos, storageKey) {
+    const tutorialVisto = localStorage.getItem(storageKey);
+    if (tutorialVisto) return;
 
-const passos = [
-  { element: '#botao1', texto: 'Este é o primeiro botão.' },
-  { element: '#botao2', texto: 'Agora clique neste botão.' },
-  { element: '#botao3', texto: 'Por fim, use este botão.' }
-];
+    const overlay = document.getElementById('tutorialOverlay');
+    const highlight = document.getElementById('tutorialHighlight');
+    const popup = document.getElementById('tutorialPopup');
+    const title = document.getElementById('tutorialTitle');
+    const text = document.getElementById('tutorialText');
+    const skipBtn = document.getElementById('tutorialSkipBtn');
+    const nextBtn = document.getElementById('tutorialNextBtn');
+    const stepCounter = document.getElementById('tutorialStepCounter');
 
-// Cria elementos principais
-const overlay = document.createElement('div');
-overlay.className = 'tutorial-overlay';
-document.body.appendChild(overlay);
+    if (!overlay || !highlight || !popup) {
+        console.error('Elementos do tutorial não encontrados no DOM. Verifique se o HTML do tutorial está incluído na página.');
+        return;
+    }
 
-const highlight = document.createElement('div');
-highlight.className = 'tutorial-highlight';
-document.body.appendChild(highlight);
+    let passoAtual = 0;
 
-const popup = document.createElement('div');
-popup.className = 'tutorial-popup';
-document.body.appendChild(popup);
+    function endTutorial() {
+        overlay.style.display = 'none';
+        highlight.style.display = 'none';
+        popup.style.display = 'none';
+        localStorage.setItem(storageKey, 'true');
+        window.removeEventListener('resize', showStep);
+    }
 
-// Função principal
-function showStep() {
-  if (passoAtual >= passos.length) {
-    // Finaliza tutorial
-    overlay.classList.remove('visible');
-    highlight.classList.remove('visible');
-    popup.classList.remove('visible');
-    setTimeout(() => {
-      overlay.style.display = 'none';
-      highlight.style.display = 'none';
-      popup.style.display = 'none';
-    }, 300);
-    return;
-  }
+    function showStep() {
+        if (passoAtual >= passos.length) {
+            endTutorial();
+            return;
+        }
 
-  const step = passos[passoAtual];
-  const targetElement = document.querySelector(step.element);
+        const step = passos[passoAtual];
+        const targetElement = document.querySelector(step.element);
 
-  if (!targetElement) {
-    passoAtual++;
+        if (!targetElement) {
+            passoAtual++;
+            showStep();
+            return;
+        }
+
+        const rect = targetElement.getBoundingClientRect();
+
+        highlight.style.display = 'block';
+        highlight.style.width = `${rect.width + 10}px`;
+        highlight.style.height = `${rect.height + 10}px`;
+        highlight.style.top = `${rect.top - 5}px`;
+        highlight.style.left = `${rect.left - 5}px`;
+
+        title.innerText = step.title;
+        text.innerText = step.text;
+        popup.style.display = 'block';
+
+        const popupWidth = popup.offsetWidth;
+        const popupHeight = popup.offsetHeight;
+        const margin = 15;
+
+        let popupLeft, popupTop;
+
+        if (step.position === 'bottom') {
+            popupTop = rect.bottom + margin;
+            popupLeft = rect.left + rect.width / 2 - popupWidth / 2;
+            popup.className = 'tutorial-popup top';
+        } else if (step.position === 'top') {
+            popupTop = rect.top - popupHeight - margin;
+            popupLeft = rect.left + rect.width / 2 - popupWidth / 2;
+            popup.className = 'tutorial-popup bottom';
+        }
+
+        if (popupLeft < margin) popupLeft = margin;
+        if (popupLeft + popupWidth > window.innerWidth) {
+            popupLeft = window.innerWidth - popupWidth - margin;
+        }
+        if (popupTop < margin) {
+            popupTop = margin;
+            if (step.position === 'top' && rect.bottom + popupHeight < window.innerHeight) {
+                 popupTop = rect.bottom + margin;
+                 popup.className = 'tutorial-popup top';
+            }
+        }
+        if (popupTop + popupHeight > window.innerHeight) {
+            popupTop = window.innerHeight - popupHeight - margin;
+            if (step.position === 'bottom' && rect.top - popupHeight > 0) {
+                popupTop = rect.top - popupHeight - margin;
+                popup.className = 'tutorial-popup bottom';
+            }
+        }
+
+        popup.style.top = `${popupTop}px`;
+        popup.style.left = `${popupLeft}px`;
+
+        stepCounter.innerText = `${passoAtual + 1}/${passos.length}`;
+        if (passoAtual === passos.length - 1) {
+            nextBtn.innerText = 'Concluir';
+        } else {
+            nextBtn.innerText = 'Próximo';
+        }
+    }
+
+    skipBtn.addEventListener('click', endTutorial);
+    nextBtn.addEventListener('click', () => {
+        passoAtual++;
+        showStep();
+    });
+
+    overlay.style.display = 'block';
     showStep();
-    return;
-  }
-
-  // Garante que o elemento está visível
-  targetElement.scrollIntoView({ block: 'center', inline: 'center', behavior: 'instant' });
-  const rect = targetElement.getBoundingClientRect();
-
-  // Mostra overlay e elementos
-  overlay.style.display = 'block';
-  highlight.style.display = 'block';
-  popup.style.display = 'block';
-
-  requestAnimationFrame(() => {
-    overlay.classList.add('visible');
-    highlight.style.width = `${rect.width + 10}px`;
-    highlight.style.height = `${rect.height + 10}px`;
-    highlight.style.top = `${rect.top - 5}px`;
-    highlight.style.left = `${rect.left - 5}px`;
-    highlight.classList.add('visible');
-  });
-
-  // Atualiza conteúdo do popup
-  popup.innerHTML = `
-    <p>${step.texto}</p>
-    <div>
-      <button id="nextStep">Próximo</button>
-      <button id="closeTutorial">Fechar</button>
-    </div>
-  `;
-
-  // Calcula posição do popup
-  requestAnimationFrame(() => {
-    const popupWidth = popup.offsetWidth;
-    const popupHeight = popup.offsetHeight;
-    let popupTop = rect.bottom + 12;
-    let popupLeft = rect.left + rect.width / 2 - popupWidth / 2;
-
-    if (popupLeft < 8) popupLeft = 8;
-    if (popupLeft + popupWidth > window.innerWidth - 8)
-      popupLeft = window.innerWidth - popupWidth - 8;
-    if (popupTop + popupHeight > window.innerHeight - 8)
-      popupTop = rect.top - popupHeight - 12;
-
-    popup.style.top = `${popupTop}px`;
-    popup.style.left = `${popupLeft}px`;
-    popup.classList.add('visible');
-  });
-
-  // Botão "Próximo"
-  popup.querySelector('#nextStep').onclick = () => {
-    popup.classList.remove('visible');
-    highlight.classList.remove('visible');
-    setTimeout(() => {
-      passoAtual++;
-      showStep();
-    }, 250);
-  };
-
-  // Botão "Fechar"
-  popup.querySelector('#closeTutorial').onclick = closeTutorial;
-
-  // Clique fora do destaque fecha também
-  overlay.onclick = closeTutorial;
+    window.addEventListener('resize', showStep);
 }
-
-function closeTutorial() {
-  overlay.classList.remove('visible');
-  popup.classList.remove('visible');
-  highlight.classList.remove('visible');
-  setTimeout(() => {
-    overlay.style.display = 'none';
-    popup.style.display = 'none';
-    highlight.style.display = 'none';
-  }, 300);
-}
-
-window.addEventListener('resize', () => {
-  if (popup.style.display === 'block') showStep();
-});
-
-// Inicia tutorial automaticamente
-showStep();
