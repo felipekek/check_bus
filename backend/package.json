@@ -8,9 +8,6 @@
     "start": "node src/server.js",
     "dev": "nodemon src/server.js"
   },
-  "keywords": [],
-  "author": "Felipe de Brito",
-  "license": "ISC",
   "dependencies": {
     "axios": "^1.5.0",
     "body-parser": "^1.20.2",
