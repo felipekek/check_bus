@@ -1,5 +1,8 @@
 // frontend/js/respostas_feedback.js
-// Perfil (opcional): se sua página não usa o módulo de perfil, pode remover estes imports.
+// Mantém: ordenação por data (mais recentes primeiro), paginação, busca e verificação de admin.
+// Padrão do drawer igual ao relatorios (toggleMenu global).
+
+// (Opcional) Integração com o modal de perfil, se existir no seu projeto.
 import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
 
 /* ================= Config/Helpers ================= */
@@ -29,44 +32,17 @@ const tbody = document.getElementById("corpoTabela");
 const barraPesquisa = document.getElementById("barraPesquisa");
 const paginacaoEl = document.getElementById("paginacao");
 
-/* ================= Drawer (sidebar local) ================= */
-function initDrawerLocal() {
-  const body = document.body;
+/* ================= Drawer (mesmo padrão do relatorios) ================= */
+window.toggleMenu = () => {
   const sidebar = document.getElementById("sidebar");
   const overlay = document.getElementById("overlay");
   const menuBtn = document.querySelector(".menu-btn");
-  if (!sidebar || !overlay || !menuBtn) return;
 
-  const toggleMenu = () => {
-    const isActive = sidebar.classList.toggle("active");
-    overlay.classList.toggle("active", isActive);
-    menuBtn.classList.toggle("hidden", isActive);
-    body.classList.toggle("drawer-open", isActive);
-    sidebar.setAttribute("aria-hidden", String(!isActive));
-  };
-
-  // evita listeners duplicados caso a página seja reinicializada
-  menuBtn.replaceWith(menuBtn.cloneNode(true));
-  overlay.replaceWith(overlay.cloneNode(true));
-  const menuBtn2 = document.querySelector(".menu-btn");
-  const overlay2 = document.getElementById("overlay");
-
-  menuBtn2.addEventListener("click", toggleMenu);
-  overlay2.addEventListener("click", toggleMenu);
-
-  document.querySelectorAll("#sidebar [data-link]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const link = btn.getAttribute("data-link");
-      if (link) window.location.href = link;
-    });
-  });
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && sidebar.classList.contains("active")) toggleMenu();
-  });
-
-  window.toggleMenu = toggleMenu;
-}
+  sidebar.classList.toggle("active");
+  overlay.classList.toggle("active");
+  menuBtn.classList.toggle("hidden");
+};
+// O CSS de draw.css já estiliza .menu-btn, .overlay e .sidebar com as mesmas transições. :contentReference[oaicite:1]{index=1}
 
 /* ================= Perfil (opcional) ================= */
 async function initPerfilLocal() {
@@ -196,7 +172,7 @@ function renderPaginacao(totalPaginas) {
   if (totalPaginas <= 1) return;
 
   const primeira = botao("«", () => { paginaAtual = 1; renderTabela(); renderPaginacao(totalPaginas); }, paginaAtual === 1, "Primeira página");
-  const anterior = botao("‹", () => { paginaAtual = Math.max(1, paginaAtual - 1); renderTabela(); renderPaginacao(totalPaginas); }, paginaAtual === 1, "Página anterior");
+  const anterior  = botao("‹", () => { paginaAtual = Math.max(1, paginaAtual - 1); renderTabela(); renderPaginacao(totalPaginas); }, paginaAtual === 1, "Página anterior");
   paginacaoEl.appendChild(primeira);
   paginacaoEl.appendChild(anterior);
 
@@ -217,7 +193,7 @@ function renderPaginacao(totalPaginas) {
   }
 
   const proxima = botao("›", () => { paginaAtual = Math.min(totalPaginas, paginaAtual + 1); renderTabela(); renderPaginacao(totalPaginas); }, paginaAtual === totalPaginas, "Próxima página");
-  const ultima = botao("»", () => { paginaAtual = totalPaginas; renderTabela(); renderPaginacao(totalPaginas); }, paginaAtual === totalPaginas, "Última página");
+  const ultima  = botao("»", () => { paginaAtual = totalPaginas; renderTabela(); renderPaginacao(totalPaginas); }, paginaAtual === totalPaginas, "Última página");
   paginacaoEl.appendChild(proxima);
   paginacaoEl.appendChild(ultima);
 
@@ -238,7 +214,6 @@ if (barraPesquisa && !barraPesquisa._bound) {
 
 /* ================= Boot ================= */
 document.addEventListener("DOMContentLoaded", async () => {
-  initDrawerLocal();
   await initPerfilLocal();
   await carregarFeedbacks();
 });
@@ -250,5 +225,5 @@ function logout() {
 }
 window.logout = logout;
 
-// Export opcional
+// export opcional
 export { carregarFeedbacks };

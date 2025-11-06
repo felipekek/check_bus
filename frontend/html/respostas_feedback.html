@@ -13,22 +13,19 @@
 </head>
 
 <body>
-  <!-- Botão do menu -->
-  <button class="menu-btn" aria-label="Abrir menu lateral">☰</button>
+  <!-- Botão/Menu/Overlay (mesmo padrão do relatorios.html) -->
+  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-  <!-- Overlay -->
-  <div class="overlay" id="overlay"></div>
-
-  <!-- Sidebar -->
-  <aside class="sidebar" id="sidebar" aria-hidden="true">
-    <button data-link="home_principal.html">🏠 Principal</button>
-    <button data-link="relatorios.html">📊 Relatórios</button>
-    <button data-link="cadast_motorista.html">🚌 Cadastrar Motorista</button>
-    <button data-link="horarios.html">⏰ Lista de Horários</button>
-    <button data-link="gps.html">📍 GPS</button>
-    <button data-link="admin.html">👥 Lista de Alunos</button>
+  <div class="sidebar" id="sidebar">
+    <button onclick="location.href='home_principal.html'">Principal</button>
+    <button onclick="location.href='relatorios.html'">Relatórios</button>
+    <button onclick="location.href='cadast_motorista.html'">Cadastrar Motorista</button>
+    <button onclick="location.href='horarios.html'">Lista de Horários</button>
+    <button onclick="location.href='gps.html'">GPS</button>
+    <button onclick="location.href='admin.html'">Lista de Alunos</button>
     <button class="logout" onclick="logout()">Sair</button>
-  </aside>
+  </div>
 
   <!-- Conteúdo principal -->
   <div class="container">
@@ -56,7 +53,7 @@
           </table>
         </div>
 
-        <!-- Paginação é injetada aqui via JS -->
+        <!-- Paginação é injetada pelo JS -->
         <div id="paginacao" aria-label="Paginação de resultados"></div>
       </div>
     </div>
@@ -67,7 +64,11 @@
     <i class="fa fa-user"></i> Perfil
   </button>
 
-  <!-- Apenas JS externo (nenhum script inline) -->
+  <!-- Se o backend estiver em outro host/porta, descomente e ajuste:
+  <script>window.__API_BASE__="http://localhost:3000";</script>
+  -->
+
+  <!-- JS externo -->
   <script type="module" src="../js/respostas_feedback.js"></script>
 </body>
 </html>
