@@ -1,8 +1,8 @@
-/* ===== Botão do Menu (drawer) fixo, canto superior esquerdo – posição de antes ===== */
+/* ===== Botão do Menu (drawer) fixo no canto superior esquerdo ===== */
 .menu-btn {
   position: fixed;
   top: 20px;
-  left: 20px;            /* mesmo “canto superior esquerdo” */
+  left: 20px;
   font-size: 28px;
   width: 54px;
   height: 54px;
@@ -11,11 +11,14 @@
   border: none;
   border-radius: 50%;
   cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  z-index: 1501;          /* acima do conteúdo; abaixo do overlay da sidebar */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1501;
   box-shadow: 0 4px 12px rgba(0,0,0,0.18);
   transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
 }
+
 .menu-btn:hover {
   background: linear-gradient(135deg, #008793 60%, #004d7a 100%);
   box-shadow: 0 6px 18px rgba(0,0,0,0.22);
@@ -28,14 +31,18 @@
   inset: 0;
   background: rgba(0,0,0,0.5);
   display: none;
-  z-index: 1500;     /* cobre a página; a sidebar virá acima com 1502 */
+  z-index: 1500;
 }
-.overlay.active { display: block; }
+
+.overlay.active {
+  display: block;
+}
 
 /* ===== Sidebar (drawer) fixa ===== */
 .sidebar {
   position: fixed;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   width: 250px;
   height: 100%;
   background: #00677a;
@@ -44,9 +51,12 @@
   padding: 20px;
   transform: translateX(-100%);
   transition: transform 0.3s ease;
-  z-index: 1502;     /* acima do overlay e dos botões */
+  z-index: 1502;
 }
-.sidebar.active { transform: translateX(0); }
+
+.sidebar.active {
+  transform: translateX(0);
+}
 
 .sidebar button {
   display: block;
@@ -62,19 +72,31 @@
   font-weight: 500;
   transition: opacity 0.2s;
 }
-.sidebar button:hover { opacity: 0.9; }
-.sidebar button.logout { background: #dc3545; }
 
-/* ===== Reserva de espaço no topo para não cobrir conteúdo =====
-   Trabalha junto com perfil.css: empurra o conteúdo para baixo
-   para que NEM o menu-btn NEM o perfil fiquem sobre o título/conteúdo. */
-:root { --fixed-top-safe: 84px; }
-body { padding-top: max(var(--fixed-top-safe), 60px); }
+.sidebar button:hover {
+  opacity: 0.9;
+}
 
-/* Ajuste fino em telas menores: botões um pouco menores e mais próximos das bordas */
+.sidebar button.logout {
+  background: #dc3545;
+}
+
+/* ===== Reserva de espaço no topo ===== */
+:root {
+  --fixed-top-safe: 84px;
+}
+
+body {
+  padding-top: max(var(--fixed-top-safe), 60px);
+}
+
+/* ===== Responsividade ===== */
 @media (max-width: 480px) {
   .menu-btn {
-    width: 48px; height: 48px; font-size: 24px;
-    top: 16px; left: 16px;
+    width: 48px;
+    height: 48px;
+    font-size: 24px;
+    top: 16px;
+    left: 16px;
   }
 }

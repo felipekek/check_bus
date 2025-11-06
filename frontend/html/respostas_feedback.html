@@ -3,104 +3,69 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Feedbacks dos Alunos</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Respostas de Feedback</title>
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="../css/draw.css">
+  <link rel="stylesheet" href="../css/perfil.css">
+  <link rel="stylesheet" href="../css/respostas_feedback.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
-<body>
 
+<body>
+  <!-- Botão do menu (mesmo markup das outras páginas) -->
+  <button class="menu-btn" aria-label="Abrir menu lateral">☰</button>
+
+  <!-- Overlay (escurece o fundo) -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Sidebar (drawer) -->
+  <aside class="sidebar" id="sidebar" aria-hidden="true">
+    <button data-link="home_principal.html">🏠 Principal</button>
+    <button data-link="relatorios.html">📊 Relatórios</button>
+    <button data-link="cadast_motorista.html">🚌 Cadastrar Motorista</button>
+    <button data-link="horarios.html">⏰ Lista de Horários</button>
+    <button data-link="gps.html">📍 GPS</button>
+    <button data-link="admin.html">👥 Lista de Alunos</button>
+    <button class="logout" onclick="logout()">Sair</button>
+  </aside>
+
+  <!-- Conteúdo principal -->
   <div class="container">
     <div class="titulo-container">
-      <h1>Feedbacks Recebidos</h1>
-      <input type="text" id="barraPesquisa" placeholder="Pesquisar aluno...">
+      <h1>Respostas de Feedback</h1>
+      <input type="text" id="barraPesquisa" placeholder="Pesquisar aluno..." aria-label="Pesquisar aluno">
     </div>
 
-    <table id="tabela-feedbacks">
-      <thead>
-        <tr>
-          <th>Aluno</th>
-          <th>Email</th>
-          <th>CPF</th>
-          <th>Feedback</th>
-          <th>Resposta do Admin</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody id="corpoTabela">
-        <tr><td colspan="6" class="no-feedback">Carregando feedbacks...</td></tr>
-      </tbody>
-    </table>
+    <div class="table-wrap">
+      <div class="table-card">
+        <div class="table-scroller">
+          <table id="tabela-feedbacks">
+            <thead>
+              <tr>
+                <th>Aluno</th>
+                <th>Email</th>
+                <th>CPF</th>
+                <th>Feedback</th>
+                <th>Resposta do Admin</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="corpoTabela">
+              <tr><td colspan="6" class="no-feedback">Carregando feedbacks...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <script>
-    const corpoTabela = document.getElementById("corpoTabela");
-    const barraPesquisa = document.getElementById("barraPesquisa");
-    let feedbacks = [];
+  <!-- Botão Perfil (mesmo lugar das outras páginas) -->
+  <button class="perfil-btn" id="btnPerfil">
+    <i class="fa fa-user"></i> Perfil
+  </button>
 
-    async function carregarFeedbacks() {
-      try {
-        const resposta = await fetch("http://localhost:3000/api/feedbacks");
-        feedbacks = await resposta.json();
-        renderizarTabela();
-      } catch (erro) {
-        corpoTabela.innerHTML = `<tr><td colspan="6" class="no-feedback">❌ Erro ao carregar feedbacks.</td></tr>`;
-        console.error("Erro ao buscar feedbacks:", erro);
-      }
-    }
-
-    function renderizarTabela(filtro = "") {
-      corpoTabela.innerHTML = "";
-
-      const filtrados = feedbacks.filter(f =>
-        f.aluno.toLowerCase().includes(filtro.toLowerCase())
-      );
-
-      if (filtrados.length === 0) {
-        corpoTabela.innerHTML = `<tr><td colspan="6" class="no-feedback">Nenhum feedback encontrado.</td></tr>`;
-        return;
-      }
-
-      filtrados.forEach((fb, i) => {
-        const tr = document.createElement("tr");
-
-        tr.innerHTML = `
-          <td>${fb.aluno}</td>
-          <td>${fb.email}</td>
-          <td>${fb.cpf}</td>
-          <td>${fb.mensagem}</td>
-          <td>
-            <textarea id="resposta-${i}" placeholder="Escreva uma resposta...">${fb.resposta || ""}</textarea>
-          </td>
-          <td>
-            <button class="responder-btn" onclick="responder(${i})">Responder</button>
-          </td>
-        `;
-
-        corpoTabela.appendChild(tr);
-      });
-    }
-
-    async function responder(index) {
-      const resposta = document.getElementById(`resposta-${index}`).value.trim();
-      if (!resposta) return alert("Digite uma resposta antes de enviar!");
-
-      try {
-        await fetch(`http://localhost:3000/api/feedbacks/${feedbacks[index].id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ resposta })
-        });
-        alert("✅ Resposta enviada com sucesso!");
-      } catch (erro) {
-        alert("❌ Erro ao enviar resposta!");
-      }
-    }
-
-    barraPesquisa.addEventListener("input", e => {
-      renderizarTabela(e.target.value);
-    });
-
-    carregarFeedbacks();
-  </script>
+  <script type="module" src="../js/respostas_feedback.js"></script>
 </body>
+
 </html>

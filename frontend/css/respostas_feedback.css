@@ -1,6 +1,8 @@
 body {
   font-family: 'Segoe UI', sans-serif;
-  background: #f4f7fb;
+  /* usar mesmo fundo das outras páginas */
+  background: linear-gradient(to right, #004d7a, #008793);
+  min-height: 100vh;
   margin: 0;
   padding: 0;
   color: #222;
