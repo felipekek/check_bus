@@ -30,12 +30,12 @@ export const enviarFeedback = async (req, res) => {
   }
 };
 
-/**
- * Listar feedbacks (use middleware requireAdmin na rota)
- */
+// backend/src/controllers/feedbackController.js
 export const listarFeedbacks = async (_req, res) => {
   try {
-    const snapshot = await db.collection("feedback").get();
+    const snapshot = await db.collection("feedback")
+      .orderBy("data", "desc")     // <-- ordena no servidor
+      .get();
     const feedbacks = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     return res.status(200).json(feedbacks);
   } catch (error) {

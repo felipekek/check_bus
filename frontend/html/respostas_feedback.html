@@ -13,13 +13,13 @@
 </head>
 
 <body>
-  <!-- Botão do menu (mesmo markup das outras páginas) -->
+  <!-- Botão do menu -->
   <button class="menu-btn" aria-label="Abrir menu lateral">☰</button>
 
-  <!-- Overlay (escurece o fundo) -->
+  <!-- Overlay -->
   <div class="overlay" id="overlay"></div>
 
-  <!-- Sidebar (drawer) -->
+  <!-- Sidebar -->
   <aside class="sidebar" id="sidebar" aria-hidden="true">
     <button data-link="home_principal.html">🏠 Principal</button>
     <button data-link="relatorios.html">📊 Relatórios</button>
@@ -34,7 +34,7 @@
   <div class="container">
     <div class="titulo-container">
       <h1>Respostas de Feedback</h1>
-      <input type="text" id="barraPesquisa" placeholder="Pesquisar aluno..." aria-label="Pesquisar aluno">
+      <input type="text" id="barraPesquisa" placeholder="Pesquisar feedback..." aria-label="Pesquisar feedback">
     </div>
 
     <div class="table-wrap">
@@ -43,29 +43,31 @@
           <table id="tabela-feedbacks">
             <thead>
               <tr>
-                <th>Aluno</th>
+                <th>Nome</th>
                 <th>Email</th>
                 <th>CPF</th>
-                <th>Feedback</th>
-                <th>Resposta do Admin</th>
-                <th>Ações</th>
+                <th>Comentário</th>
+                <th>Data</th>
               </tr>
             </thead>
             <tbody id="corpoTabela">
-              <tr><td colspan="6" class="no-feedback">Carregando feedbacks...</td></tr>
+              <tr><td colspan="5" class="no-feedback">Carregando feedbacks...</td></tr>
             </tbody>
           </table>
         </div>
+
+        <!-- Paginação é injetada aqui via JS -->
+        <div id="paginacao" aria-label="Paginação de resultados"></div>
       </div>
     </div>
   </div>
 
-  <!-- Botão Perfil (mesmo lugar das outras páginas) -->
+  <!-- Botão Perfil -->
   <button class="perfil-btn" id="btnPerfil">
     <i class="fa fa-user"></i> Perfil
   </button>
 
+  <!-- Apenas JS externo (nenhum script inline) -->
   <script type="module" src="../js/respostas_feedback.js"></script>
 </body>
-
 </html>

@@ -1,12 +1,35 @@
 // frontend/js/respostas_feedback.js
+// Perfil (opcional): se sua página não usa o módulo de perfil, pode remover estes imports.
 import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
 
-/* ================= Helpers ================= */
-const API_BASE = ""; // relativo ao mesmo host
+/* ================= Config/Helpers ================= */
+const API_BASE = window.__API_BASE__ ?? ""; // relativo ao mesmo host por padrão
 const getToken = () => localStorage.getItem("token") || "";
 const isAdmin = () => (localStorage.getItem("tipoUsuario") || "").toLowerCase() === "admin";
 
-/* ================= Drawer (local) ================= */
+const sanitize = (s) =>
+  String(s ?? "").replace(/[<>&"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c]));
+
+const fmtData = (iso) => {
+  if (!iso) return "-";
+  const d = new Date(iso);
+  return isNaN(d)
+    ? "-"
+    : d.toLocaleString("pt-BR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" });
+};
+
+/* ================= Estado ================= */
+let feedbacks = [];  // todos
+let filtrados = [];  // após busca
+let paginaAtual = 1;
+let porPagina = 10;
+
+/* ================= Elementos ================= */
+const tbody = document.getElementById("corpoTabela");
+const barraPesquisa = document.getElementById("barraPesquisa");
+const paginacaoEl = document.getElementById("paginacao");
+
+/* ================= Drawer (sidebar local) ================= */
 function initDrawerLocal() {
   const body = document.body;
   const sidebar = document.getElementById("sidebar");
@@ -18,22 +41,19 @@ function initDrawerLocal() {
     const isActive = sidebar.classList.toggle("active");
     overlay.classList.toggle("active", isActive);
     menuBtn.classList.toggle("hidden", isActive);
-    body.classList.toggle("drawer-open", isActive); // igual às outras páginas
+    body.classList.toggle("drawer-open", isActive);
     sidebar.setAttribute("aria-hidden", String(!isActive));
   };
 
-  // remove possíveis listeners duplicados clonando os elementos
+  // evita listeners duplicados caso a página seja reinicializada
   menuBtn.replaceWith(menuBtn.cloneNode(true));
   overlay.replaceWith(overlay.cloneNode(true));
-
-  // re-seleciona após clone
   const menuBtn2 = document.querySelector(".menu-btn");
   const overlay2 = document.getElementById("overlay");
 
   menuBtn2.addEventListener("click", toggleMenu);
   overlay2.addEventListener("click", toggleMenu);
 
-  // navegação dos botões do drawer
   document.querySelectorAll("#sidebar [data-link]").forEach((btn) => {
     btn.addEventListener("click", () => {
       const link = btn.getAttribute("data-link");
@@ -41,149 +61,179 @@ function initDrawerLocal() {
     });
   });
 
-  // ESC fecha o drawer
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && sidebar.classList.contains("active")) toggleMenu();
   });
 
-  // expõe global (algumas páginas usam onclick="toggleMenu()")
   window.toggleMenu = toggleMenu;
 }
 
-/* ================= Perfil ================= */
+/* ================= Perfil (opcional) ================= */
 async function initPerfilLocal() {
   try {
-    await carregarModalPerfil(); // injeta HTML do modal de perfil
+    await carregarModalPerfil?.();
     const btnPerfil = document.getElementById("btnPerfil");
-    if (btnPerfil) btnPerfil.addEventListener("click", abrirPerfil);
+    if (btnPerfil) btnPerfil.addEventListener("click", () => abrirPerfil?.());
   } catch (e) {
-    console.error("Falha ao carregar modal de perfil:", e);
+    console.warn("Perfil opcional não inicializado:", e);
   }
 }
 
-/* ================= Feedbacks ================= */
+/* ================= Fetch + Render ================= */
 async function carregarFeedbacks() {
-  const tbody = document.getElementById("corpoTabela");
-  const barraPesquisa = document.getElementById("barraPesquisa");
   if (!tbody) return;
 
+  // Mensagem de loading
+  tbody.innerHTML = `<tr><td colspan="5" class="no-feedback">Carregando feedbacks...</td></tr>`;
+
+  // Proteção: painel só para admin (rota GET /feedback exige requireAdmin)
   if (!isAdmin()) {
-    tbody.innerHTML = `<tr><td colspan="6" class="no-feedback">Acesso restrito a administradores.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" class="no-feedback">Acesso restrito a administradores.</td></tr>`;
+    renderPaginacao(0);
     return;
   }
 
   try {
-    tbody.innerHTML = `<tr><td colspan="6" class="no-feedback">Carregando feedbacks...</td></tr>`;
-
     const res = await fetch(`${API_BASE}/feedback`, {
       headers: {
         "Content-Type": "application/json",
         ...(getToken() ? { Authorization: `Bearer ${getToken()}` } : {}),
       },
+      credentials: "include",
     });
 
-    if (!res.ok) throw new Error(`Erro ${res.status}: não foi possível listar feedbacks`);
-
-    const lista = await res.json();
-    if (!Array.isArray(lista) || lista.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="6" class="no-feedback">Nenhum feedback encontrado.</td></tr>`;
+    if (!res.ok) {
+      tbody.innerHTML = `<tr><td colspan="5" class="no-feedback">Erro ${res.status} ao carregar feedbacks.</td></tr>`;
+      renderPaginacao(0);
       return;
     }
 
-    tbody.innerHTML = lista.map((f) => {
-      const aluno = f.aluno || "-";
-      const email = f.email || "-";
-      const cpf = f.cpf || "-";
-      const texto = f.texto || "-";
-      const resposta = f.respostaAdmin || "-";
-      const id = f.id || "";
-      return `
-        <tr data-row>
-          <td>${sanitize(aluno)}</td>
-          <td>${sanitize(email)}</td>
-          <td>${sanitize(cpf)}</td>
-          <td>${sanitize(texto)}</td>
-          <td>${sanitize(resposta)}</td>
-          <td>
-            <button class="btn-acao" data-acao="responder" data-id="${id}">Responder</button>
-            <button class="btn-acao danger" data-acao="excluir" data-id="${id}">Excluir</button>
-          </td>
-        </tr>
-      `;
-    }).join("");
+    const lista = await res.json();
 
-    if (barraPesquisa && !barraPesquisa._bound) {
-      barraPesquisa._bound = true;
-      barraPesquisa.addEventListener("input", () => {
-        const termo = barraPesquisa.value.trim().toLowerCase();
-        tbody.querySelectorAll("[data-row]").forEach((tr) => {
-          tr.style.display = tr.textContent.toLowerCase().includes(termo) ? "" : "none";
-        });
-      });
-    }
+    // Ordena por data desc (mais recentes primeiro)
+    feedbacks = Array.isArray(lista)
+      ? lista.slice().sort((a, b) => (new Date(b?.data || 0)) - (new Date(a?.data || 0)))
+      : [];
 
-    tbody.onclick = async (e) => {
-      const btn = e.target.closest(".btn-acao");
-      if (!btn) return;
-
-      const id = btn.dataset.id;
-      const acao = btn.dataset.acao;
-      if (!id || !acao) return;
-
-      if (acao === "responder") {
-        const resposta = prompt("Digite a resposta do admin:");
-        if (resposta && resposta.trim()) {
-          await salvarResposta(id, resposta.trim());
-          await carregarFeedbacks();
-        }
-      } else if (acao === "excluir") {
-        if (confirm("Deseja realmente excluir este feedback?")) {
-          await excluirFeedback(id);
-          await carregarFeedbacks();
-        }
-      }
-    };
+    aplicarBusca(); // inicializa filtrados e renderiza
   } catch (err) {
     console.error("Erro ao carregar feedbacks:", err);
-    tbody.innerHTML = `<tr><td colspan="6" class="no-feedback">Erro ao carregar feedbacks.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" class="no-feedback">Erro ao carregar feedbacks.</td></tr>`;
+    renderPaginacao(0);
   }
 }
 
-async function salvarResposta(id, resposta) {
-  try {
-    const res = await fetch(`${API_BASE}/feedback/${id}/responder`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...(getToken() ? { Authorization: `Bearer ${getToken()}` } : {}),
-      },
-      body: JSON.stringify({ resposta }),
-    });
-    if (!res.ok) throw new Error("Falha ao salvar resposta");
-  } catch (e) {
-    alert("Erro ao salvar resposta.");
-    console.error(e);
-  }
+/* ================= Busca + Paginação ================= */
+function aplicarBusca() {
+  const termo = (barraPesquisa?.value || "").trim().toLowerCase();
+
+  filtrados = !termo
+    ? feedbacks
+    : feedbacks.filter((f) => {
+        const texto = `${f?.nome ?? ""} ${f?.email ?? ""} ${f?.cpf ?? ""} ${f?.comentario ?? ""}`.toLowerCase();
+        return texto.includes(termo);
+      });
+
+  paginaAtual = 1; // volta para a primeira página sempre que buscar
+  renderTabela();
+  renderPaginacao(Math.ceil(filtrados.length / porPagina));
 }
 
-async function excluirFeedback(id) {
-  try {
-    const res = await fetch(`${API_BASE}/feedback/${id}`, {
-      method: "DELETE",
-      headers: {
-        ...(getToken() ? { Authorization: `Bearer ${getToken()}` } : {}),
-      },
-    });
-    if (!res.ok) throw new Error("Falha ao excluir feedback");
-  } catch (e) {
-    alert("Erro ao excluir feedback.");
-    console.error(e);
-  }
+function obterPagina(lista, pagina, tamanho) {
+  const start = (pagina - 1) * tamanho;
+  return lista.slice(start, start + tamanho);
 }
 
-/* ================= Util ================= */
-function sanitize(str) {
-  return String(str).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+function renderTabela() {
+  if (!tbody) return;
+
+  if (!Array.isArray(filtrados) || filtrados.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" class="no-feedback">Nenhum feedback encontrado.</td></tr>`;
+    return;
+  }
+
+  const pageItems = obterPagina(filtrados, paginaAtual, porPagina);
+
+  tbody.innerHTML = pageItems
+    .map((f) => {
+      const nome = f.nome || "-";
+      const email = f.email || "-";
+      const cpf = f.cpf || "-";
+      const comentario = f.comentario || "-";
+      const data = fmtData(f.data);
+
+      return `
+        <tr data-row>
+          <td>${sanitize(nome)}</td>
+          <td>${sanitize(email)}</td>
+          <td>${sanitize(cpf)}</td>
+          <td>${sanitize(comentario)}</td>
+          <td>${sanitize(data)}</td>
+        </tr>
+      `;
+    })
+    .join("");
+}
+
+function botao(label, onClick, disabled = false, aria = "") {
+  const b = document.createElement("button");
+  b.textContent = label;
+  b.type = "button";
+  b.className = "pager-btn";
+  if (aria) b.setAttribute("aria-label", aria);
+  b.disabled = !!disabled;
+  b.addEventListener("click", onClick);
+  return b;
+}
+
+function renderPaginacao(totalPaginas) {
+  if (!paginacaoEl) return;
+
+  if (!totalPaginas) totalPaginas = Math.ceil((filtrados?.length || 0) / porPagina);
+
+  paginacaoEl.innerHTML = "";
+
+  if (totalPaginas <= 1) return;
+
+  const primeira = botao("«", () => { paginaAtual = 1; renderTabela(); renderPaginacao(totalPaginas); }, paginaAtual === 1, "Primeira página");
+  const anterior = botao("‹", () => { paginaAtual = Math.max(1, paginaAtual - 1); renderTabela(); renderPaginacao(totalPaginas); }, paginaAtual === 1, "Página anterior");
+  paginacaoEl.appendChild(primeira);
+  paginacaoEl.appendChild(anterior);
+
+  const MAX = 7;
+  let ini = Math.max(1, paginaAtual - 3);
+  let fim = Math.min(totalPaginas, ini + MAX - 1);
+  if (fim - ini + 1 < MAX) ini = Math.max(1, fim - MAX + 1);
+
+  for (let p = ini; p <= fim; p++) {
+    const b = botao(String(p), () => {
+      paginaAtual = p;
+      renderTabela();
+      renderPaginacao(totalPaginas);
+    }, false, `Ir para a página ${p}`);
+
+    if (p === paginaAtual) b.classList.add("ativo");
+    paginacaoEl.appendChild(b);
+  }
+
+  const proxima = botao("›", () => { paginaAtual = Math.min(totalPaginas, paginaAtual + 1); renderTabela(); renderPaginacao(totalPaginas); }, paginaAtual === totalPaginas, "Próxima página");
+  const ultima = botao("»", () => { paginaAtual = totalPaginas; renderTabela(); renderPaginacao(totalPaginas); }, paginaAtual === totalPaginas, "Última página");
+  paginacaoEl.appendChild(proxima);
+  paginacaoEl.appendChild(ultima);
+
+  const info = document.createElement("span");
+  info.className = "pager-info";
+  const total = filtrados.length;
+  const iniIdx = (paginaAtual - 1) * porPagina + 1;
+  const fimIdx = Math.min(paginaAtual * porPagina, total);
+  info.textContent = `Exibindo ${total ? iniIdx : 0}–${total ? fimIdx : 0} de ${total}`;
+  paginacaoEl.appendChild(info);
+}
+
+/* ================= Eventos ================= */
+if (barraPesquisa && !barraPesquisa._bound) {
+  barraPesquisa._bound = true;
+  barraPesquisa.addEventListener("input", aplicarBusca);
 }
 
 /* ================= Boot ================= */
@@ -193,10 +243,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   await carregarFeedbacks();
 });
 
+/* ================= Logout global ================= */
 function logout() {
   localStorage.clear();
   window.location.href = "index.html";
 }
 window.logout = logout;
 
+// Export opcional
 export { carregarFeedbacks };
