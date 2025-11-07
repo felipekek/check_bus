@@ -1,0 +1,83 @@
+<!-- public/html/cadast_onibus.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cadastrar Ônibus</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/cadast_onibus.css" />
+  <link rel="stylesheet" href="../css/perfil.css" />
+  <link rel="stylesheet" href="../css/draw.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+  <div class="sidebar" id="sidebar">
+    <button onclick="location.href='home_principal.html'">Principal</button>
+    <button onclick="location.href='admin_motoristas.html'">Gerenciar Motoristas</button>
+    <button onclick="location.href='admin_onibus.html'">Gerenciar Ônibus</button>
+    <button onclick="location.href='index.html'" class="logout">Sair</button>
+  </div>
+
+  <div class="form-container">
+    <h1><i class="fa fa-bus"></i> Cadastrar Ônibus</h1>
+
+    <form id="formOnibus">
+      <label>Nome do ônibus</label>
+      <input type="text" id="nome" required placeholder="Ex.: Ônibus 01 - Campus" />
+
+      <label>Placa</label>
+      <input type="text" id="placa" required placeholder="Ex.: ABC-1D23" />
+
+      <label>Capacidade</label>
+      <input type="number" id="capacidade" min="1" max="100" required placeholder="Ex.: 44" />
+
+      <label>Rota</label>
+      <input type="text" id="rota" placeholder="Ex.: Centro → Campus" />
+
+      <label>Motorista (opcional)</label>
+      <select id="motoristaId">
+        <option value="">— Selecionar motorista —</option>
+      </select>
+
+      <div class="checkbox-line">
+        <label class="switch">
+          <input type="checkbox" id="ativo" checked />
+          <span class="slider"></span>
+        </label>
+        <span>Ativo</span>
+      </div>
+
+      <button type="submit"><i class="fa fa-save"></i> Cadastrar</button>
+    </form>
+  </div>
+
+  <button class="perfil-btn" id="btnPerfil">
+    <i class="fa fa-user"></i> Perfil
+  </button>
+
+  <script>
+    // Menu lateral
+    window.toggleMenu = function() {
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
+      const menuBtn = document.querySelector(".menu-btn");
+      if (!sidebar || !overlay) return;
+      sidebar.classList.toggle("active");
+      overlay.classList.toggle("active");
+      if (menuBtn) menuBtn.classList.toggle("hidden");
+    };
+  </script>
+
+  <script type="module">
+    import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
+    carregarModalPerfil();
+    document.getElementById("btnPerfil").addEventListener("click", abrirPerfil);
+  </script>
+
+  <script type="module" src="../js/cadast_onibus.js"></script>
+</body>
+</html>
