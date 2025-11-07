@@ -19,7 +19,7 @@ import {
   userDeleteDate,
 } from "../controllers/horariosController.js";
 
-import { requireAdmin } from "../middlewares/requireAdmin.js";
+import requireAdmin from "../middlewares/requireAdmin.js";
 
 const router = express.Router();
 

@@ -2,7 +2,7 @@
 import express from "express";
 import { listarRelatorios, excluirRelatorio } from "../controllers/relatorioController.js";
 import { gerarPDF, gerarPDFFiltrado } from "../controllers/pdfController.js";
-import { requireAdmin } from "../middlewares/requireAdmin.js";
+import requireAdmin from "../middlewares/requireAdmin.js";
 
 const router = express.Router();
 
