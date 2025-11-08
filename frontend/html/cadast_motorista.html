@@ -3,99 +3,144 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cadastro de Ônibus/Motorista</title>
+  <title>Cadastro de Motorista - CheckBus</title>
+
+  <!-- Estilos -->
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="stylesheet" href="../css/admin.css" />
-  <link rel="stylesheet" href="../css/cadast_motorista.css" /> 
   <link rel="stylesheet" href="../css/perfil.css" />
   <link rel="stylesheet" href="../css/draw.css" />
+  <link rel="stylesheet" href="../css/cadast_motorista.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body>
+  <!-- Botão de menu lateral -->
   <button class="menu-btn" onclick="toggleMenu()">☰</button>
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
+  <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
-    <button onclick="location.href='home_principal.html'">Principal</button>
-    <button onclick="location.href='seus_horarios.html'">Seus Horários</button>
-    <button onclick="location.href='horarios.html'">Lista de Horários</button>
-    <button onclick="location.href='gps.html'">Abrir GPS</button>
-    <button onclick="location.href='relatorios.html'">Relatório</button>
-    <button onclick="location.href='index.html'" class="logout">Sair</button>
+    <button onclick="location.href='home_principal.html'">🏠 Principal</button>
+    <button onclick="location.href='seus_horarios.html'">🕓 Seus Horários</button>
+    <button onclick="location.href='horarios.html'">📋 Lista de Horários</button>
+    <button onclick="location.href='gps.html'">🗺️ Abrir GPS</button>
+    <button onclick="location.href='relatorios.html'">📑 Relatórios</button>
+    <button onclick="location.href='index.html'" class="logout">🚪 Sair</button>
   </div>
 
-  <div class="form-container">
-    <h1>Cadastro de Motorista</h1>
+  <!-- Fundo decorativo -->
+  <div class="background-gradient"></div>
 
-    <form id="formMotorista"> 
+  <!-- Conteúdo principal -->
+  <main class="form-container fade-in">
+    <h1><i class="fa-solid fa-id-card-clip"></i> Cadastro de Motorista</h1>
+    <p class="subtitle">Preencha os dados abaixo para cadastrar um novo motorista no sistema CheckBus.</p>
 
-      <h2>Dados Pessoais</h2>
+    <form id="formMotorista" class="grid-form">
+      <!-- Dados pessoais -->
+      <section class="card slide-up">
+        <h2><i class="fa-solid fa-user"></i> Dados Pessoais</h2>
+        <div class="grid-2">
+          <div>
+            <label for="nome">Nome completo</label>
+            <input type="text" id="nome" placeholder="Ex: João Silva" required />
+          </div>
+          <div>
+            <label for="email">E-mail</label>
+            <input type="email" id="email" placeholder="Ex: joao@email.com" required />
+          </div>
+          <div>
+            <label for="cpf">CPF</label>
+            <input type="text" id="cpf" placeholder="000.000.000-00" required />
+          </div>
+          <div>
+            <label for="telefone">Telefone</label>
+            <input type="text" id="telefone" placeholder="(00) 00000-0000" required />
+          </div>
+        </div>
+      </section>
 
-      <label for="nome">Nome completo</label>
-      <input type="text" id="nome" required />
+      <!-- CNH -->
+      <section class="card slide-up">
+        <h2><i class="fa-solid fa-id-card"></i> Informações da CNH</h2>
+        <div class="grid-2">
+          <div>
+            <label for="cnh">Número da CNH</label>
+            <input type="text" id="cnh" placeholder="Digite o número da CNH" required />
+          </div>
+          <div>
+            <label for="categoria">Categoria</label>
+            <select id="categoria" required>
+              <option value="">Selecione</option>
+              <option value="D">D</option>
+              <option value="E">E</option>
+            </select>
+          </div>
+          <div>
+            <label for="validadeCnh">Validade CNH</label>
+            <input type="date" id="validadeCnh" required />
+          </div>
+        </div>
+      </section>
 
-      <label for="email">E-mail</label>
-      <input type="email" id="email" required />
+      <!-- Dados Operacionais -->
+      <section class="card slide-up">
+        <h2><i class="fa-solid fa-briefcase"></i> Dados Operacionais</h2>
+        <div class="grid-2">
+          <div>
+            <label for="turno">Turno</label>
+            <select id="turno" required>
+              <option value="">Selecione</option>
+              <option value="Matutino">Matutino</option>
+              <option value="Vespertino">Vespertino</option>
+              <option value="Noturno">Noturno</option>
+            </select>
+          </div>
+          <div>
+            <label for="status">Status</label>
+            <select id="status" required>
+              <option value="Ativo">Ativo</option>
+              <option value="Inativo">Inativo</option>
+            </select>
+          </div>
+        </div>
+      </section>
 
-      <label for="cpf">CPF</label>
-      <input type="text" id="cpf" required pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" />
+      <!-- Senha -->
+      <section class="card slide-up">
+        <h2><i class="fa-solid fa-lock"></i> Segurança da Conta</h2>
+        <div class="grid-2">
+          <div>
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" placeholder="Mínimo 6 caracteres" required />
+          </div>
+          <div>
+            <label for="confirmarSenha">Confirmar Senha</label>
+            <input type="password" id="confirmarSenha" placeholder="Repita a senha" required />
+          </div>
+        </div>
+      </section>
 
-      <label for="telefone">Telefone</label>
-      <input type="text" id="telefone" required pattern="\(\d{2}\) \d{5}-\d{4}" />
-
-      <h2>Informações da CNH</h2>
-
-      <label for="cnh">Número da CNH</label>
-      <input type="text" id="cnh" required />
-
-      <label for="categoria">Categoria CNH</label>
-      <select id="categoria" required>
-        <option value="">Selecione</option>
-        <option value="D">D</option>
-        <option value="E">E</option>
-      </select>
-
-      <label for="validadeCnh">Validade CNH</label>
-      <input type="date" id="validadeCnh" required />
-
-      <h2>Dados Operacionais</h2>
-
-      <label for="senha">Senha</label>
-      <input type="password" id="senha" />
-
-      <label for="confirmarSenha">Confirmar Senha</label>
-      <input type="password" id="confirmarSenha" />
-
-      <button type="submit">Cadastrar Motorista</button>
-
-      <!-- Botão de Perfil com nova configuração (CSS atualizado aplicado) -->
-      <button class="perfil-btn" id="btnPerfil">
-        <i class="fa fa-user-plus"></i> Perfil
+      <button type="submit" class="btn-submit">
+        <i class="fa-solid fa-check"></i> Cadastrar Motorista
       </button>
     </form>
-  </div>
+  </main>
 
-  <!-- IMask.js -->
+  <!-- Scripts -->
   <script src="https://unpkg.com/imask"></script>
   <script type="module" src="../js/cadast_motorista.js"></script>
 
   <script>
-    window.toggleMenu = function() {
+    window.toggleMenu = function () {
       const sidebar = document.getElementById("sidebar");
       const overlay = document.getElementById("overlay");
       const menuBtn = document.querySelector(".menu-btn");
-      if (!sidebar || !overlay) return;
       sidebar.classList.toggle("active");
       overlay.classList.toggle("active");
-      if (menuBtn) menuBtn.classList.toggle("hidden");
+      menuBtn.classList.toggle("hidden");
     };
-  </script>
-
-  <script type="module">
-    import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
-    carregarModalPerfil();
-    const btnPerfil = document.getElementById("btnPerfil");
-    if (btnPerfil) btnPerfil.addEventListener("click", abrirPerfil);
   </script>
 </body>
 </html>

@@ -1,56 +1,48 @@
 // backend/src/controllers/motoristaController.js
 import { db } from "../config/firebase-admin.js";
-import { getAuth } from "firebase-admin/auth";
 
-/* Lista todos os motoristas (usuarios com tipoUsuario === "motorista") */
-export const listarMotoristas = async (req, res) => {
+/**
+ * Controlador de cadastro de motorista
+ * Salva os dados no Firestore, na coleção 'motoristas'
+ */
+export const cadastrarMotorista = async (req, res) => {
   try {
-    const motoristasSnap = await db
-      .collection("usuarios")
-      .where("tipoUsuario", "==", "motorista")
-      .get();
+    const {
+      nome,
+      email,
+      cpf,
+      telefone,
+      cnh,
+      categoria,
+      validadeCnh,
+      turno,
+      status,
+      senha,
+    } = req.body;
 
-    const motoristas = motoristasSnap.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-
-    res.json(motoristas);
-  } catch (err) {
-    console.error("Erro ao buscar motoristas:", err);
-    res.status(500).json({ erro: "Erro ao buscar motoristas" });
-  }
-};
-
-/* Exclui motorista: Auth + Firestore + subcoleções */
-export const excluirMotorista = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    // Apaga usuário do Firebase Auth (se existir)
-    try {
-      await getAuth().deleteUser(id);
-    } catch (e) {
-      console.warn(`Usuário ${id} não encontrado no Auth ou já excluído.`);
+    // Verifica campos obrigatórios
+    if (!nome || !email || !cpf || !telefone || !cnh || !categoria || !validadeCnh || !turno || !status) {
+      return res.status(400).json({ erro: "Preencha todos os campos obrigatórios!" });
     }
 
-    // Apaga subcoleções (exemplo: horarios)
-    const subcolecoes = ["horarios", "rotas"];
-    for (const sub of subcolecoes) {
-      const snap = await db.collection("usuarios").doc(id).collection(sub).get();
-      const batch = db.batch();
-      snap.docs.forEach((d) => batch.delete(d.ref));
-      await batch.commit();
-    }
+    // Cria documento no Firestore
+    await db.collection("motoristas").add({
+      nome,
+      email,
+      cpf,
+      telefone,
+      cnh,
+      categoria,
+      validadeCnh,
+      turno,
+      status,
+      senha,
+      criadoEm: new Date().toISOString(),
+    });
 
-    // Apaga o documento principal
-    await db.collection("usuarios").doc(id).delete();
-
-    res.json({ sucesso: true, mensagem: "Motorista excluído com sucesso." });
-  } catch (err) {
-    console.error("Erro ao excluir motorista:", err);
-    res.status(500).json({ erro: "Erro ao excluir motorista" });
+    return res.status(201).json({ mensagem: "Motorista cadastrado com sucesso!" });
+  } catch (erro) {
+    console.error("❌ Erro ao cadastrar motorista:", erro);
+    return res.status(500).json({ erro: "Erro ao cadastrar motorista. Tente novamente." });
   }
 };
-
-

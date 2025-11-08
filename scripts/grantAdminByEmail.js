@@ -1,29 +1,43 @@
-// CHECK_BUS/scripts/grantAdminByEmail.js
-import admin from "../backend/src/config/firebase-admin.js";
+/**
+ * scripts/grantAdminByEmail.js
+ * Define { admin: true } para um usuário existente via e-mail.
+ */
 
-// 👇 E-mail do usuário que será admin
-const ADMIN_EMAIL = "staff@adm.com";
+import admin from "firebase-admin";
+import { readFileSync } from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// 🔹 Caminho absoluto para o serviceAccountKey.json (um nível acima da pasta scripts)
+const serviceAccountPath = path.resolve(__dirname, "../backend/serviceAccountKey.json");
+
+// 🔹 Lê e inicializa o Firebase Admin
+const serviceAccount = JSON.parse(readFileSync(serviceAccountPath, "utf8"));
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://trancaeletronica-90835-default-rtdb.firebaseio.com",
+});
 
 async function main() {
   try {
-    const app = admin.app();
-    console.log("Usando projeto Firebase:", app.options.projectId || "(ver credenciais)");
+    const email = "staff@adm.com"; // ✅ altere se quiser outro e-mail admin
+    console.log(`🔍 Buscando usuário: ${email}`);
 
-    // Busca o usuário pelo e-mail
-    const user = await admin.auth().getUserByEmail(ADMIN_EMAIL);
-    console.log("Usuário encontrado:");
-    console.log(`📧 Email: ${user.email}`);
+    const user = await admin.auth().getUserByEmail(email);
+    console.log(`✅ Usuário encontrado: ${user.email}`);
     console.log(`🆔 UID: ${user.uid}`);
 
-    // Define a claim de administrador
+    // Aplica a permissão de admin
     await admin.auth().setCustomUserClaims(user.uid, { admin: true });
+    console.log("🚀 Claim { admin: true } aplicada com sucesso!");
 
-    console.log(`✅ Claim { admin: true } aplicada com sucesso ao usuário ${user.email}`);
-    console.log("ℹ️ Faça logout e login novamente no app para ativar as permissões.");
+    const updated = await admin.auth().getUser(user.uid);
+    console.log("📦 Claims atuais:", updated.customClaims || {});
   } catch (err) {
-    console.error("❌ Erro ao aplicar claim:", err);
-  } finally {
-    process.exit(0);
+    console.error("❌ Erro ao aplicar claim:", err.message);
   }
 }
 
