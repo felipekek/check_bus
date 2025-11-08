@@ -23,7 +23,6 @@ header h1 {
 }
 
 .menu-btn,
-.perfil-btn,
 .btn {
   background: #fff;
   color: #0077b6;
@@ -35,7 +34,6 @@ header h1 {
   transition: .2s;
 }
 .menu-btn:hover,
-.perfil-btn:hover,
 .btn:hover { background: #e0f1ff; }
 .btn.primary { background: #0077b6; color: #fff; border-color: #0077b6; }
 .btn.primary:hover { background: #005f91; }
