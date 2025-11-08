@@ -1,27 +1,14 @@
+// backend/src/routes/adminRoutes.js
 import express from "express";
-import { requireAuth, verificarAdmin } from "../middlewares/authMiddleware.js";
-
-import { listarAlunos, excluirAluno } from "../controllers/alunoController.js";
-import { listarMotoristas, excluirMotorista } from "../controllers/motoristaController.js";
-import { validarRequisitosMotorista } from "../controllers/adminController.js";
+import { listarAlunos, excluirAluno } from "../controllers/adminController.js";
+import { requireAdmin } from "../middlewares/requireAdmin.js";
 
 const router = express.Router();
 
-/* ================================
-   ROTAS DE ALUNOS (SOMENTE ADMIN)
-=================================== */
-router.get("/alunos", requireAuth, verificarAdmin, listarAlunos);
-router.delete("/alunos/:id", requireAuth, verificarAdmin, excluirAluno);
+// Lista todos os alunos (somente admin)
+router.get("/", requireAdmin, listarAlunos);
 
-/* ================================
-   ROTAS DE MOTORISTAS (SOMENTE ADMIN)
-=================================== */
-router.get("/motoristas", requireAuth, verificarAdmin, listarMotoristas);
-router.delete("/motoristas/:id", requireAuth, verificarAdmin, excluirMotorista);
-
-/* ================================
-   VALIDAÇÃO DE MOTORISTAS
-=================================== */
-router.post("/motoristas/validar", requireAuth, verificarAdmin, validarRequisitosMotorista);
+// Exclui aluno (Auth + Firestore + horários) (somente admin)
+router.delete("/:id", requireAdmin, excluirAluno);
 
 export default router;

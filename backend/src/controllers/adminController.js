@@ -1,20 +1,78 @@
-// controllers/adminController.js
+// backend/src/controllers/adminController.js
+import { db } from "../config/firebase-admin.js";
+import { getAuth } from "firebase-admin/auth";
 
-export function validarRequisitosMotorista(req, res) {
+export async function listarAlunos(_req, res) {
   try {
-    const m = req.body;
+    const alunosSnap = await db.collection("alunos").get();
+    if (alunosSnap.empty) return res.json([]);
 
-    const validado =
-      m.idade >= 21 &&
-      m.cnhCategoria === "D" &&
-      !!m.temCursoTransporteColetivo &&
-      !!m.experienciaCategoriaBC &&
-      !m.temRestricoesJudiciais &&
-      !m.infracoesGravesRecentes &&
-      !!m.aptoFisicoMental;
+    const lista = await Promise.all(
+      alunosSnap.docs.map(async (alunoDoc) => {
+        const aluno = alunoDoc.data();
+        const alunoId = alunoDoc.id;
 
-    res.json({ validado });
+        const horariosSnap = await db
+          .collection("horarios")
+          .doc(alunoId)
+          .collection("listaHorarios")
+          .get();
+
+        const horarios = horariosSnap.docs.map((h) => {
+          const d = h.data();
+          return {
+            dia: d.titulo || "Dia não informado",
+            horario: d.horario || "Horário não informado",
+          };
+        });
+
+        return {
+          id: alunoId,
+          nome: aluno.nome || "-",
+          cpf: aluno.cpf || "-",
+          telefone: aluno.telefone || "-",
+          email: aluno.email || "-",
+          curso: aluno.curso || "-",
+          turno: aluno.turno || "-",
+          periodo: aluno.periodo || "-",
+          instituicao: aluno.instituicao || "-",
+          ultimoLogin: aluno.ultimoLogin || "-",
+          horarios: horarios.length > 0 ? horarios : [],
+        };
+      })
+    );
+
+    res.json(lista);
   } catch (err) {
-    res.status(500).json({ erro: "Erro ao validar motorista" });
+    console.error("Erro ao listar alunos:", err);
+    res.status(500).json({ error: "Erro ao listar alunos" });
+  }
+}
+
+export async function excluirAluno(req, res) {
+  try {
+    const { id } = req.params;
+
+    // Apaga usuário do Auth
+    await getAuth().deleteUser(id);
+
+    // Apaga doc do aluno
+    await db.collection("alunos").doc(id).delete();
+
+    // Apaga subcoleção de horários
+    const horariosSnap = await db
+      .collection("horarios")
+      .doc(id)
+      .collection("listaHorarios")
+      .get();
+
+    const batch = db.batch();
+    horariosSnap.docs.forEach((doc) => batch.delete(doc.ref));
+    await batch.commit();
+
+    res.json({ message: "Aluno e seus dados foram excluídos com sucesso." });
+  } catch (err) {
+    console.error("Erro ao excluir aluno:", err);
+    res.status(500).json({ error: "Erro ao excluir aluno" });
   }
 }

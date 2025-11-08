@@ -1,7 +1,7 @@
 // backend/src/routes/feedbackRoutes.js
 import express from "express";
 import { enviarFeedback, listarFeedbacks } from "../controllers/feedbackController.js";
-import requireAdmin from "../middlewares/requireAdmin.js";
+import { requireAdmin } from "../middlewares/requireAdmin.js";
 
 const router = express.Router();
 
