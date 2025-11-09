@@ -2,7 +2,7 @@
 body {
   margin: 0;
   font-family: "Poppins", sans-serif;
-  background: linear-gradient(135deg, #f4f9ff, #e8f3ff);
+  background: linear-gradient(to right, #004d7a, #008793);
   color: #333;
   display: flex;
   flex-direction: column;
@@ -55,7 +55,7 @@ main {
   margin-bottom: 16px;
 }
 
-/* ======== MENU PRINCIPAL (BOTÕES) ======== */
+/* ======== MENU PRINCIPAL (CARDS DE BOTÕES) ======== */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -63,35 +63,38 @@ main {
   margin-bottom: 30px;
 }
 
-.grid button {
+.grid .card {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
+  text-align: center;
 
-  /* 🔹 Mesma cor de fundo do tema principal */
-  background: linear-gradient(135deg, #004d7a, #007a99);
+  /* 🔹 Mesma cor do fundo da página (degradê azul) */
+  background: linear-gradient(to right, #004d7a, #008793);
   color: #fff;
 
   font-weight: 600;
   font-size: 1rem;
   border: none;
   border-radius: 12px;
-  padding: 16px 12px;
+  padding: 22px 14px;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0, 77, 122, 0.25);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
   text-transform: capitalize;
 }
 
-.grid button i {
-  font-size: 1.2rem;
+.grid .card:hover {
+  transform: translateY(-3px);
+  background: linear-gradient(to right, #007a99, #00bf72);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  color: #fff;
 }
 
-.grid button:hover {
-  transform: translateY(-3px);
-  background: linear-gradient(135deg, #007a99, #00bf72);
-  box-shadow: 0 6px 20px rgba(0, 122, 153, 0.3);
+.grid .card i {
+  font-size: 1.8rem;
 }
 
 /* ======== CALENDÁRIO (inalterado) ======== */
