@@ -165,8 +165,13 @@ async function backendDeleteDates(ym, dates) {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` }
     });
+
     if (!res.ok) {
       const e = await res.json().catch(() => ({}));
+      if (res.status === 403) {
+        toast("Sem permissão para excluir este dia (verifique regras do Firestore).");
+        throw new Error("Permissão negada");
+      }
       throw new Error(e.erro || `Falha ao apagar a data ${date}`);
     }
   }
@@ -344,30 +349,34 @@ function criarLinha(dataStr, schedule) {
     atualizarListaHorarios();
   });
 
-  // ⬇ EXCLUIR: apaga local e TAMBÉM no Firebase imediatamente
+  // ⬇ EXCLUIR: apaga local e TAMBÉM no servidor (Firestore) via backendDeleteDates
   btnExcluir.addEventListener("click", async () => {
+    if (!confirm(`Deseja realmente excluir o dia ${dataStr}?`)) return;
+    btnExcluir.disabled = true;
     try {
-      const ym = ymKey(currentDate);
-      const uid = getUid();
-      const token = await getIdToken();
-      const res = await fetch(`${API_BASE}/horarios/user/${uid}/${ym}/${dataStr}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (!res.ok) throw new Error("Falha ao excluir dia no servidor.");
+      const ym = ymKey(currentDate); // função existente que retorna "YYYY-MM"
+      // chama API/backend que remove as datas (deve existir backendDeleteDates)
+      await backendDeleteDates(ym, [dataStr]);
 
-      // depois atualiza o local/UX:
-      delete calendarState[ym][dataStr];
-      save(LS_CAL, calendarState);
-      // garantir que não fique pendência desse dia
-      unmarkRemoval(ym, dataStr);
+      // Atualiza estado local somente após sucesso no servidor
+      if (calendarState && calendarState[ym]) {
+        delete calendarState[ym][dataStr];
+        if (Object.keys(calendarState[ym]).length === 0) {
+          delete calendarState[ym];
+        }
+        save(LS_CAL, calendarState); // persiste no localStorage
+      }
 
-      renderCalendar();
-      atualizarListaHorarios();
-      toast("Dia excluído!");
-    } catch (e) {
-      console.error(e);
-      toast("Não foi possível excluir no servidor.");
+      // garante UI consistente
+      unmarkRemoval?.(ym, dataStr); // se existir função que marca remoção
+      renderCalendar?.();
+      atualizarListaHorarios?.();
+      toast?.("Dia excluído com sucesso!");
+    } catch (err) {
+      console.error("Erro ao excluir dia:", err);
+      toast?.("Erro ao excluir o dia no servidor.");
+    } finally {
+      btnExcluir.disabled = false;
     }
   });
 

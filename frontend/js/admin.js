@@ -41,11 +41,13 @@ async function carregarAlunos() {
     if (listaAlunos.length === 0) {
       container.innerHTML = `<p class="no-data">Nenhum aluno cadastrado.</p>`;
       atualizarGrafico([]); // limpa gráfico
+      atualizarMiniDashboard([]); // limpa dashboard
       return;
     }
 
     renderizarAlunos(listaAlunos);
     atualizarGrafico(listaAlunos); // atualiza gráfico
+    atualizarMiniDashboard(listaAlunos); // atualiza mini dashboard com os dados carregados
   } catch (err) {
     console.error("Erro ao carregar alunos:", err);
     container.innerHTML = `<p class="no-data">Erro ao carregar alunos. Verifique o console.</p>`;
@@ -167,6 +169,10 @@ async function excluirAluno(alunoId) {
       );
       if (itemParaRemover) itemParaRemover.remove();
       listaAlunos = listaAlunos.filter((a) => a.id !== alunoId);
+
+      // atualiza gráfico e mini dashboard após remoção
+      atualizarGrafico(listaAlunos);
+      atualizarMiniDashboard(listaAlunos);
     } catch (error) {
       console.error("Erro ao excluir aluno:", error);
       alert("Erro ao excluir aluno: " + error.message);
@@ -176,7 +182,7 @@ async function excluirAluno(alunoId) {
 
 // ---------- FILTRO DE PESQUISA ----------
 document.getElementById("barraPesquisa").addEventListener("keyup", (e) => {
-  const termo = e.target.value.toLowerCase();
+  const termo = (e.target.value || "").toLowerCase();
   let alunosParaFiltrar = listaAlunos;
 
   if (instituicaoSelecionada) {
@@ -190,17 +196,20 @@ document.getElementById("barraPesquisa").addEventListener("keyup", (e) => {
 
   const filtrados = alunosParaFiltrar.filter(
     (aluno) =>
-      aluno.nome.toLowerCase().includes(termo) ||
-      aluno.email.toLowerCase().includes(termo) ||
-      aluno.instituicao.toLowerCase().includes(termo) ||
-      (aluno.curso && aluno.curso.toLowerCase().includes(termo))
+      (aluno.nome ?? "").toLowerCase().includes(termo) ||
+      (aluno.email ?? "").toLowerCase().includes(termo) ||
+      (aluno.instituicao ?? "").toLowerCase().includes(termo) ||
+      (aluno.curso ?? "").toLowerCase().includes(termo)
   );
   renderizarAlunos(filtrados, termo);
+  atualizarMiniDashboard(filtrados);
 });
 
 // ---------- GRÁFICO DE INSTITUIÇÕES ----------
 function atualizarGrafico(alunos) {
-  const ctx = document.getElementById("instituicoesChart").getContext("2d");
+  const canvas = document.getElementById("instituicoesChart");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
 
   const instituicoes = {};
   alunos.forEach((a) => {
@@ -257,6 +266,8 @@ function atualizarGrafico(alunos) {
               )
             : base1;
           renderizarAlunos(filtrados1, termoAtual);
+          atualizarMiniDashboard(filtrados1);
+
           chartInstituicoes.data.labels = labels;
           chartInstituicoes.data.datasets[0].data = data;
           chartInstituicoes.data.datasets[0].backgroundColor = [
@@ -281,6 +292,7 @@ function atualizarGrafico(alunos) {
               )
             : base2;
           renderizarAlunos(filtrados2, termoAtual);
+          atualizarMiniDashboard(filtrados2);
 
           const originalIndex = labels.indexOf(instituicaoClicada);
           const corSelecionada = coresOriginais[originalIndex];
@@ -298,6 +310,24 @@ function atualizarGrafico(alunos) {
       },
     },
   });
+}
+
+// ---------- MINI DASHBOARD DE ESTATÍSTICAS ----------
+function atualizarMiniDashboard(alunos) {
+  const total = alunos.length;
+  const instituicoes = new Set(alunos.map(a => (a.instituicao ?? "").trim().toLowerCase()).filter(Boolean)).size;
+  const turnoMat = alunos.filter(a => (a.turno ?? "").toLowerCase().includes("mat")).length;
+  const turnoNot = alunos.filter(a => (a.turno ?? "").toLowerCase().includes("not")).length;
+
+  const elTotal = document.getElementById("totalAlunos");
+  const elInst = document.getElementById("totalInstituicoes");
+  const elMat = document.getElementById("turnoMatutino");
+  const elNot = document.getElementById("turnoNoturno");
+
+  if (elTotal) elTotal.textContent = total;
+  if (elInst) elInst.textContent = instituicoes;
+  if (elMat) elMat.textContent = turnoMat;
+  if (elNot) elNot.textContent = turnoNot;
 }
 
 // ---------- LOGOUT ----------

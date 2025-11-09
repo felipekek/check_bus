@@ -1,63 +1,100 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Lista de Alunos</title>
-    <link rel="stylesheet" href="../css/style.css" />
-    <link rel="stylesheet" href="../css/admin.css" />
-    <link rel="stylesheet" href="../css/perfil.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/draw.css" />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lista de Alunos</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+  <link rel="stylesheet" href="../css/perfil.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/draw.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+  <!-- ===== Botão do menu lateral ===== -->
+  <button class="menu-btn" onclick="toggleMenu()">☰</button>
 
-    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+  <!-- Overlay escuro -->
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-    <div class="sidebar" id="sidebar">
-        <button onclick="location.href='home_principal.html'">Principal</button>
-        <button onclick="location.href='cadast_motorista.html'">Cadastrar Motorista</button>
-        <button onclick="location.href='seus_horarios.html'">Seus Horários</button>
-        <button onclick="location.href='horarios.html'">Lista de Horários</button>
-        <button onclick="location.href='gps.html'">Abrir GPS</button>
-        <button onclick="location.href='relatorios.html'" id="btnRelatorio">Relatório</button>
-        <button onclick="location.href='index.html'" class="logout">Sair</button>
-    </div>
+  <!-- ===== Sidebar ===== -->
+  <div class="sidebar" id="sidebar">
+    <button onclick="location.href='home_principal.html'">Principal</button>
+    <button onclick="location.href='cadast_motorista.html'">Cadastrar Motorista</button>
+    <button onclick="location.href='seus_horarios.html'">Seus Horários</button>
+    <button onclick="location.href='horarios.html'">Lista de Horários</button>
+    <button onclick="location.href='gps.html'">Abrir GPS</button>
+    <button onclick="location.href='relatorios.html'" id="btnRelatorio">Relatório</button>
+    <button onclick="location.href='index.html'" class="logout">Sair</button>
+  </div>
 
+  <!-- ===== CONTEÚDO PRINCIPAL ===== -->
+  <div class="main-dashboard">
+    <!-- ===== Lista de alunos ===== -->
     <div class="alunos-container">
-        <div class="titulo-container">
-            <h1>Lista de Alunos</h1>
-            <input 
-                type="text" 
-                id="barraPesquisa" 
-                placeholder="Pesquisar..."
-            >
-        </div>
+      <div class="titulo-container">
+        <h1>Lista de Alunos</h1>
+        <input type="text" id="barraPesquisa" placeholder="Pesquisar...">
+      </div>
 
-        <div id="accordionContainer">
-            <p class="no-data">Carregando alunos...</p>
-        </div>
+      <div class="table-header">
+        <span>Nome</span>
+        <span>Instituição</span>
+        <span>Curso</span>
+        <span>Turno</span>
+        <span>Ações</span>
+      </div>
+
+      <div id="accordionContainer">
+        <p class="no-data">Carregando alunos...</p>
+      </div>
     </div>
 
-    <section class="grafico-container card">
+    <!-- RIGHT COLUMN: estatísticas + gráfico (grafico abaixo das estatísticas) -->
+    <div class="right-column">
+      <aside class="mini-dashboard">
+        <h2><i class="fa fa-chart-line"></i> Estatísticas</h2>
+        <div class="dash-grid">
+          <div class="dash-card">
+            <h3 id="totalAlunos">0</h3>
+            <p>Total de Alunos</p>
+          </div>
+          <div class="dash-card">
+            <h3 id="totalInstituicoes">0</h3>
+            <p>Instituições Cadastradas</p>
+          </div>
+          <div class="dash-card">
+            <h3 id="turnoMatutino">0</h3>
+            <p>Turno Matutino</p>
+          </div>
+          <div class="dash-card">
+            <h3 id="turnoNoturno">0</h3>
+            <p>Turno Noturno</p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Gráfico separado (menor, mesmo tamanho do mini-dashboard) -->
+      <section class="grafico-container small">
         <h2><i class="fa fa-pie-chart"></i> Distribuição por Instituição</h2>
-        <canvas id="instituicoesChart" width="400" height="200"></canvas>
-    </section>
+        <canvas id="instituicoesChart" width="220" height="220"></canvas>
+      </section>
+    </div>
+  </div>
 
-    <button class="perfil-btn" id="btnPerfil">
-      <i class="fa fa-user"></i> Perfil
-    </button>
+  <!-- ===== Botão de Perfil ===== -->
+  <button class="perfil-btn" id="btnPerfil">
+    <i class="fa fa-user"></i> Perfil
+  </button>
 
-    <script type="module">
-        import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
+  <!-- ===== Scripts ===== -->
+  <script type="module">
+    import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
+    carregarModalPerfil();
+    document.getElementById("btnPerfil").addEventListener("click", abrirPerfil);
+  </script>
 
-        carregarModalPerfil();
-
-        const btnPerfil = document.getElementById("btnPerfil");
-        btnPerfil.addEventListener("click", abrirPerfil);
-    </script>
-    <script type="module" src="../js/admin.js"></script>
+  <script type="module" src="../js/admin.js"></script>
 </body>
 </html>

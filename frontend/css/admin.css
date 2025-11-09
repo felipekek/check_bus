@@ -1,145 +1,215 @@
+/* ===================================================
+   ADMIN.CSS — Página "Lista de Alunos"
+   Design refinado e profissional - CheckBus
+   =================================================== */
+
+body {
+  background: linear-gradient(to right, #004d7a, #008793);
+  font-family: "Inter", Arial, sans-serif;
+  color: #222;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+/* ====== LAYOUT PRINCIPAL ====== */
+.main-dashboard {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 30px;
+  flex-wrap: wrap;
+  margin-top: 80px;
+  margin-bottom: 40px;
+  padding: 0 20px;
+}
+
+/* ====== BLOCO BRANCO (Lista de Alunos) ====== */
 .alunos-container {
-    max-width: 900px;
-    margin: 40px auto;
-    background: #fff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-    color: #222;
+  flex: 0.65;
+  background: #fff;
+  padding: 35px 40px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  min-width: 600px;
+  max-width: 1000px;
 }
 
-h1 {
-    text-align: center;
-    margin-bottom: 24px;
-    color: #004d7a;
+/* ====== MINI DASHBOARD LATERAL ====== */
+.mini-dashboard {
+  flex: 0.35;
+  background: #fff;
+  border-radius: 16px;
+  padding: 25px 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  min-width: 280px;
+  max-width: 340px;
+  color: #004d7a;
+  height: fit-content;
 }
 
+.mini-dashboard h2 {
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  color: #004d7a;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 2px solid #008793;
+  padding-bottom: 10px;
+}
+
+/* Suporta ambas as classes usadas no HTML (.dash-grid e .dashboard-cards) */
+.dash-grid,
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+.dash-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: linear-gradient(135deg, #004d7a, #008793);
+  color: #fff;
+  padding: 16px 18px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.dash-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+.dash-card i {
+  font-size: 1.8rem;
+}
+
+.dash-card h3 {
+  font-size: 1.8rem;
+  margin: 0;
+  font-weight: 700;
+  color: #ffdd57;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.25);
+}
+
+.dash-card p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+/* ====== Animação de atualização ====== */
+@keyframes countPulse {
+  0% { transform: scale(1); color: #ffdd57; }
+  50% { transform: scale(1.1); color: #fff; }
+  100% { transform: scale(1); color: #ffdd57; }
+}
+.dash-card h3.updated {
+  animation: countPulse 0.6s ease;
+}
+
+/* ====== Título e Pesquisa ====== */
 .titulo-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 20px;
-    gap: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 30px;
 }
 
 .titulo-container h1 {
-    flex: 2;
-    text-align: center;
-    margin: 0;
-    color: #004d7a;
+  flex: 1;
+  font-size: 2rem;
+  color: #004d7a;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin: 0;
 }
 
-.titulo-container #barraPesquisa {
-    flex: 1;
-    max-width: 220px;
-    margin-left: 20px;
-    padding: 6px 12px;
-    font-size: 0.9rem;
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    outline: none;
-    transition: all 0.2s ease-in-out;
-    text-align: left;
+#barraPesquisa {
+  flex: 0.6;
+  min-width: 220px;
+  padding: 10px 14px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  background: #f8f9fa;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
 }
 
-/* -------------------
-   Estilos do gráfico
-   ------------------- */
-.grafico-container {
-    max-width: 880px;      /* mesmo tamanho da tabela */
-    padding: 20px;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-    margin: 40px auto 20px auto; /* espaço acima e abaixo */
-    box-sizing: border-box;
+#barraPesquisa:focus {
+  outline: none;
+  border-color: #008793;
+  box-shadow: 0 0 8px rgba(0, 135, 147, 0.4);
+  background: #fff;
 }
 
-.grafico-container h2 {
-    text-align: left;
-    margin-bottom: 20px;
+/* ====== Cabeçalho da Lista ====== */
+.table-header {
+  display: grid;
+  grid-template-columns: 1.8fr 1fr 1fr 1fr 0.3fr;
+  background: linear-gradient(90deg, #004d7a, #008793);
+  color: #fff;
+  font-weight: 600;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  padding: 12px 20px;
+  font-size: 0.95rem;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
 }
 
-#graficoCanvas, #instituicoesChart {
-    max-width: 100%;
-    height: auto;
-    display: block;
+.table-header span {
+  text-align: center;
 }
 
-
-#instituicoesChart {
-    max-width: 300px; /* largura máxima */
-    max-height: 300px; /* altura máxima */
-    margin: 0 auto; /* centraliza */
-    display: block;
+.table-header span:first-child {
+  text-align: left;
+  padding-left: 10px;
 }
 
-
-/* Aplica transição suave na tabela */
-#corpoTabelaAlunos tr {
-    transition: all 0.3s ease-in-out;
-    opacity: 1;
-}
-
-/* Quando removemos os dados antigos, podemos aplicar fade out */
-#corpoTabelaAlunos.fade-out tr {
-    opacity: 0;
-}
-
-/* Container do gráfico também pode ter fade */
-.grafico-container {
-    transition: all 0.3s ease-in-out;
-    opacity: 1;
-}
-
-.grafico-container.fade {
-    opacity: 0.3; /* leve efeito de desfoque ao atualizar */
-}
-
-/* ================================= */
-/* ESTILOS DO ACCORDION DE ALUNOS    */
-/* ================================= */
-
-/* Item do Accordion */
+/* ====== Accordion (Lista de Alunos) ====== */
 .accordion-item {
   border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  margin: 10px 0;
+  border-radius: 10px;
+  margin: 12px 0;
+  background: #fdfdfd;
   overflow: hidden;
-  background: #f9f9f9;
-  position: relative; /* necessário para o botão de excluir */
   transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
+
 .accordion-item:hover {
-    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-    border-color: #008793;
+  border-color: #008793;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Header do Accordion */
+/* ====== Cabeçalho do Accordion ====== */
 .accordion-header {
   display: flex;
   align-items: center;
-  padding: 12px 15px;
+  background: linear-gradient(90deg, #004d7a, #008793);
+  color: #fff;
+  padding: 12px 20px;
   cursor: pointer;
-  background: linear-gradient(90deg, #004d7a, #00677a);
-  color: white;
-  font-weight: bold;
+  font-weight: 600;
   position: relative;
 }
 
 .toggle-btn {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
   width: 28px;
   height: 28px;
   border-radius: 50%;
   background: #fff;
   color: #004d7a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-right: 12px;
   font-weight: bold;
-  font-size: 16px;
-  user-select: none;
   transition: transform 0.3s ease;
 }
 
@@ -147,118 +217,119 @@ h1 {
   transform: rotate(90deg);
 }
 
-/* Container flex do header: nome + resumo */
 .header-flex {
   display: flex;
   align-items: center;
   flex: 1;
   gap: 20px;
-  padding-right: 50px; /* Espaço para o botão de deletar não sobrepor o texto */
+  padding-right: 60px;
 }
 
 .aluno-nome {
+  flex: 1.5;
   text-align: left;
   font-weight: bold;
-  flex: 1.5; /* ocupa um pouco mais de espaço */
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Resumo no header */
+/* ====== Resumo ====== */
 .summary-info {
   display: flex;
-  flex: 3; /* ocupa mais espaço proporcional */
+  flex: 3;
   justify-content: space-between;
   font-size: 15px;
-  color: #e0f7fa; /* Cor ciano bem clara para melhor contraste */
-  transition: all 0.5s ease;
-  padding: 0 20px;
+  color: #dff9fb;
+  padding: 0 10px;
+  width: 100%;
 }
 
 .summary-info span {
   flex: 1;
   text-align: center;
-}
-
-.accordion-item.open .summary-info {
-  opacity: 0;
-  transform: translateY(-20px);
-  height: 0;
+  white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Conteúdo do accordion */
+/* ====== Conteúdo do Accordion ====== */
 .accordion-content {
   max-height: 0;
   opacity: 0;
   overflow: hidden;
-  transition: max-height 0.6s ease, opacity 0.6s ease, padding 0.3s ease;
+  transition: all 0.5s ease;
+  background: #fff;
   padding: 0 15px;
   display: flex;
   gap: 30px;
-  background: #fff;
 }
 
 .accordion-item.open .accordion-content {
-  max-height: 600px;
+  max-height: 650px;
   opacity: 1;
   padding: 20px 15px;
 }
 
-/* Coluna esquerda: informações */
+/* ====== Infos e Horários ====== */
 .info-grid {
   flex: 2;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px 30px;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 15px 25px;
 }
 
 .info-item {
   background: #f8f9fa;
   padding: 10px;
   border-radius: 6px;
-  border-left: 3px solid #008793;
+  border-left: 4px solid #008793;
 }
 
 .info-item strong {
+  color: #004d7a;
   display: block;
   margin-bottom: 4px;
-  color: #004d7a;
 }
 
-/* Coluna direita: horários */
 .horarios {
-  flex: 1;
+  flex: 1.1;
 }
 
 .horarios h3 {
-  margin-top: 0;
-  margin-bottom: 10px;
   color: #004d7a;
   text-align: center;
+  margin-bottom: 10px;
 }
 
-/* Tabela de horários dentro do accordion */
 .horarios table {
   width: 100%;
   border-collapse: collapse;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
 }
-.horarios th, .horarios td {
+
+.horarios th,
+.horarios td {
   padding: 8px;
   text-align: center;
   border-bottom: 1px solid #eee;
   font-size: 14px;
 }
+
 .horarios th {
   background: linear-gradient(90deg, #004d7a, #008793);
   color: white;
   font-weight: 600;
 }
 
-
-/* Botão de excluir */
+/* ====== Botão de Excluir ====== */
 .delete-btn {
+  position: absolute;
+  top: 8px;
+  right: 12px;
   background: #e74c3c;
   border: none;
   border-radius: 6px;
@@ -273,27 +344,101 @@ h1 {
 
 .delete-btn:hover {
   background: #c0392b;
-  transform: translateY(-10%) scale(1.1);
+  transform: scale(1.1);
 }
 
-/* Estilos para o ícone SVG da lixeira dentro do botão */
-.delete-btn svg path,
-.delete-btn svg line {
-    stroke: white;    /* cor branca */
-    stroke-width: 2;  /* espessura consistente */
-    stroke-linecap: round;
-    stroke-linejoin: round;
+/* ====== Gráfico (versão grande — mantida para outras páginas) ====== */
+.grafico-container {
+  max-width: 1200px;
+  padding: 25px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  margin: 20px auto 40px auto;
+  transition: all 0.3s ease-in-out;
 }
 
-/* Destaque para ocorrências da busca */
-mark.hl {
-  background: #ffe08a;      /* amarelinho */
-  padding: 0 2px;
-  border-radius: 3px;
+.grafico-container h2 {
+  text-align: left;
+  color: #004d7a;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-/* No cabeçalho (fundo escuro), trocamos a cor do texto pra manter contraste */
-.accordion-header mark.hl {
-  background: #53fade;
-  color: #002b36;
+/* canvas padrão (para a versão grande) */
+.grafico-container #instituicoesChart {
+  max-width: 300px;
+  max-height: 300px;
+  margin: 0 auto;
+  display: block;
+}
+
+/* ====== Gráfico pequeno (igual largura do mini-dashboard) ====== */
+.grafico-container.small {
+  max-width: 100%; /* usar a largura da coluna direita */
+  padding: 16px;
+  margin: 0; /* já posicionado pela coluna direita */
+  box-sizing: border-box;
+}
+
+.grafico-container.small h2 {
+  font-size: 1rem;
+  margin-bottom: 12px;
+  color: #004d7a;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.grafico-container.small #instituicoesChart {
+  max-width: 220px;
+  max-height: 220px;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+}
+
+/* ====== RIGHT COLUMN: agrupa mini-dashboard + gráfico (stack vertical) */
+.right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  flex: 0.35;
+  min-width: 280px;
+  max-width: 340px;
+  align-items: stretch;
+  margin-top: 0; /* mantém alinhamento com .alunos-container */
+}
+
+/* ====== Responsividade ====== */
+@media (max-width: 992px) {
+  .main-dashboard {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .alunos-container, .mini-dashboard {
+    width: 90%;
+    max-width: 800px;
+  }
+
+  .mini-dashboard {
+    order: -1;
+  }
+
+  .table-header {
+    display: none;
+  }
+
+  .titulo-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  #barraPesquisa {
+    width: 100%;
+  }
 }
