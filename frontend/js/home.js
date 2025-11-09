@@ -36,8 +36,7 @@ onAuthStateChanged(auth, async (user) => {
 
   const defaultButtons = [
     { icon: 'fa-clock', text: 'Horários', href: 'horarios.html', tipo: 'todos' },
-    { icon: 'fa-location-dot', text: 'GPS', href: 'gps.html', tipo: 'todos' },
-    { icon: 'fa-calendar-days', text: 'Seus Horários', href: 'seus_horarios.html', tipo: 'aluno' }
+    { icon: 'fa-location-dot', text: 'GPS', href: 'gps.html', tipo: 'todos' }
   ];
 
   const adminButtons = [
