@@ -1,0 +1,323 @@
+:root {
+  --prim: #0d6efd;
+  --ok: #1b9e4b;
+  --warn: #e03131;
+  --bg: #f6f8fb;
+  --card: #fff;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font: 14px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  /* não sobrescrever o fundo global: herda o background do ../css/style.css */
+  background: inherit;
+  color: #0c2437;
+}
+
+/* Ajustes do Header */
+header {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 25px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+header h1 {
+  margin: 0 0 20px 0;
+  color: #004d7a;
+  font-size: 1.8rem;
+}
+
+main {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.legend {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 15px;
+  background: #f8f9fa;
+  border-radius: 50px;
+  font-size: 0.9rem;
+}
+
+/* Indicadores de estado (dots) */
+.dot { width: 12px; height: 12px; border-radius: 50%; }
+.dot.available { 
+    background: #dff6e4; 
+    border: 1px solid #1b9e4b; 
+}
+.dot.no-bus { 
+    background: #ffe5e5;  /* Vermelho mais suave */
+    border: 1px solid #ff4d4d; 
+}
+.dot.going { 
+    background: #d7e8ff; 
+    border: 1px solid #0d6efd; 
+}
+
+/* Estados das células do calendário */
+.day {
+  text-align: center;
+  padding: 10px 0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  border: 1px solid #e5e9f2;
+  user-select: none;
+  transition: all 0.2s ease;
+}
+
+.day.available { 
+  background: #dff6e4; 
+  color: #145c2c; 
+  border-color: #bfe9c8; 
+}
+
+.day.no_bus,
+.day.no-bus { 
+  background: #ffe5e5;
+  color: #cc3333;
+  border-color: #ffd1d1; 
+}
+
+.day.going { 
+  background: #d7e8ff; 
+  color: #0d6efd; 
+  border-color: #b5d4ff; 
+}
+
+/* Indicadores (dots) na legenda */
+.dot.available { 
+  background: #dff6e4; 
+  border: 1px solid #1b9e4b; 
+}
+
+.dot.no_bus,
+.dot.no-bus { 
+  background: #ffe5e5;
+  border: 1px solid #ff4d4d; 
+}
+
+.dot.going { 
+  background: #d7e8ff; 
+  border: 1px solid #0d6efd; 
+}
+
+.calendar-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.calendar-nav button {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #004d7a;
+  background: #004d7a;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.calendar-nav button:hover {
+  background: #008793;
+  border-color: #008793;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.dow { text-align: center; font-weight: 600; color: #4a667d; padding: 6px 0; font-size: 12px; }
+
+.day {
+  text-align: center;
+  padding: 10px 0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  border: 1px solid #e5e9f2;
+  user-select: none;
+}
+.day.available { background: #dff6e4; color: #145c2c; border-color: #bfe9c8; }
+.day.no-bus { background: #ffe5e5;  /* Vermelho mais suave */
+    color: #cc3333;      /* Texto em vermelho mais escuro para legibilidade */
+    border-color: #ffd1d1; }
+.day.locked { opacity: .7; cursor: not-allowed; }
+
+.tools .row { margin-bottom: 8px; }
+.tools label { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+
+input[type="time"], select, input[type="text"], input[type="number"] {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #d9e1ea;
+  background: #fff;
+}
+
+.btn {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #004d7a;
+  background: #004d7a;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  background: #008793;
+  border-color: #008793;
+  transform: translateY(-1px);
+}
+
+/* Botão primário (destacado) */
+.btn.primary { 
+  background: #008793; 
+  color: #fff; 
+  border-color: #008793; 
+}
+
+.btn.primary:hover { 
+  background: #006d75;
+  border-color: #006d75;
+}
+
+/* Botão de perigo/exclusão */
+.btn.danger { 
+  background: #e03131; 
+  color: #fff; 
+  border-color: #e03131; 
+}
+
+.btn.danger:hover { 
+  background: #c42b2b;
+  border-color: #c42b2b;
+}
+
+.table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+.table th { text-align: left; font-size: 12px; color: #4a667d; }
+.table td, .table th { padding: 6px 8px; }
+.rowcard { background: #f5f9ff; border: 1px solid #e0ecff; border-radius: 10px; }
+
+/* Ajustes do Modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.modal-content {
+  background: #fff;
+  margin: 8% auto;
+  padding: 25px;
+  border-radius: 12px;
+  width: 50%;
+  max-width: 500px;
+  position: relative;
+}
+
+.perfil-card {
+  margin: 20px 0;
+  background: #f8f9fa;
+  padding: 16px;
+  border-radius: 12px;
+}
+
+.perfil-modal-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.perfil-modal-buttons .btn {
+  flex: 1;
+  padding: 12px;
+}
+
+/* Estilo para os checkboxes de dias da semana */
+.dias-semana {
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #d9e1ea;
+}
+
+.dias-semana-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  width: 100%;
+}
+
+.dias-semana-header span {
+  font-size: 0.9rem;
+  color: #004d7a;
+}
+
+.btn-small {
+  padding: 4px 8px;
+  font-size: 0.85rem;
+}
+
+.dias-semana label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
+  background: #fff;
+  border: 1px solid #e0e4e8;
+}
+
+.dias-semana label:hover {
+  background: #f0f4f8;
+}
+
+.dias-semana label.selected {
+  background: #e0f1ff;
+  border-color: #b8d9ff;
+}
+
+@media (max-width: 900px) {
+  main { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  main {
+    grid-template-columns: 1fr;
+  }
+  
+  header, main {
+    margin: 15px;
+  }
+}

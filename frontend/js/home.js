@@ -34,8 +34,11 @@ onAuthStateChanged(auth, async (user) => {
   const tipoUsuario = localStorage.getItem("tipoUsuario") || "aluno";
   grid.innerHTML = "";
 
+  // ajusta destino de "Horários" se o usuário for admin
+  const horarioHref = tipoUsuario === "admin" ? "adm-lista-de-horarios.html" : "horarios.html";
+
   const defaultButtons = [
-    { icon: 'fa-clock', text: 'Horários', href: 'horarios.html', tipo: 'todos' },
+    { icon: 'fa-clock', text: 'Horários', href: horarioHref, tipo: 'todos' },
     { icon: 'fa-location-dot', text: 'GPS', href: 'gps.html', tipo: 'todos' }
   ];
 
@@ -43,7 +46,6 @@ onAuthStateChanged(auth, async (user) => {
     { icon: 'fa-book-open', text: 'Relatórios', href: 'relatorios.html', tipo: 'admin' },
     { icon: 'fa-users', text: 'Lista de Alunos', href: 'admin.html', tipo: 'admin' },
     { icon: 'fa-user-plus', text: 'Cadastrar Motorista', href: 'cadast_motorista.html', tipo: 'admin' },
-    // ✅ Botão de Respostas Feedback dentro do grid
     { icon: 'fa-star', text: 'Respostas Feedback', href: 'respostas_feedback.html', tipo: 'admin' }
   ];
 
