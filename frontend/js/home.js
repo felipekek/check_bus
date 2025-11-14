@@ -42,14 +42,26 @@ onAuthStateChanged(auth, async (user) => {
     { icon: 'fa-location-dot', text: 'GPS', href: 'gps.html', tipo: 'todos' }
   ];
 
-  const adminButtons = [
-    { icon: 'fa-book-open', text: 'Relatórios', href: 'relatorios.html', tipo: 'admin' },
-    { icon: 'fa-users', text: 'Lista de Alunos', href: 'admin.html', tipo: 'admin' },
-    { icon: 'fa-user-plus', text: 'Cadastrar Motorista', href: 'cadast_motorista.html', tipo: 'admin' },
-    { icon: 'fa-star', text: 'Respostas Feedback', href: 'respostas_feedback.html', tipo: 'admin' }
+  // BOTÕES EXCLUSIVOS DO ALUNO
+  const alunoButtons = [
+    { icon: 'fa-bell', text: 'Notificações', href: 'notificacoes.html', tipo: 'aluno' },
+    { icon: 'fa-clock-rotate-left', text: 'Histórico de Embarque', href: 'historico.html', tipo: 'aluno' },
+    { icon: 'fa-circle-question', text: 'FAQ', href: 'faq.html', tipo: 'aluno' }
   ];
 
-  const allButtons = [...defaultButtons, ...adminButtons];
+
+ // BOTÕES DO ADMIN – AGORA COMPLETO
+const adminButtons = [
+  { icon: 'fa-book-open', text: 'Relatórios', href: 'relatorios.html', tipo: 'admin' },
+  { icon: 'fa-users', text: 'Lista de Alunos', href: 'admin.html', tipo: 'admin' },
+  { icon: 'fa-user-plus', text: 'Cadastrar Motorista', href: 'cadast_motorista.html', tipo: 'admin' },
+  { icon: 'fa-bus', text: 'Cadastrar Ônibus', href: 'cadastro_onibus.html', tipo: 'admin' },
+  { icon: 'fa-sitemap', text: 'Ônibus & Motorista', href: 'gestao.html', tipo: 'admin' },
+  { icon: 'fa-bullhorn', text: 'Avisos', href: 'avisos.html', tipo: 'admin' },
+  { icon: 'fa-star', text: 'Respostas Feedback', href: 'respostas_feedback.html', tipo: 'admin' }
+];
+
+const allButtons = [...defaultButtons, ...adminButtons, ...alunoButtons];
 
   allButtons.forEach(btn => {
     if (btn.tipo === 'todos' || btn.tipo === tipoUsuario) {

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadastro de Ônibus - CheckBus</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+  <link rel="stylesheet" href="../css/perfil.css" />
+  <link rel="stylesheet" href="../css/draw.css" />
+  <link rel="stylesheet" href="../css/cadastro_onibus.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+  <div class="sidebar" id="sidebar">
+    <button onclick="location.href='home_principal.html'">🏠 Principal</button>
+    <button onclick="location.href='relatorios.html'">📑 Relatórios</button>
+    <button onclick="location.href='admin.html'">👥 Lista de Alunos</button>
+    <button onclick="location.href='gps.html'">🗺️ GPS</button>
+    <button onclick="location.href='index.html'" class="logout">🚪 Sair</button>
+  </div>
+
+  <div class="background-gradient"></div>
+
+  <main class="form-container fade-in">
+    <h1><i class="fa-solid fa-bus"></i> Cadastro de Ônibus</h1>
+    <p class="subtitle">Preencha os dados abaixo para cadastrar um novo ônibus no sistema CheckBus.</p>
+
+    <form id="formOnibus" class="grid-photo">
+
+      <!-- CARD DA FOTO -->
+      <section class="card photo-card slide-left">
+        <h2><i class="fa-solid fa-image"></i> Foto do Ônibus</h2>
+
+        <div class="photo-preview-box">
+          <img id="previewFoto" src="../imagens/placeholder_bus.png" alt="Prévia da Foto">
+        </div>
+
+        <label class="upload-btn">
+            <input type="file" id="fotoOnibus" accept="image/*">
+            Selecionar Imagem
+        </label>
+
+        <button type="button" id="btnRemoverFoto" class="remove-btn">
+        Remover Imagem
+        </button>
+
+      </section>
+
+      <!-- CARD DOS DADOS -->
+      <section class="card slide-up">
+        <h2><i class="fa-solid fa-info-circle"></i> Dados do Ônibus</h2>
+
+        <div class="grid-2">
+
+          <div>
+            <label for="numero">Número do Ônibus</label>
+            <input type="text" id="numero" placeholder="Ex: 01" required />
+          </div>
+
+          <div>
+            <label for="placa">Placa</label>
+            <input type="text" id="placa" placeholder="ABC-1234" required />
+          </div>
+
+          <div>
+            <label for="modelo">Modelo / Marca</label>
+            <input type="text" id="modelo" placeholder="Ex: Marcopolo Torino" required />
+          </div>
+
+          <div>
+            <label for="ano">Ano</label>
+            <input type="number" id="ano" min="2000" max="2090" placeholder="Ex: 2020" required />
+          </div>
+
+          <div>
+            <label for="capacidade">Capacidade (lugares)</label>
+            <input type="number" id="capacidade" placeholder="Ex: 44" required />
+          </div>
+
+          <div>
+            <label for="tipo">Tipo do Ônibus</label>
+            <select id="tipo" required>
+              <option value="">Selecione</option>
+              <option value="Convencional">Convencional</option>
+              <option value="Executivo">Executivo</option>
+              <option value="Micro-ônibus">Micro-ônibus</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="status">Status</label>
+            <select id="status" required>
+              <option value="Ativo">Ativo</option>
+              <option value="Em Manutenção">Em Manutenção</option>
+              <option value="Inativo">Inativo</option>
+            </select>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- OBSERVAÇÕES -->
+      <section class="card slide-up full-row">
+        <h2><i class="fa-solid fa-notes-medical"></i> Observações</h2>
+        <textarea id="observacoes" placeholder="Opcional: Informações adicionais sobre o ônibus"></textarea>
+      </section>
+
+      <button type="submit" class="btn-submit full-row">
+        <i class="fa-solid fa-check"></i> Cadastrar Ônibus
+      </button>
+
+    </form>
+  </main>
+
+  <script type="module" src="../js/cadastro_onibus.js"></script>
+
+  <script>
+    window.toggleMenu = function () {
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
+      const menuBtn = document.querySelector(".menu-btn");
+      sidebar.classList.toggle("active");
+      overlay.classList.toggle("active");
+      menuBtn.classList.toggle("hidden");
+    };
+  </script>
+
+</body>
+</html>
