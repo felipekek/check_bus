@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avisos - ADM</title>
+
+  <link rel="stylesheet" href="../css/avisos.css">
+  <link rel="stylesheet" href="../css/draw.css">
+</head>
+
+<body>
+
+  <!-- BOTÃO MENU -->
+  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+  <!-- DRAWER LATERAL -->
+  <div class="sidebar" id="sidebar">
+    <button onclick="location.href='home_principal.html'">Principal</button>
+    <button onclick="location.href='cadastro_motorista.html'">Cadastro Motorista</button>
+    <button onclick="location.href='cadastro_onibus.html'">Cadastro Ônibus</button>
+    <button onclick="location.href='avisos.html'">Avisos</button>
+    <button onclick="location.href='index.html'" class="logout">Sair</button>
+  </div>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <div class="page-container">
+
+    <h1 class="titulo">Sistema de Avisos</h1>
+
+    <!-- GRID LADO ESQUERDO / DIREITO -->
+    <div class="layout-grid">
+
+      <!-- =============================================== -->
+      <!-- BLOCO ESQUERDA – CRIAR AVISO PERSONALIZADO -->
+      <!-- =============================================== -->
+      <div class="card bloco bloco-esquerda">
+        <h2>Criar Aviso Personalizado</h2>
+
+        <form id="formAviso" class="form-aviso">
+
+          <div class="form-grupo">
+            <label for="tituloAviso">Título do aviso</label>
+            <input
+              id="tituloAviso"
+              type="text"
+              placeholder="Digite um título claro e objetivo..."
+              required
+              class="input-campo"
+            >
+          </div>
+
+          <div class="form-grupo">
+            <label for="mensagemAviso">Mensagem detalhada</label>
+            <textarea
+              id="mensagemAviso"
+              placeholder="Descreva a mensagem que será enviada aos alunos..."
+              required
+              class="textarea-campo"
+            ></textarea>
+          </div>
+
+          <button type="submit" class="btn-submit btn-enviar-aviso">
+            Enviar Aviso
+          </button>
+
+        </form>
+      </div>
+
+
+      <!-- =============================================== -->
+      <!-- BLOCO DIREITA – TURNOS + AVISOS PRÉ-PROGRAMADOS -->
+      <!-- =============================================== -->
+      <div class="card bloco bloco-direita">
+
+        <!-- TURNOS -->
+        <h2>Enviar Para</h2>
+
+        <div class="checkbox-container">
+
+          <label>
+            <input type="checkbox" class="turno-check" value="manha">
+            Manhã
+          </label>
+
+          <label>
+            <input type="checkbox" class="turno-check" value="tarde">
+            Tarde
+          </label>
+
+          <label>
+            <input type="checkbox" class="turno-check" value="noite">
+            Noite
+          </label>
+
+          <label>
+            <input type="checkbox" class="turno-check" value="todos">
+            Todos
+          </label>
+
+        </div>
+
+        <hr class="divisor">
+
+        <!-- AVISOS PRÉ-PROGRAMADOS -->
+        <h2>Avisos Pré-Programados</h2>
+
+        <div class="checkbox-container">
+
+          <label>
+            <input type="checkbox" class="predef-check"
+                   data-msg="O ônibus está em manutenção e não funcionará hoje.">
+            🛠 Manutenção
+          </label>
+
+          <label>
+            <input type="checkbox" class="predef-check"
+                   data-msg="O ônibus irá atrasar cerca de 5 minutos.">
+            ⏱ Atraso de 5 min
+          </label>
+
+          <label>
+            <input type="checkbox" class="predef-check"
+                   data-msg="O trajeto foi alterado momentaneamente.">
+            🔄 Mudança de trajeto
+          </label>
+
+          <label>
+            <input type="checkbox" class="predef-check"
+                   data-msg="O ônibus chegou ao ponto inicial.">
+            🚌 Chegada ao ponto
+          </label>
+
+        </div>
+
+        <button id="btnEnviarPredef" class="btn-submit">
+          Enviar Avisos Selecionados
+        </button>
+
+      </div>
+
+    </div> <!-- fim layout grid -->
+
+
+    <!-- =============================================== -->
+<!-- LISTA DE AVISOS ENVIADOS -->
+<!-- =============================================== -->
+<div class="card bloco tabela-bloco">
+
+  <div class="table-header">
+    <h2>Avisos Enviados</h2>
+
+    <input 
+      id="pesquisarAvisos" 
+      type="text" 
+      placeholder="Pesquisar..."
+      class="input-pesquisa"
+    >
+  </div>
+
+  <div class="tabela-wrapper">
+    <table class="tabela">
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>Turno</th>
+          <th>Data</th>
+          <th>Ação</th>
+        </tr>
+      </thead>
+
+      <tbody id="listaAvisos">
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+
+  </div> <!-- fim page container -->
+
+
+  <!-- SCRIPT DO DRAWER -->
+  <script>
+    window.toggleMenu = function () {
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
+      const btn = document.querySelector(".menu-btn");
+
+      sidebar.classList.toggle("active");
+      overlay.classList.toggle("active");
+      btn.classList.toggle("hidden");
+    };
+  </script>
+
+  <!-- SCRIPT PRINCIPAL -->
+  <script type="module" src="../js/avisos.js"></script>
+
+</body>
+
+</html>

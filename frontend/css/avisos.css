@@ -1,0 +1,359 @@
+/* =============================
+   FUNDO CHECKBUS
+============================= */
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(to right, #004d7a, #008793);
+  background-attachment: fixed;
+  color: #fff;
+}
+
+/* =============================
+   CONTAINER
+============================= */
+.page-container {
+  width: 95%;
+  max-width: 1300px;
+  margin: 50px auto;
+}
+
+.titulo {
+  text-align: center;
+  font-size: 2.3rem;
+  margin-bottom: 40px;
+  font-weight: 700;
+}
+
+/* =============================
+   LAYOUT EM DUAS COLUNAS
+============================= */
+.layout-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+}
+
+@media (max-width: 900px) {
+  .layout-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =============================
+   CARDS
+============================= */
+.card {
+  background: #ffffffee;
+  padding: 25px;
+  border-radius: 15px;
+  color: #004d7a;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+}
+
+/* =============================
+   CHECKBOXES
+============================= */
+.checkbox-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.checkbox-container label {
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  gap: 10px;
+}
+
+/* LINHA DIVISÓRIA */
+.divisor {
+  border: none;
+  border-top: 2px solid #ccc;
+  margin: 25px 0;
+}
+
+/* =============================
+   BOTÃO
+============================= */
+.btn-submit {
+  margin-top: 20px;
+  padding: 13px;
+  width: 100%;
+  border: none;
+  background: #004d7a;
+  color: #fff;
+  font-weight: 700;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.btn-submit:hover {
+  background: #055366;
+}
+
+/* =============================
+   TABELA
+============================= */
+.tabela-bloco {
+  margin-top: 40px;
+}
+
+.tabela {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabela th {
+  background: #007a99;
+  color: #fff;
+  padding: 14px;
+}
+
+.tabela td {
+  padding: 12px;
+  border-bottom: 2px solid #eee;
+  background: #ffffffd9;
+}
+
+.btn-delete {
+  padding: 7px 12px;
+  background: #c33;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-delete:hover {
+  background: #a00;
+}
+
+/* =============================
+   FORMULÁRIO DE AVISO PERSONALIZADO
+============================= */
+
+.form-aviso {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-grupo {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-grupo label {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.input-campo,
+.textarea-campo {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 2px solid #d7d7d7;
+  background: #ffffff;
+  font-size: 15px;
+  color: #004d7a;
+  transition: all .25s ease;
+}
+
+.input-campo:focus,
+.textarea-campo:focus {
+  border-color: #00bf72;
+  background: #f3fffa;
+  outline: none;
+}
+
+.textarea-campo {
+  height: 150px;
+  resize: none;
+}
+
+.btn-enviar-aviso {
+  margin-top: 10px;
+}
+
+/* ======= CORREÇÃO DO ESTOURO DO BLOCO ======= */
+
+.card {
+  box-sizing: border-box;
+}
+
+.input-campo,
+.textarea-campo {
+  max-width: 100%;
+  box-sizing: border-box; /* impede estourar */
+  display: block;
+}
+
+.form-aviso {
+  padding-right: 5px; /* evita que o conteúdo grude no limite do card */
+}
+
+.bloco-esquerda {
+  overflow: hidden; /* garante que nada vaze do card */
+}
+
+/* ================================================
+   CABEÇALHO DA TABELA (TÍTULO + PESQUISA)
+================================================ */
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.input-pesquisa {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 2px solid #d0d0d0;
+  background: #fff;
+  font-size: 14px;
+  width: 240px;
+  color: #004d7a;
+  transition: 0.2s;
+}
+
+.input-pesquisa:focus {
+  border-color: #00bf72;
+  background: #f3fffa;
+  outline: none;
+}
+
+
+/* ================================================
+   TABELA PROFISSIONAL
+================================================ */
+.tabela-wrapper {
+  overflow-x: auto;
+}
+
+.tabela {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.tabela thead {
+  background: linear-gradient(to right, #004d7a, #007a99);
+}
+
+.tabela th {
+  padding: 14px;
+  color: #fff;
+  font-weight: 600;
+  text-align: left;
+}
+
+.tabela td {
+  padding: 14px;
+  background: #ffffffc5;
+  border-bottom: 2px solid #e8e8e8;
+  transition: 0.2s;
+}
+
+/* Efeito hover profissional */
+.tabela tbody tr:hover td {
+  background: #eaf6ff;
+}
+
+/* Botão Excluir mais moderno */
+.btn-delete {
+  padding: 8px 14px;
+  border: none;
+  background: #d9534f;
+  color: #fff;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-delete:hover {
+  background: #b52b27;
+}
+
+/* ============================
+   ACCORDION NA TABELA
+============================ */
+
+.accordion-row {
+  display: none;
+  background: #f8fbff;
+}
+
+.accordion-row.open {
+  display: table-row;
+}
+
+.accordion-content {
+  padding: 14px;
+  background: #ffffff;
+  border-left: 4px solid #007a99;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px #0001;
+}
+
+.accordion-content h4 {
+  margin: 0;
+  color: #004d7a;
+  font-size: 18px;
+}
+
+.accordion-content p {
+  margin: 8px 0 0;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+/* ========================================================
+   CORREÇÃO DO ACCORDION (VISÍVEL NA TABELA)
+======================================================= */
+
+.accordion-row {
+  display: none;
+}
+
+.accordion-row.open {
+  display: table-row;
+}
+
+/* Fundo visível e com contraste */
+.accordion-content {
+  background: #e9f6ff;              /* azul clarinho visível */
+  padding: 16px;
+  border-left: 5px solid #007a99;   /* barra azul profissional */
+  border-radius: 6px;
+  box-shadow: inset 0 0 8px #0002;  /* leve sombra interna */
+}
+
+/* Título do accordion */
+.accordion-content h4 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  color: #004d7a;                    /* azul escuro */
+  font-weight: 700;
+}
+
+/* Texto da mensagem */
+.accordion-content p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #003b5c;
+}
+
+/* Deixar a célula que contém o accordion sem bordas conflitantes */
+.accordion-row td {
+  background: #e9f6ff !important;
+  border-bottom: none !important;
+}

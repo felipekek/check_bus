@@ -18,17 +18,17 @@
 </head>
 <body>
   <button class="menu-btn" onclick="toggleMenu()">☰</button>
-
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-  <div class="sidebar" id="sidebar">
+  <!-- Drawer/Sidebar atualizado (corrigido para ADM) -->
+  <nav class="sidebar" id="sidebar">
     <button onclick="location.href='home_principal.html'">Principal</button>
-    <button onclick="location.href='horarios.html'">Lista de Horários</button>
-    <button onclick="location.href='gps.html'">Abrir GPS</button>
-    <button onclick="location.href='relatorios.html'" id="btnRelatorio">Relatório</button>
-    <button onclick="location.href='admin.html'" id="btnAlunos">Lista de Alunos</button>
-    <button onclick="logout()" class="logout">Sair</button>
-  </div>
+    <button onclick="location.href='horarios.html'">Horários</button>
+    <button id="btnRelatorio" onclick="location.href='relatorios.html'">Relatórios</button>
+    <button id="btnAlunos" onclick="location.href='admin.html'">Lista de Alunos</button>
+    <button onclick="location.href='cadastro_onibus.html'">Cadastrar Ônibus</button>
+    <button onclick="location.href='index.html'" class="logout">Sair</button>
+  </nav>
 
   <div class="main-content">
     <h1>Localização do Ônibus</h1>
