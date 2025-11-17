@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notificações - CheckBus</title>
+
+  <link rel="stylesheet" href="../css/notificacoes.css">
+  <link rel="stylesheet" href="../css/draw.css">
+</head>
+
+<body>
+
+  <!-- Botão do menu lateral -->
+  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+  <!-- Menu lateral (drawer) -->
+  <div class="sidebar" id="sidebar">
+    <button onclick="location.href='home_principal.html'">Principal</button>
+    <button onclick="location.href='horarios.html'">Lista de Horários</button>
+    <button onclick="location.href='gps.html'">GPS</button>
+    <button onclick="location.href='notificacoes.html'">Notificações</button>
+    <button onclick="location.href='index.html'" class="logout">Sair</button>
+  </div>
+
+  <!-- Conteúdo principal -->
+  <div class="page-container">
+
+    <h1 class="titulo-pagina">Notificações</h1>
+    <p class="subtitulo">
+      Aqui você acompanha avisos importantes do sistema e o status do ônibus para o seu turno.
+    </p>
+
+    <div class="notificacoes-grid">
+
+      <!-- COLUNA ESQUERDA: Avisos do sistema -->
+      <section class="card painel-avisos">
+        <div class="card-header">
+          <h2>Avisos do Sistema</h2>
+          <span id="badgeTurno" class="badge-turno">Turno: --</span>
+        </div>
+
+        <div class="search-wrapper">
+          <input
+            type="text"
+            id="buscaAvisosAluno"
+            placeholder="Pesquisar avisos..."
+          >
+        </div>
+
+        <div id="listaAvisosAluno" class="lista-avisos">
+          <!-- Avisos serão carregados aqui via JS -->
+          <p class="mensagem-vazia" id="msgSemAvisos">
+            Nenhum aviso encontrado para o seu turno.
+          </p>
+        </div>
+      </section>
+
+      <!-- COLUNA DIREITA: Notificações do ônibus -->
+      <section class="card painel-onibus">
+        <div class="card-header">
+          <h2>Status do Ônibus</h2>
+        </div>
+
+        <div class="status-onibus-info">
+          <p class="status-titulo">Próxima chegada</p>
+          <p id="statusOnibusMensagem" class="status-mensagem">
+            Ainda não há notificações de chegada para o seu turno.
+          </p>
+        </div>
+
+        <div class="status-onibus-detalhes">
+          <div class="status-box">
+            <span class="status-label">Tempo estimado</span>
+            <span id="tempoEstimado" class="status-valor">--</span>
+          </div>
+          <div class="status-box">
+            <span class="status-label">Distância aproximada</span>
+            <span id="distanciaAproximada" class="status-valor">--</span>
+          </div>
+        </div>
+
+        <p class="status-observacao">
+          Assim que o sistema de GPS estiver integrado, você receberá aqui
+          notificações em tempo real, como <strong>"o ônibus chegará em 5 minutos"</strong>
+          ou <strong>"o ônibus está a 500 metros de distância"</strong>.
+        </p>
+      </section>
+
+    </div>
+
+  </div>
+
+  <!-- Script do menu lateral -->
+  <script>
+    window.toggleMenu = function () {
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
+      const btn = document.querySelector(".menu-btn");
+
+      sidebar.classList.toggle("active");
+      overlay.classList.toggle("active");
+      btn.classList.toggle("hidden");
+    };
+  </script>
+
+  <!-- Script principal da página -->
+  <script type="module" src="../js/notificacoes.js"></script>
+
+</body>
+
+</html>

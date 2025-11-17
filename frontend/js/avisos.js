@@ -22,15 +22,24 @@ function getTurnos() {
 }
 
 
+function normalizeTurno(s) {
+  return String(s || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
+}
+
+
 /* ===========================================================
    ENVIAR AVISO (UM PARA CADA TURNO)
 =========================================================== */
 async function enviarAviso(titulo, mensagem, turnos) {
   for (let t of turnos) {
+    const turnoNorm = normalizeTurno(t);
     await addDoc(collection(db, "avisos"), {
       titulo,
       mensagem,
-      turno: t,
+      turno: turnoNorm,
       tipo: "personalizado",
       dataEnvio: serverTimestamp()
     });
