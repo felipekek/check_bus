@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - CheckBus</title>
+
+    <link rel="stylesheet" href="../css/faq.css">
+    <link rel="stylesheet" href="../css/draw.css">
+    <link rel="stylesheet" href="../css/perfil.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<!-- ================================ -->
+<!-- BOTÃO DO MENU + OVERLAY + DRAWER -->
+<!-- ================================ -->
+<button class="menu-btn" onclick="toggleMenu()">☰</button>
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<div class="sidebar" id="sidebar">
+    <button onclick="location.href='home_principal.html'">Principal</button>
+    <button onclick="location.href='horarios.html'">Lista de Horários</button>
+    <button onclick="location.href='gps.html'">GPS</button>
+    <button onclick="location.href='notificacoes.html'">Notificações</button>
+    <button onclick="location.href='faq.html'">FAQ</button>
+    <button onclick="location.href='index.html'" class="logout">Sair</button>
+</div>
+
+<!-- ================================ -->
+<!-- BOTÃO PERFIL (FUNCIONA COM perfil.js) -->
+<!-- ================================ -->
+<button class="perfil-btn" id="btnPerfil">
+    <i class="fa-solid fa-user"></i> Perfil
+</button>
+
+<!-- ================================ -->
+<!-- CONTEÚDO DO FAQ -->
+<!-- ================================ -->
+<div class="page-container">
+
+    <h1 class="titulo">FAQ - Perguntas Frequentes</h1>
+    <p class="subtitulo">Veja respostas rápidas sobre as páginas e funções do CheckBus.</p>
+
+    <div class="faq-container">
+
+        <!-- HOME -->
+        <div class="faq-item">
+            <button class="faq-question">
+                <span><i class="fa-solid fa-house"></i> O que encontro na página principal?</span>
+            </button>
+            <div class="faq-answer">
+                <p>A página principal reúne atalhos essenciais: horários, notificações, GPS e perfil. Ela foi projetada para acesso rápido e simples.</p>
+            </div>
+        </div>
+
+        <!-- Turno -->
+        <div class="faq-item">
+            <button class="faq-question">
+                <span><i class="fa-solid fa-sun"></i> Por que aparece meu turno na tela inicial?</span>
+            </button>
+            <div class="faq-answer">
+                <p>Seu turno organiza automaticamente todos os horários e avisos personalizados para o seu período (manhã, tarde ou noite).</p>
+            </div>
+        </div>
+
+        <!-- HORÁRIOS -->
+        <div class="faq-item">
+            <button class="faq-question">
+                <span><i class="fa-solid fa-clock"></i> Como vejo os horários do meu turno?</span>
+            </button>
+            <div class="faq-answer">
+                <p>A página “Lista de Horários” exibe todos os horários cadastrados para o seu turno, sempre atualizados pela equipe responsável.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">
+                <span><i class="fa-solid fa-pen-to-square"></i> Posso alterar meus horários?</span>
+            </button>
+            <div class="faq-answer">
+                <p>Alguns horários podem ser ajustados pelo aluno, mas horários fixos dependem das permissões da instituição.</p>
+            </div>
+        </div>
+
+        <!-- NOTIFICAÇÕES -->
+        <div class="faq-item">
+            <button class="faq-question">
+                <span><i class="fa-solid fa-bell"></i> Por que recebo avisos na página Notificações?</span>
+            </button>
+            <div class="faq-answer">
+                <p>Os avisos informam sobre atrasos, manutenção, troca de ônibus ou qualquer comunicado importante sobre o transporte.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">
+                <span><i class="fa-solid fa-filter"></i> Vou receber avisos de outros turnos?</span>
+            </button>
+            <div class="faq-answer">
+                <p>Não. Você só recebe avisos do seu turno ou avisos gerais enviados para todos os passageiros.</p>
+            </div>
+        </div>
+
+        <!-- NOTIFICAÇÕES MOBILE -->
+        <div class="faq-item">
+            <button class="faq-question">
+                <span><i class="fa-solid fa-mobile-screen"></i> Vou receber alertas no celular?</span>
+            </button>
+            <div class="faq-answer">
+                <p>Sim. Basta permitir as notificações do navegador no seu celular para receber avisos importantes imediatamente.</p>
+            </div>
+        </div>
+
+        <!-- GPS -->
+        <div class="faq-item">
+            <button class="faq-question">
+                <span><i class="fa-solid fa-location-dot"></i> O mapa mostra o ônibus em tempo real?</span>
+            </button>
+            <div class="faq-answer">
+                <p>Sim. A posição do ônibus é atualizada automaticamente quando o módulo GPS está ativo.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">
+                <span><i class="fa-solid fa-route"></i> O que significa “ônibus a X metros/minutos”?</span>
+            </button>
+            <div class="faq-answer">
+                <p>É uma estimativa baseada na distância e na velocidade atual do ônibus para ajudá-lo a se preparar para o embarque.</p>
+            </div>
+        </div>
+
+        <!-- PERFIL -->
+        <div class="faq-item">
+            <button class="faq-question">
+                <span><i class="fa-solid fa-id-card"></i> Quais informações posso alterar no meu perfil?</span>
+            </button>
+            <div class="faq-answer">
+                <p>Você pode atualizar telefone, curso, instituição, foto e outros dados pessoais. Informações críticas dependem da instituição.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">
+                <span><i class="fa-solid fa-key"></i> Como altero minha senha?</span>
+            </button>
+            <div class="faq-answer">
+                <p>A alteração de senha está disponível na área de Perfil. Você receberá um e-mail com instruções de segurança.</p>
+            </div>
+        </div>
+
+        <!-- CARTÃO -->
+        <div class="faq-item">
+            <button class="faq-question">
+                <span><i class="fa-solid fa-ticket"></i> O que acontece quando passo meu cartão no ônibus?</span>
+            </button>
+            <div class="faq-answer">
+                <p>O sistema registra o embarque, horário e identifica o passageiro. Isso auxilia na organização e segurança do transporte.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">
+                <span><i class="fa-solid fa-circle-exclamation"></i> O que fazer se o cartão não funcionar?</span>
+            </button>
+            <div class="faq-answer">
+                <p>Você deve informar a administração. Pode ser necessário atualizar seu cadastro ou verificar a catraca.</p>
+            </div>
+        </div>
+
+        <!-- PRIVACIDADE -->
+        <div class="faq-item">
+            <button class="faq-question">
+                <span><i class="fa-solid fa-shield-halved"></i> O CheckBus segue normas de privacidade?</span>
+            </button>
+            <div class="faq-answer">
+                <p>Sim! Todos os dados são protegidos de acordo com a LGPD e armazenados com segurança no Firebase.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- PERFIL (carregado dinamicamente) -->
+<script type="module">
+    import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
+    carregarModalPerfil();
+    const btnPerfil = document.getElementById("btnPerfil");
+    if (btnPerfil) btnPerfil.addEventListener("click", abrirPerfil);
+</script>
+
+<!-- MENU DRAW -->
+<script>
+    window.toggleMenu = function () {
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("overlay");
+        const btn = document.querySelector(".menu-btn");
+
+        sidebar.classList.toggle("active");
+        overlay.classList.toggle("active");
+        btn.classList.toggle("hidden");
+    };
+</script>
+
+<script src="../js/faq.js"></script>
+
+</body>
+</html>
