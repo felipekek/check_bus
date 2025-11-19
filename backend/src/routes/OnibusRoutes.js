@@ -6,8 +6,8 @@ import { cadastrarOnibus } from "../controllers/OnibusController.js";
 const router = express.Router();
 
 // 🟦 Configuração do multer (pasta temporária)
-const upload = multer({ dest: "uploads/" });
+//const upload = multer({ dest: "uploads/" });
 
-router.post("/cadastrar", upload.single("foto"), cadastrarOnibus);
+router.post("/cadastrar", cadastrarOnibus);
 
 export default router;
