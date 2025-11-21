@@ -1,13 +1,20 @@
+// backend/src/config/firebase-admin.js
 import admin from "firebase-admin";
-import { readFileSync } from "fs";
-import path from "path";
+import dotenv from "dotenv";
+dotenv.config();
 
-const servicePath = path.resolve("backend/src/config/serviceAccountKey.json");
-const serviceAccount = JSON.parse(readFileSync(servicePath, "utf8"));
+// O serviço vem do .env como string → então precisamos transformar em JSON
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
+// Correção necessária: o private_key precisa dos \n reais
+serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, "\n");
+
+// Inicialização do Firebase Admin
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+  });
+}
 
 export const db = admin.firestore();
 export const authAdmin = admin.auth();

@@ -1,13 +1,13 @@
-// backend/src/routes/OnibusRoutes.js
 import express from "express";
 import multer from "multer";
 import { cadastrarOnibus } from "../controllers/OnibusController.js";
 
 const router = express.Router();
 
-// 🟦 Configuração do multer (pasta temporária)
-//const upload = multer({ dest: "uploads/" });
+// 🟦 Configuração do multer (para aceitar upload de imagem)
+const storage = multer.memoryStorage(); // imagem fica em buffer
+const upload = multer({ storage });
 
-router.post("/cadastrar", cadastrarOnibus);
+router.post("/cadastrar", upload.single("foto"), cadastrarOnibus);
 
 export default router;
