@@ -1,6 +1,6 @@
 
 // backend/src/controllers/avisosController.js
-import { dbAdmin } from "../firebase-admin.js";
+import { db } from "../config/firebase-admin.js";
 import { FieldValue } from "firebase-admin/firestore";
 
 /* =====================================================
