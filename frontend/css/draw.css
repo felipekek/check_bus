@@ -1,6 +1,11 @@
-/* ===== Botão do Menu (drawer) fixo no canto superior esquerdo ===== */
+/* ===================================================
+   DRAWER (Menu Lateral) - CheckBus
+   Botão do menu posicionado de forma absoluta
+   =================================================== */
+
+/* ===== Botão do Menu (drawer) no canto superior esquerdo ===== */
 .menu-btn {
-  position: fixed;
+  position: absolute;
   top: 20px;
   left: 20px;
   font-size: 28px;
@@ -70,7 +75,7 @@
   cursor: pointer;
   text-align: left;
   font-weight: 500;
-  font-size: 16px; /* Adicionado para uniformizar o tamanho */
+  font-size: 16px;
   transition: opacity 0.2s;
 }
 
@@ -82,14 +87,8 @@
   background: #dc3545;
 }
 
-/* ===== Reserva de espaço no topo ===== */
-:root {
-  --fixed-top-safe: 84px;
-}
-
-body {
-  padding-top: max(var(--fixed-top-safe), 60px);
-}
+/* ===== Espaçamento superior do body para não cobrir conteúdo ===== */
+/* REMOVIDO: Não é mais necessário com position: absolute */
 
 /* ===== Responsividade ===== */
 @media (max-width: 480px) {
