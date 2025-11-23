@@ -5,12 +5,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Avisos - ADM</title>
-
+  <link rel="stylesheet" href="../css/perfil.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="../css/avisos.css">
   <link rel="stylesheet" href="../css/draw.css">
 </head>
 
 <body>
+  <!-- Botão Perfil -->
+<button class="perfil-btn" id="btnPerfil">
+  <i class="fa fa-user"></i> Perfil
+</button>
 
   <!-- BOTÃO MENU -->
   <button class="menu-btn" onclick="toggleMenu()">☰</button>
@@ -197,6 +202,17 @@
 
   <!-- SCRIPT PRINCIPAL -->
   <script type="module" src="../js/avisos.js"></script>
+
+  <script type="module">
+  import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
+  
+  carregarModalPerfil();
+  
+  const btnPerfil = document.getElementById("btnPerfil");
+  if (btnPerfil) {
+    btnPerfil.addEventListener("click", abrirPerfil);
+  }
+</script>
 
 </body>
 
