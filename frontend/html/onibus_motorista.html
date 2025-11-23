@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ônibus & Motoristas - CheckBus</title>
+
+  <!-- CSS base do projeto -->
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+  <link rel="stylesheet" href="../css/perfil.css" />
+  <link rel="stylesheet" href="../css/draw.css" />
+  <!-- CSS específico da página -->
+  <link rel="stylesheet" href="../css/onibus_motorista.css" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Mapa Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+
+<body>
+  <!-- Botão menu lateral (drawer) -->
+  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <button onclick="location.href='home_principal.html'">🏠 Principal</button>
+    <button onclick="location.href='cadastro_onibus.html'">🚌 Cadastro Ônibus</button>
+    <button onclick="location.href='cadastro_motorista.html'">👨‍✈️ Cadastro Motorista</button>
+    <button onclick="location.href='admin.html'">👥 Alunos</button>
+    <button onclick="location.href='gps.html'">🗺️ GPS</button>
+    <button onclick="location.href='index.html'" class="logout">🚪 Sair</button>
+  </div>
+
+  <!-- Botão Perfil ADM -->
+  <button class="perfil-btn" id="btnPerfil">
+    <i class="fa-solid fa-user-shield"></i>
+    Perfil ADM
+  </button>
+
+  <!-- Modal Perfil ADM (versão admin) -->
+  <div id="modalPerfil" class="modal">
+    <div class="modal-content">
+      <span id="btnFecharPerfil" class="close">&times;</span>
+      <h2 style="color: #008793;">Perfil do Administrador</h2>
+
+      <div class="perfil-card">
+        <p><strong>Nome:</strong> <span id="nomeUsuario">Carregando...</span></p>
+        <p><strong>Email:</strong> <span id="emailUsuario">Carregando...</span></p>
+        <p><strong>ID do Usuário:</strong> <span id="idUsuario">Carregando...</span></p>
+        <p><strong>CPF:</strong> <span id="cpfUsuario">Carregando...</span></p>
+      </div>
+
+      <div class="perfil-modal-buttons">
+        <button id="btnAtualizarEmail">Atualizar E-mail</button>
+        <button id="btnAlterarSenha">Alterar Senha</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal alterar senha -->
+  <div id="modalAlterarSenha" class="modal">
+    <div class="modal-content">
+      <span class="close" id="btnFecharSenha">&times;</span>
+      <h2 style="color: #008793;">Alterar Senha</h2>
+
+      <form id="formAlterarSenha" class="senha-form">
+        <label for="senhaAtual">Senha Atual:</label>
+        <input type="password" id="senhaAtual" required>
+
+        <label for="novaSenha">Nova Senha:</label>
+        <input type="password" id="novaSenha" required>
+
+        <label for="confirmaNovaSenha">Confirmar Nova Senha:</label>
+        <input type="password" id="confirmaNovaSenha" required>
+
+        <button type="submit" id="btnSalvarSenha">Salvar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal atualizar e-mail -->
+  <div id="modalAtualizarEmail" class="modal">
+    <div class="modal-content">
+      <span id="btnFecharEmail" class="close">&times;</span>
+      <h2>Atualizar E-mail</h2>
+      <form id="formAtualizarEmail">
+        <label for="emailAtual">E-mail atual:</label>
+        <input type="email" id="emailAtual" required>
+
+        <label for="senhaAtualEmail">Senha atual:</label>
+        <input type="password" id="senhaAtualEmail" required>
+
+        <label for="novoEmail">Novo e-mail:</label>
+        <input type="email" id="novoEmail" required>
+
+        <button type="submit">Salvar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="page-container fade-in">
+    <header class="page-header">
+      <div>
+        <h1><i class="fa-solid fa-route"></i> Gerenciar Motoristas & Ônibus</h1>
+        <p class="subtitle">
+          Defina qual motorista dirige qual ônibus, o turno, os dias da semana e as instituições da rota.
+        </p>
+      </div>
+    </header>
+
+    <!-- GRID PRINCIPAL COM ÁREAS -->
+    <section class="grid">
+
+      <!-- TOPO ESQUERDA: MAPA -->
+      <section class="card card-mapa">
+        <h2><i class="fa-solid fa-map-location-dot"></i> Mapa da Rota</h2>
+        <p class="card-help">Visualização aproximada dos pontos que o ônibus irá passar.</p>
+        <div id="mapa"></div>
+      </section>
+
+      <!-- TOPO DIREITA: TURNO -->
+      <section class="card card-turno">
+        <h2><i class="fa-solid fa-clock"></i> Turno</h2>
+        <p class="card-help">Informe o turno em que essa rota irá acontecer.</p>
+        <select id="selectTurno" required>
+          <option value="">Selecione o turno...</option>
+          <option value="Manhã">Manhã</option>
+          <option value="Tarde">Tarde</option>
+          <option value="Noite">Noite</option>
+        </select>
+      </section>
+
+      <!-- TOPO DIREITA ABAIXO: DIAS -->
+      <section class="card card-dias">
+        <h2><i class="fa-solid fa-calendar-days"></i> Dias da Semana</h2>
+        <p class="card-help">Marque os dias em que essa rota estará ativa.</p>
+        <div class="dias-grid">
+          <label><input type="checkbox" value="Segunda">Seg</label>
+          <label><input type="checkbox" value="Terça">Ter</label>
+          <label><input type="checkbox" value="Quarta">Qua</label>
+          <label><input type="checkbox" value="Quinta">Qui</label>
+          <label><input type="checkbox" value="Sexta">Sex</label>
+          <label><input type="checkbox" value="Sábado">Sáb</label>
+        </div>
+      </section>
+
+      <!-- MEIO ESQUERDA: INSTITUIÇÕES -->
+      <section class="card card-instituicoes">
+        <h2><i class="fa-solid fa-school"></i> Instituições / Rota</h2>
+        <p class="card-help">
+          Selecione as instituições que esse ônibus irá atender nessa configuração.
+        </p>
+        <div id="listaInstituicoes" class="checkbox-list">
+          <!-- Carregado via JS -->
+        </div>
+      </section>
+
+      <!-- MEIO DIREITA: MOTORISTA -->
+      <section class="card card-motorista">
+        <h2><i class="fa-solid fa-id-card"></i> Motorista</h2>
+        <p class="card-help">Selecione o motorista responsável pela rota.</p>
+        <select id="selectMotorista" required>
+          <option value="">Selecione um motorista...</option>
+        </select>
+      </section>
+
+      <!-- MEIO DIREITA ABAIXO: ÔNIBUS -->
+      <section class="card card-onibus">
+        <h2><i class="fa-solid fa-bus"></i> Ônibus</h2>
+        <p class="card-help">Escolha qual ônibus será utilizado.</p>
+        <select id="selectOnibus" required>
+          <option value="">Selecione um ônibus...</option>
+        </select>
+      </section>
+
+      <!-- BOTÃO SALVAR: LINHA PRÓPRIA, ACIMA DO RESUMO -->
+      <button id="btnSalvar" class="btn-submit">
+        <i class="fa-solid fa-check"></i> Salvar Configuração
+      </button>
+
+      <!-- RESUMO FINAL: ÚLTIMA LINHA -->
+      <section class="card resumo-card">
+        <div class="resumo-header">
+          <h2><i class="fa-solid fa-list-check"></i> Resumo da Configuração</h2>
+          <span class="resumo-badge">Visualização rápida</span>
+        </div>
+        <ul id="resumoLista" class="resumo-lista">
+          <li>Nenhuma configuração selecionada ainda.</li>
+        </ul>
+      </section>
+
+    </section>
+  </main>
+
+  <script type="module" src="../js/onibus_motorista.js"></script>
+
+  <script>
+    window.toggleMenu = function () {
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
+      const menuBtn = document.querySelector(".menu-btn");
+      sidebar.classList.toggle("active");
+      overlay.classList.toggle("active");
+      menuBtn.classList.toggle("hidden");
+    };
+  </script>
+</body>
+</html>

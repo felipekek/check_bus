@@ -1,5 +1,6 @@
+// backend/src/controllers/OnibusController.js
 import { db } from "../config/firebase-admin.js";
-import { supabase, BUCKET } from "../config/supabase.js";
+import { supabase, BUCKET_ONIBUS } from "../config/supabase.js";
 
 export const cadastrarOnibus = async (req, res) => {
   try {
@@ -20,16 +21,14 @@ export const cadastrarOnibus = async (req, res) => {
 
     let fotoURL = null;
 
-    // ================================
-    // 1️⃣ Se o usuário enviou uma imagem
-    // ================================
+    // Se o usuário enviou a foto
     if (req.file) {
       const arquivo = req.file;
       const nomeArquivo = `onibus_${Date.now()}.jpeg`;
 
-      // Upload no Supabase Storage
+      // Upload no bucket correto
       const { data, error } = await supabase.storage
-        .from(BUCKET)
+        .from(BUCKET_ONIBUS)
         .upload(nomeArquivo, arquivo.buffer, {
           contentType: arquivo.mimetype,
           upsert: false
@@ -40,17 +39,15 @@ export const cadastrarOnibus = async (req, res) => {
         return res.status(500).json({ erro: "Falha ao realizar upload da imagem." });
       }
 
-      // Pega URL pública
+      // Gerar URL pública correta
       const { data: publicURL } = supabase.storage
-        .from(BUCKET)
+        .from(BUCKET_ONIBUS)
         .getPublicUrl(nomeArquivo);
 
       fotoURL = publicURL.publicUrl;
     }
 
-    // ================================
-    // 2️⃣ Salvar os dados no Firestore
-    // ================================
+    // Salvar dados no Firestore
     await db.collection("onibus").add({
       numero,
       placa,
