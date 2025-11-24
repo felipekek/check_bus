@@ -16,7 +16,7 @@
 
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-  <div class="sidebar" id="sidebar"></div>
+  <div id="sidebar-container"></div>
 
   <div class="container">
     <h1>Seus Horários:</h1>
@@ -36,6 +36,11 @@
 
     const btnPerfil = document.getElementById("btnPerfil");
     btnPerfil.addEventListener("click", abrirPerfil);
+  </script>
+
+  <script type="module">
+    import { inicializarSidebar } from "../js/sidebar-universal.js";
+    await inicializarSidebar();
   </script>
 
   <script type="module" src="../js/seus_horarios.js"></script>

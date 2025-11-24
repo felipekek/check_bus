@@ -38,15 +38,7 @@
 <button class="menu-btn" onclick="toggleMenu()">☰</button>
 <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-<div class="sidebar" id="sidebar">
-    <button onclick="location.href='home_principal.html'">Principal</button>
-    <button onclick="location.href='cadast_motorista.html'">Cadastrar Motorista</button>
-    <button onclick="location.href='seus_horarios.html'">Seus Horários</button>
-    <button onclick="location.href='horarios.html'">Lista de Horários</button>
-    <button onclick="location.href='gps.html'">Abrir GPS</button>
-    <button onclick="location.href='admin.html'" id="btnAlunos">Lista de Alunos</button>
-    <button onclick="logout()" class="logout">Sair</button>
-</div>
+<div id="sidebar-container"></div>
 
 <button class="perfil-btn" onclick="location.href='perfil.html'">Perfil</button>
 
@@ -100,6 +92,11 @@
 
     const btnPerfil = document.getElementById("btnPerfil");
     btnPerfil.addEventListener("click", abrirPerfil);
+  </script>
+
+  <script type="module">
+    import { inicializarSidebar } from "../js/sidebar-universal.js";
+    await inicializarSidebar();
   </script>
 
 <script type="module" src="../js/relatorios.js"></script>

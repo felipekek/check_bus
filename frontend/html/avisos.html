@@ -22,13 +22,7 @@
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
   <!-- DRAWER LATERAL -->
-  <div class="sidebar" id="sidebar">
-    <button onclick="location.href='home_principal.html'">Principal</button>
-    <button onclick="location.href='cadastro_motorista.html'">Cadastro Motorista</button>
-    <button onclick="location.href='cadastro_onibus.html'">Cadastro Ônibus</button>
-    <button onclick="location.href='avisos.html'">Avisos</button>
-    <button onclick="location.href='index.html'" class="logout">Sair</button>
-  </div>
+  <div id="sidebar-container"></div>
 
   <!-- CONTEÚDO PRINCIPAL -->
   <div class="page-container">
@@ -213,6 +207,11 @@
     btnPerfil.addEventListener("click", abrirPerfil);
   }
 </script>
+
+  <script type="module">
+    import { inicializarSidebar } from "../js/sidebar-universal.js";
+    await inicializarSidebar();
+  </script>
 
 </body>
 

@@ -19,13 +19,7 @@
   <button class="menu-btn" onclick="toggleMenu()">☰</button>
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-  <div class="sidebar" id="sidebar">
-    <button onclick="location.href='home_principal.html'">🏠 Principal</button>
-    <button onclick="location.href='relatorios.html'">📑 Relatórios</button>
-    <button onclick="location.href='admin.html'">👥 Lista de Alunos</button>
-    <button onclick="location.href='gps.html'">🗺️ GPS</button>
-    <button onclick="location.href='index.html'" class="logout">🚪 Sair</button>
-  </div>
+  <div id="sidebar-container"></div>
 
   <div class="background-gradient"></div>
 
@@ -131,6 +125,11 @@
       overlay.classList.toggle("active");
       menuBtn.classList.toggle("hidden");
     };
+  </script>
+
+  <script type="module">
+    import { inicializarSidebar } from "../js/sidebar-universal.js";
+    await inicializarSidebar();
   </script>
 
 </body>

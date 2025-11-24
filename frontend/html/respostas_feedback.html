@@ -17,15 +17,7 @@
   <button class="menu-btn" onclick="toggleMenu()">☰</button>
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-  <div class="sidebar" id="sidebar">
-    <button onclick="location.href='home_principal.html'">Principal</button>
-    <button onclick="location.href='relatorios.html'">Relatórios</button>
-    <button onclick="location.href='cadast_motorista.html'">Cadastrar Motorista</button>
-    <button onclick="location.href='horarios.html'">Lista de Horários</button>
-    <button onclick="location.href='gps.html'">GPS</button>
-    <button onclick="location.href='admin.html'">Lista de Alunos</button>
-    <button class="logout" onclick="logout()">Sair</button>
-  </div>
+  <div id="sidebar-container"></div>
 
   <!-- Conteúdo principal -->
   <div class="container">
@@ -70,5 +62,11 @@
 
   <!-- JS externo -->
   <script type="module" src="../js/respostas_feedback.js"></script>
+
+  <script type="module">
+    import { inicializarSidebar } from "../js/sidebar-universal.js";
+    await inicializarSidebar();
+  </script>
+
 </body>
 </html>

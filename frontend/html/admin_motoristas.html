@@ -16,16 +16,7 @@
 
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-  <div class="sidebar" id="sidebar">
-    <button onclick="location.href='home_principal.html'">Principal</button>
-    <button onclick="location.href='cadast_motorista.html'">Cadastrar Motorista</button>
-    <button onclick="location.href='admin_motoristas.html'">Gerenciar Motoristas</button>
-    <button onclick="location.href='admin.html'">Gerenciar Alunos</button>
-    <button onclick="location.href='horarios.html'">Lista de Horários</button>
-    <button onclick="location.href='gps.html'">Abrir GPS</button>
-    <button onclick="location.href='relatorios.html'">Relatório</button>
-    <button onclick="location.href='index.html'" class="logout">Sair</button>
-  </div>
+  <div id="sidebar-container"></div>
 
   <div class="alunos-container">
   <div class="titulo-container">
@@ -65,5 +56,11 @@
       menuBtn.classList.toggle("hidden");
     };
   </script>
+
+  <script type="module">
+    import { inicializarSidebar } from "../js/sidebar-universal.js";
+    await inicializarSidebar();
+  </script>
+
 </body>
 </html>

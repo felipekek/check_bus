@@ -22,11 +22,7 @@
   <button class="menu-btn" onclick="toggleMenu()">☰</button>
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-  <div class="sidebar" id="sidebar">
-    <button onclick="location.href='painel_motorista.html'">Painel</button>
-    <button onclick="location.href='gps_motorista.html'">GPS</button>
-    <button onclick="logout()" class="logout">Sair</button>
-  </div>
+  <div id="sidebar-container"></div>
 
   <!-- Conteúdo principal -->
   <main class="main-content">
@@ -41,5 +37,11 @@
 
   <!-- Script principal -->
   <script type="module" src="../js/gps_motorista.js"></script>
+
+  <script type="module">
+    import { inicializarSidebar } from "../js/sidebar-universal.js";
+    await inicializarSidebar();
+  </script>
+
 </body>
 </html>

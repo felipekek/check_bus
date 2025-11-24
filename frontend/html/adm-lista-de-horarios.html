@@ -20,12 +20,7 @@
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
   <!-- Sidebar (Draw) -->
-  <div class="sidebar" id="sidebar">
-    <button onclick="location.href='home_principal.html'">Principal</button>
-    <button onclick="location.href='adm-lista-de-alunos.html'">Lista de Alunos</button>
-    <button onclick="location.href='adm-lista-horarios.html'">Horários</button>
-    <button onclick="logout()">Sair</button>
-  </div>
+  <div id="sidebar-container"></div>
 
   <!-- Botão Perfil -->
   <button class="perfil-btn" id="abrirPerfilAdmin">
@@ -194,5 +189,11 @@
       document.querySelector('.menu-btn')?.classList.remove('hidden');
     });
   </script>
+
+  <script type="module">
+    import { inicializarSidebar } from "../js/sidebar-universal.js";
+    await inicializarSidebar();
+  </script>
+
 </body>
 </html>

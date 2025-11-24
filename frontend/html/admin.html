@@ -19,15 +19,7 @@
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
   <!-- ===== Sidebar ===== -->
-  <div class="sidebar" id="sidebar">
-    <button onclick="location.href='home_principal.html'">Principal</button>
-    <button onclick="location.href='cadast_motorista.html'">Cadastrar Motorista</button>
-    <button onclick="location.href='seus_horarios.html'">Seus Horários</button>
-    <button onclick="location.href='horarios.html'">Lista de Horários</button>
-    <button onclick="location.href='gps.html'">Abrir GPS</button>
-    <button onclick="location.href='relatorios.html'" id="btnRelatorio">Relatório</button>
-    <button onclick="location.href='index.html'" class="logout">Sair</button>
-  </div>
+  <div id="sidebar-container"></div>
 
   <!-- ===== CONTEÚDO PRINCIPAL ===== -->
   <div class="main-dashboard">
@@ -96,5 +88,11 @@
   </script>
 
   <script type="module" src="../js/admin.js"></script>
+
+  <script type="module">
+    import { inicializarSidebar } from "../js/sidebar-universal.js";
+    await inicializarSidebar();
+  </script>
+
 </body>
 </html>

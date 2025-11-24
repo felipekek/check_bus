@@ -22,15 +22,7 @@
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
   <!-- Sidebar -->
-  <aside class="sidebar" id="sidebar">
-    <button onclick="location.href='home_principal.html'">🏠 Principal</button>
-    <button onclick="location.href='cadastro_onibus.html'">🚌 Cadastro Ônibus</button>
-    <button onclick="location.href='cadast_motorista.html'">👨‍✈️ Cadastro Motorista</button>
-    <button onclick="location.href='onibus_motorista.html'">🛣️ Rotas</button>
-    <button onclick="location.href='admin.html'">👥 Alunos</button>
-    <button onclick="location.href='gps.html'">🗺️ GPS</button>
-    <button onclick="location.href='index.html'" class="logout">🚪 Sair</button>
-  </aside>
+  <div id="sidebar-container"></div>
 
   <!-- Botão Perfil ADM -->
   <button class="perfil-btn" id="btnPerfil">
@@ -251,6 +243,11 @@
       document.getElementById("sidebar").classList.toggle("active");
       document.getElementById("overlay").classList.toggle("active");
     }
+  </script>
+
+  <script type="module">
+    import { inicializarSidebar } from "../js/sidebar-universal.js";
+    await inicializarSidebar();
   </script>
 
 </body>

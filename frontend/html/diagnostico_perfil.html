@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico de Perfil - CheckBus</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #004d7a 0%, #008793 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #004d7a 0%, #008793 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .info-box {
+            background: #f8f9fa;
+            border-left: 4px solid #008793;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .info-box h3 {
+            color: #004d7a;
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .resultado {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .resultado.success {
+            border-color: #28a745;
+            background: #f0fff4;
+        }
+
+        .resultado.error {
+            border-color: #dc3545;
+            background: #fff5f5;
+        }
+
+        .resultado.warning {
+            border-color: #ffc107;
+            background: #fffbf0;
+        }
+
+        .resultado pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #004d7a 0%, #008793 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+            margin: 10px 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin: 5px;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .field-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .field-table th,
+        .field-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .field-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #004d7a;
+        }
+
+        .field-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .code-inline {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Diagnóstico de Perfil</h1>
+            <p>Descubra qual perfil o sistema está detectando para seu usuário</p>
+        </div>
+
+        <div class="content">
+            
+            <div class="info-box">
+                <h3>📋 O que este diagnóstico faz?</h3>
+                <p>
+                    Este script verifica qual perfil o Firebase está retornando para o usuário logado
+                    e compara com o que deveria ser. Use isto para descobrir por que a sidebar
+                    está mostrando as páginas erradas.
+                </p>
+            </div>
+
+            <div style="text-align: center; margin: 30px 0;">
+                <button class="btn" onclick="executarDiagnostico()" id="btnDiagnostico">
+                    🔍 Executar Diagnóstico
+                </button>
+            </div>
+
+            <div id="status-autenticacao" style="text-align: center; margin: 20px 0;">
+                <!-- Status será inserido aqui -->
+            </div>
+
+            <div id="resultado-usuario" style="display: none;">
+                <h3>👤 Informações do Usuário</h3>
+                <table class="field-table">
+                    <tr>
+                        <th>Campo</th>
+                        <th>Valor</th>
+                    </tr>
+                    <tbody id="tabela-usuario"></tbody>
+                </table>
+            </div>
+
+            <div id="resultado-perfil" style="display: none;">
+                <h3>🎯 Campos de Perfil Encontrados</h3>
+                <table class="field-table">
+                    <tr>
+                        <th>Campo</th>
+                        <th>Valor</th>
+                        <th>Status</th>
+                    </tr>
+                    <tbody id="tabela-perfil"></tbody>
+                </table>
+            </div>
+
+            <div id="resultado-diagnostico" class="resultado" style="display: none;">
+                <pre id="console-output"></pre>
+            </div>
+
+            <div id="resultado-solucao" style="display: none;">
+                <!-- Solução será inserida aqui -->
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Firebase já deve estar configurado -->
+    <script type="module">
+        import { auth, db } from '../js/firebase-config.js';
+        import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+
+        let consoleOutput = [];
+
+        // Capturar console.log
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            consoleOutput.push({ type: 'log', message: args.join(' ') });
+        };
+
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            consoleOutput.push({ type: 'error', message: args.join(' ') });
+        };
+
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            consoleOutput.push({ type: 'warn', message: args.join(' ') });
+        };
+
+        // Verificar autenticação
+        auth.onAuthStateChanged((user) => {
+            const statusDiv = document.getElementById('status-autenticacao');
+            
+            if (user) {
+                statusDiv.innerHTML = `
+                    <span class="status success">✅ Usuário logado: ${user.email}</span>
+                `;
+            } else {
+                statusDiv.innerHTML = `
+                    <span class="status error">❌ Nenhum usuário logado</span>
+                    <p style="margin-top: 10px;">Faça login primeiro para executar o diagnóstico.</p>
+                `;
+                document.getElementById('btnDiagnostico').disabled = true;
+            }
+        });
+
+        // Executar diagnóstico
+        window.executarDiagnostico = async function() {
+            consoleOutput = [];
+            document.getElementById('btnDiagnostico').disabled = true;
+            document.getElementById('btnDiagnostico').textContent = '⏳ Executando...';
+
+            try {
+                console.log('🔍 ===== INICIANDO DIAGNÓSTICO =====');
+                
+                const user = auth.currentUser;
+                
+                if (!user) {
+                    throw new Error('Nenhum usuário logado');
+                }
+
+                console.log('✅ Usuário:', user.email);
+                console.log('📧 UID:', user.uid);
+
+                // Buscar documento
+                const userDocRef = doc(db, 'usuarios', user.uid);
+                const userDoc = await getDoc(userDocRef);
+
+                if (!userDoc.exists()) {
+                    throw new Error('Documento não encontrado no Firestore');
+                }
+
+                const userData = userDoc.data();
+                console.log('✅ Documento encontrado');
+
+                // Mostrar dados do usuário
+                document.getElementById('resultado-usuario').style.display = 'block';
+                const tabelaUsuario = document.getElementById('tabela-usuario');
+                tabelaUsuario.innerHTML = `
+                    <tr><td>Email</td><td>${user.email}</td></tr>
+                    <tr><td>UID</td><td>${user.uid}</td></tr>
+                    <tr><td>Nome</td><td>${userData.nome || '-'}</td></tr>
+                `;
+
+                // Verificar campos de perfil
+                const camposPerfil = {
+                    'perfil': userData.perfil,
+                    'tipo': userData.tipo,
+                    'role': userData.role,
+                    'nivel': userData.nivel,
+                    'cargo': userData.cargo,
+                    'funcao': userData.funcao
+                };
+
+                document.getElementById('resultado-perfil').style.display = 'block';
+                const tabelaPerfil = document.getElementById('tabela-perfil');
+                tabelaPerfil.innerHTML = '';
+
+                let perfilEncontrado = null;
+
+                for (const [campo, valor] of Object.entries(camposPerfil)) {
+                    const status = valor ? 
+                        `<span class="status success">✅ Existe</span>` : 
+                        `<span class="status error">❌ Não existe</span>`;
+                    
+                    tabelaPerfil.innerHTML += `
+                        <tr>
+                            <td><code>${campo}</code></td>
+                            <td><code>${valor || 'undefined'}</code></td>
+                            <td>${status}</td>
+                        </tr>
+                    `;
+
+                    if (valor && !perfilEncontrado) {
+                        perfilEncontrado = { campo, valor };
+                    }
+                }
+
+                // Detectar perfil
+                const perfilDetectado = userData.perfil || userData.tipo || 'aluno';
+                
+                console.log('🎯 Perfil detectado:', perfilDetectado);
+                console.log('📄 Dados completos:', JSON.stringify(userData, null, 2));
+
+                // Mostrar solução
+                document.getElementById('resultado-solucao').style.display = 'block';
+                const solucaoDiv = document.getElementById('resultado-solucao');
+
+                if (perfilDetectado === 'admin') {
+                    solucaoDiv.innerHTML = `
+                        <div class="info-box" style="border-color: #28a745; background: #f0fff4;">
+                            <h3 style="color: #28a745;">✅ PERFIL CORRETO!</h3>
+                            <p>O sistema está detectando corretamente que você é um <strong>admin</strong>.</p>
+                            <p style="margin-top: 10px;">
+                                Se a sidebar ainda está mostrando páginas de aluno, 
+                                verifique se você está usando <code class="code-inline">inicializarSidebar()</code> 
+                                (detecção automática) e não <code class="code-inline">inicializarSidebarManual('aluno')</code>.
+                            </p>
+                        </div>
+                    `;
+                } else {
+                    solucaoDiv.innerHTML = `
+                        <div class="info-box" style="border-color: #dc3545; background: #fff5f5;">
+                            <h3 style="color: #dc3545;">❌ PROBLEMA ENCONTRADO!</h3>
+                            <p>O sistema está detectando perfil: <code class="code-inline">${perfilDetectado}</code></p>
+                            <p>Mas você deveria ser: <code class="code-inline">admin</code></p>
+                            
+                            <h4 style="margin-top: 20px; color: #004d7a;">💡 Soluções:</h4>
+                            <ol style="line-height: 1.8; margin-left: 20px;">
+                                <li>
+                                    <strong>No Firestore:</strong> Vá até a coleção 
+                                    <code class="code-inline">usuarios/${user.uid}</code> 
+                                    e altere o campo <code class="code-inline">perfil</code> 
+                                    ou <code class="code-inline">tipo</code> para 
+                                    <code class="code-inline">"admin"</code>
+                                </li>
+                                <li>
+                                    <strong>OU ajuste o código:</strong> Se o perfil está em outro campo 
+                                    (ex: <code class="code-inline">role</code>), 
+                                    modifique o arquivo <code class="code-inline">sidebar-universal-CORRIGIDO.js</code> 
+                                    na linha que detecta o perfil
+                                </li>
+                            </ol>
+                        </div>
+                    `;
+                }
+
+                // Mostrar console
+                document.getElementById('resultado-diagnostico').style.display = 'block';
+                const consoleDiv = document.getElementById('console-output');
+                consoleDiv.textContent = consoleOutput.map(item => item.message).join('\n');
+
+            } catch (error) {
+                console.error('❌ ERRO:', error.message);
+                
+                document.getElementById('resultado-diagnostico').style.display = 'block';
+                document.getElementById('resultado-diagnostico').className = 'resultado error';
+                const consoleDiv = document.getElementById('console-output');
+                consoleDiv.textContent = consoleOutput.map(item => item.message).join('\n');
+            }
+
+            document.getElementById('btnDiagnostico').disabled = false;
+            document.getElementById('btnDiagnostico').textContent = '🔄 Executar Novamente';
+        };
+
+    </script>
+
+</body>
+</html>
