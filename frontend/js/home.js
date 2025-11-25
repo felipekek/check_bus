@@ -2,7 +2,7 @@
 import { db, auth } from "./firebase-config.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { collection, getDocs, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-import { initTutorial } from "./tutorial.js";
+
 
 let userId = null;
 const grid = document.getElementById("menuGrid");
