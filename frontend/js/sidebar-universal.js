@@ -16,6 +16,7 @@ const SIDEBAR_CONFIG = {
         { icon: 'fa-solid fa-circle-question', label: 'FAQ', url: 'faq.html' }
     ],
     admin: [
+        { icon: 'fa-solid fa-house', label: 'Principal', url: 'home_principal.html' },
         { icon: 'fa-solid fa-users', label: 'Lista de Alunos', url: 'admin.html' },
         { icon: 'fa-solid fa-user-plus', label: 'Cadastrar Motorista', url: 'cadast_motorista.html' },
         { icon: 'fa-solid fa-bus', label: 'Cadastrar Ônibus', url: 'cadastro_onibus.html' },
