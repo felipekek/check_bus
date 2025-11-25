@@ -56,7 +56,7 @@ const adminButtons = [
   { icon: 'fa-users', text: 'Lista de Alunos', href: 'admin.html', tipo: 'admin' },
   { icon: 'fa-user-plus', text: 'Cadastrar Motorista', href: 'cadast_motorista.html', tipo: 'admin' },
   { icon: 'fa-bus', text: 'Cadastrar Ônibus', href: 'cadastro_onibus.html', tipo: 'admin' },
-  { icon: 'fa-sitemap', text: 'Ônibus & Motorista', href: 'onibus_motorista.html', tipo: 'admin' },
+  { icon: 'fa-sitemap', text: 'Gerenciar Motoristas & Ônibus', href: 'onibus_motorista.html', tipo: 'admin' },
   { icon: 'fa-bullhorn', text: 'Avisos', href: 'avisos.html', tipo: 'admin' },
   { icon: 'fa-star', text: 'Respostas Feedback', href: 'respostas_feedback.html', tipo: 'admin' }
 ];
