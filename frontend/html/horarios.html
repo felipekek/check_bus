@@ -5,42 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Horários - Check Bus</title>
 
-  <!-- Gradiente + tipografia -->
   <link rel="stylesheet" href="../css/style.css" />
-
-  <!-- CSS desta página -->
   <link rel="stylesheet" href="../css/horarios.css" />
-
-  <!-- Demais estilos (se existirem no projeto) -->
   <link rel="stylesheet" href="../css/perfil.css" />
   <link rel="stylesheet" href="../css/draw.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body>
   <button class="menu-btn" onclick="toggleMenu()">☰</button>
-
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
+  <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
-    <button onclick="location.href='home_principal.html'">
-        <i class="fa-solid fa-house"></i> Principal
-    </button>
-    <button onclick="location.href='horarios.html'">
-        <i class="fa-solid fa-clock"></i> Lista de Horários
-    </button>
-    <button onclick="location.href='gps.html'">
-        <i class="fa-solid fa-location-dot"></i> GPS
-    </button>
-    <button onclick="location.href='notificacoes.html'">
-        <i class="fa-solid fa-bell"></i> Notificações
-    </button>
-    <button onclick="location.href='faq.html'">
-        <i class="fa-solid fa-circle-question"></i> FAQ
-    </button>
-    <button onclick="location.href='index.html'" class="logout">
-        <i class="fa-solid fa-right-from-bracket"></i> Sair
-    </button>
-</div>
+      <button onclick="location.href='home_principal.html'"><i class="fa-solid fa-house"></i> Principal</button>
+      <button onclick="location.href='horarios.html'"><i class="fa-solid fa-clock"></i> Lista de Horários</button>
+      <button onclick="location.href='gps.html'"><i class="fa-solid fa-location-dot"></i> GPS</button>
+      <button onclick="location.href='notificacoes.html'"><i class="fa-solid fa-bell"></i> Notificações</button>
+      <button onclick="location.href='faq.html'"><i class="fa-solid fa-circle-question"></i> FAQ</button>
+      <button onclick="location.href='index.html'" class="logout"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
+  </div>
 
   <div class="container container--wide">
     <header>
@@ -48,7 +32,8 @@
     </header>
 
     <main>
-      <!-- ====== SELEÇÃO DE HORÁRIOS ====== -->
+
+      <!-- =============== SELEÇÃO DE HORÁRIOS =============== -->
       <section class="card">
         <h2>Seleção de Horários</h2>
 
@@ -58,38 +43,16 @@
           <span>Chegada prevista</span>
         </div>
 
-        <div class="tabela-fixa">
-          <label class="linha">
-            <span class="col-turno">
-              <input type="radio" name="turno" value="Manhã" />
-              <span>Manhã</span>
-            </span>
-            <span>06:00</span>
-            <span>14:00</span>
-          </label>
-          <label class="linha">
-            <span class="col-turno">
-              <input type="radio" name="turno" value="Tarde" />
-              <span>Tarde</span>
-            </span>
-            <span>11:30</span>
-            <span>18:00</span>
-          </label>
-          <label class="linha">
-            <span class="col-turno">
-              <input type="radio" name="turno" value="Noite" />
-              <span>Noite</span>
-            </span>
-            <span>18:00</span>
-            <span>21:00</span>
-          </label>
-        </div>
+        <!-- 🔥 SOMENTE TURNOS DO ADM -->
+        <div id="turnosContainer" class="tabela-fixa"></div>
 
+        <!-- PERSONALIZADO -->
         <div class="personalizado-container">
           <label class="switch-line">
             <input type="checkbox" id="personalizadoToggle" />
             <span>Usar horário personalizado</span>
           </label>
+
           <div id="personalizadoCampos" class="personalizado-campos">
             <div class="input-group">
               <label for="saidaPersonalizada">Saída:</label>
@@ -122,22 +85,18 @@
         </div>
       </section>
 
-      <!-- ====== CALENDÁRIO ====== -->
+      <!-- =============== CALENDÁRIO =============== -->
       <section class="card">
         <div class="legend">
           <span class="pill"><span class="dot av"></span>Tem ônibus</span>
           <span class="pill"><span class="dot no"></span>Sem ônibus</span>
           <span class="pill"><span class="dot go"></span>Você vai</span>
-          <span class="pill">
-            <span class="dot" style="background-image:linear-gradient(135deg,#0077b6 0 50%, #e0f8e9 50% 100%);border:1px solid #a9ccff;"></span>
-            Vai + tem ônibus
-          </span>
         </div>
 
         <div class="calendar-nav">
-          <button id="prev" aria-label="Mês anterior">◀</button>
+          <button id="prev">◀</button>
           <span id="calendar-month-year"></span>
-          <button id="next" aria-label="Próximo mês">▶</button>
+          <button id="next">▶</button>
         </div>
 
         <div class="calendar" id="calendar"></div>
@@ -149,7 +108,7 @@
         </div>
       </section>
 
-      <!-- ====== LISTA + ESTATÍSTICAS ====== -->
+      <!-- ============= LISTAGEM E ESTATÍSTICAS ============= -->
       <section class="card card--full">
         <div class="stats">
           <div class="stat">
@@ -164,7 +123,6 @@
 
         <h2>Seus dias salvos</h2>
 
-        <!-- Cabeçalho (desktop) -->
         <div class="linha-horario header" aria-hidden="true">
           <span>Data</span>
           <span>Turno</span>
@@ -173,18 +131,15 @@
           <span>Ações</span>
         </div>
 
-        <!-- Lista (vira cards no mobile) -->
         <div id="horariosSalvos" class="lista" aria-live="polite"></div>
       </section>
+
     </main>
-    
   </div>
 
-  <button class="perfil-btn" id="btnPerfil">
-    <i class="fa fa-user"></i> Perfil
-  </button>
+  <button class="perfil-btn" id="btnPerfil"><i class="fa fa-user"></i> Perfil</button>
 
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="toast" class="toast"></div>
 
   <script>
     window.toggleMenu = function() {

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,11 +8,10 @@
 
   <link rel="stylesheet" href="../css/notificacoes.css">
   <link rel="stylesheet" href="../css/draw.css">
-  <link rel="stylesheet" href="../css/perfil.css"> <!-- ADICIONAR -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
+
   <!-- Botão do menu lateral -->
   <button class="menu-btn" onclick="toggleMenu()">☰</button>
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
@@ -24,11 +24,6 @@
     <button onclick="location.href='notificacoes.html'">Notificações</button>
     <button onclick="location.href='index.html'" class="logout">Sair</button>
   </div>
-
-  <!-- ADICIONAR: Botão Perfil -->
-  <button class="perfil-btn" id="btnPerfil">
-    <i class="fa fa-user"></i> Perfil
-  </button>
 
   <!-- Conteúdo principal -->
   <div class="page-container">
@@ -95,7 +90,7 @@
 
   </div>
 
-  <!-- Scripts -->
+  <!-- Script do menu lateral -->
   <script>
     window.toggleMenu = function () {
       const sidebar = document.getElementById("sidebar");
@@ -108,18 +103,9 @@
     };
   </script>
 
-  <!-- ADICIONAR: Script do perfil -->
-  <script type="module">
-    import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
-    
-    carregarModalPerfil();
-    
-    const btnPerfil = document.getElementById("btnPerfil");
-    if (btnPerfil) {
-      btnPerfil.addEventListener("click", abrirPerfil);
-    }
-  </script>
-
+  <!-- Script principal da página -->
   <script type="module" src="../js/notificacoes.js"></script>
+
 </body>
+
 </html>

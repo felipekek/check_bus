@@ -93,8 +93,13 @@ export async function adminGetMonth(req, res) {
     if (!YM_RE.test(ym)) return res.status(400).json({ erro: "ym inválido." });
 
     const snap = await db.collection("calendars_admin").doc(ym).get();
-    const data = snap.exists ? snap.data() : { days: {} };
-    res.json({ ym, days: data.days || {} });
+    const data = snap.exists ? snap.data() : { days: {}, turnos: [] };
+
+    res.json({
+      ym,
+      days: data.days || {},
+      turnos: Array.isArray(data.turnos) ? data.turnos : []
+    });
   } catch (err) {
     console.error("adminGetMonth:", err);
     res.status(500).json({ erro: "Falha ao buscar mês admin." });
@@ -104,12 +109,27 @@ export async function adminGetMonth(req, res) {
 export async function adminSetMonth(req, res) {
   try {
     const { ym } = req.params;
-    const { days } = req.body || {};
+    const { days, turnos } = req.body || {};
+
     if (!YM_RE.test(ym)) return res.status(400).json({ erro: "ym inválido." });
-    if (!days || typeof days !== "object") return res.status(400).json({ erro: "days ausente." });
+    if (!days || typeof days !== "object") {
+      return res.status(400).json({ erro: "days ausente." });
+    }
+
+    const payload = {
+      days,
+      updatedAt: nowTS()
+    };
+
+    if (Array.isArray(turnos)) {
+      payload.turnos = turnos;
+    }
 
     const docRef = db.collection("calendars_admin").doc(ym);
-    await docRef.set({ days, updatedAt: nowTS() }, { merge: true });
+
+    // 🔥 sem merge aqui também
+    await docRef.set(payload);
+
     res.json({ mensagem: "Calendário admin atualizado.", ym });
   } catch (err) {
     console.error("adminSetMonth:", err);
@@ -146,12 +166,11 @@ export async function userSetMonth(req, res) {
     if (!days || typeof days !== "object") return res.status(400).json({ erro: "days ausente." });
 
     const docRef = db.collection("calendars_user").doc(uid).collection("months").doc(ym);
-    const snap = await docRef.get();
-    const prev = snap.exists ? snap.data().days || {} : {};
-    const merged = { ...prev, ...days };
 
-    await docRef.set({ days: merged, updatedAt: nowTS() }, { merge: true });
-    await mirrorMonthToLegacy(uid, merged);
+    // 🔥 sem merge
+    await docRef.set({ days, updatedAt: nowTS() });
+
+    await mirrorMonthToLegacy(uid, days);
 
     res.json({ mensagem: "Calendário do usuário salvo.", uid, ym });
   } catch (err) {
@@ -180,7 +199,9 @@ export async function userToggleDay(req, res) {
       next[date] = { state, schedule };
     }
 
-    await docRef.set({ days: next, updatedAt: nowTS() }, { merge: true });
+    // 🔥 sem merge
+    await docRef.set({ days: next, updatedAt: nowTS() });
+
     await mirrorMonthToLegacy(uid, next);
 
     res.json({ mensagem: "Dia atualizado.", uid, ym, date });
@@ -220,7 +241,9 @@ export async function userCopyMonth(req, res) {
       }
     }
 
-    await toRef.set({ days: nextTo, updatedAt: nowTS() }, { merge: true });
+    // 🔥 sem merge
+    await toRef.set({ days: nextTo, updatedAt: nowTS() });
+
     await mirrorMonthToLegacy(uid, nextTo);
 
     res.json({ mensagem: "Cópia realizada.", uid, fromYm, toYm });
@@ -237,8 +260,8 @@ export async function userClearMonth(req, res) {
     if (!YM_RE.test(ym)) return res.status(400).json({ erro: "ym inválido." });
 
     const docRef = db.collection("calendars_user").doc(uid).collection("months").doc(ym);
-    await docRef.delete();
 
+    await docRef.delete();
     await mirrorMonthToLegacy(uid, {});
 
     return res.json({ mensagem: "Mês do usuário apagado.", uid, ym });
@@ -251,6 +274,7 @@ export async function userClearMonth(req, res) {
 export async function userDeleteDate(req, res) {
   try {
     const { uid, ym, date } = req.params;
+
     if (!uid) return res.status(400).json({ erro: "uid ausente." });
     if (!YM_RE.test(ym)) return res.status(400).json({ erro: "ym inválido." });
     if (!DATE_RE.test(date)) return res.status(400).json({ erro: "date inválido." });
@@ -266,7 +290,9 @@ export async function userDeleteDate(req, res) {
     const next = { ...prev };
     delete next[date];
 
-    await docRef.set({ days: next, updatedAt: nowTS() }, { merge: true });
+    // 🔥 sem merge
+    await docRef.set({ days: next, updatedAt: nowTS() });
+
     await mirrorMonthToLegacy(uid, next);
 
     res.json({ mensagem: "Dia excluído.", uid, ym, date });

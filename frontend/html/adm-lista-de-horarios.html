@@ -96,7 +96,7 @@
           <option value="available">Tem ônibus</option>
           <option value="no_bus">Sem ônibus</option>
         </select>
-        <!-- Adicione este div antes dos checkboxes -->
+
         <div class="dias-semana-header">
           <span>Selecione os dias que deseja alterar:</span>
           <button type="button" class="btn btn-small" id="toggleDias">Marcar/Desmarcar Todos</button>
@@ -148,11 +148,14 @@
         <button class="btn" id="loadMonth">Recarregar</button>
         <button class="btn danger" id="clearMonth">Limpar mês</button>
       </div>
-      <small style="opacity:.7">Os dados são salvos localmente no navegador. Em produção, use o backend do Firebase.</small>
+      <small style="opacity:.7">
+        Os dados deste calendário são salvos no Firestore (coleção <code>calendars_admin</code>) através do backend.
+      </small>
     </aside>
   </main>
 
-  <script src="../js/adm-lista-de-horarios.js"></script>
+  <!-- AGORA COMO MÓDULO -->
+  <script type="module" src="../js/adm-lista-de-horarios.js"></script>
 
   <script>
     // Toggle sidebar + overlay
@@ -177,12 +180,10 @@
       localStorage.removeItem('token'); localStorage.removeItem('tipoUsuario'); location.href = 'index.html';
     });
 
-    // fecha modal ao clicar fora do conteúdo
     window.addEventListener('click', (e) => {
       if (e.target === modal) modal.style.display = 'none';
     });
 
-    // evita que overlay fique preso se usuário fechar manualmente
     document.getElementById('overlay').addEventListener('click', () => {
       document.getElementById('sidebar').classList.remove('active');
       document.getElementById('overlay').classList.remove('active');
