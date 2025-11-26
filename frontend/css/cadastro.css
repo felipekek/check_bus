@@ -1,91 +1,235 @@
-/* Estilos para feedback visual dos campos do cadastro */
-.campo-invalido {
-  border: 2px solid #e74c3c;
-}
-.campo-valido {
-  border: 2px solid #2ecc71;
-}
-.msg-erro {
-  color: #e74c3c;
-  font-size: 14px;
-  margin-top: 4px;
-}
+/* ===================================================
+ * CADASTRO - ESTILO CHECK BUS MODERNO
+ * Baseado no login_moderno.css
+ * ===================================================*/
 
-/* Layout de duas colunas para o formulário de cadastro */
-#registerForm {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px 32px;
-}
+/* Importar base do login e adicionar específicos do cadastro */
+@import url('login.css');
 
-#registerForm .campo {
-  display: flex;
-  flex-direction: column;
-}
+/* ===== AJUSTES ESPECÍFICOS DO CADASTRO ===== */
 
-#registerForm label,
-#registerForm input,
-#registerForm p.msg-erro {
-  grid-column: auto;
-}
-
-#registerForm label {
-  margin-bottom: 4px;
-  font-weight: 600;
-}
-
-#registerForm input {
-  margin-bottom: 0;
-}
-
-#registerForm p.msg-erro {
-  margin-bottom: 12px;
-  min-height: 18px;
-}
-
-/* Faz cada label/input/msg-erro ocupar uma linha na coluna */
-#registerForm label,
-#registerForm input,
-#registerForm p.msg-erro {
-  display: block;
-}
-
-/* Faz o botão ocupar as duas colunas */
-#registerForm button {
-  grid-column: 1 / span 2;
+/* Container cadastro (maior que login) */
+.cadastro-container {
+  position: relative;
+  z-index: 1;
   width: 100%;
-  margin-top: 24px;
+  max-width: 600px; /* Maior que login */
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease;
 }
 
-h1 {
-
-  margin-top: -10px;
+.cadastro-container.loaded {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-@media (max-width: 700px) {
-  #registerForm {
-    grid-template-columns: 1fr !important;
-    gap: 16px 0;
-  }
-  #registerForm button {
-    grid-column: 1 / span 1;
-  }
+/* Card maior para acomodar mais campos */
+.cadastro-container .form-card {
+  padding: 35px;
 }
 
+/* Ajuste do ícone */
+.cadastro-container .icon-circle {
+  background: linear-gradient(135deg, #00a86b 0%, #00d084 100%);
+  box-shadow: 0 10px 30px rgba(0, 168, 107, 0.3);
+}
 
-  /* Botão enviar */
-button {
-  background: #4a90e2;
-  color: #fff;
+/* ===== SELECT CUSTOMIZADO ===== */
+
+.select-wrapper {
+  position: relative;
+}
+
+.form-select {
+  width: 100%;
+  padding: 14px 16px 14px 46px;
   font-size: 16px;
-  padding: 12px;
-  border: none;
-  border-radius: 10px;
+  border: 2px solid var(--gray-200);
+  border-radius: 12px;
+  background: var(--gray-50);
+  color: var(--gray-900);
+  transition: all var(--transition-base);
+  appearance: none;
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
+  font-family: inherit;
 }
 
-button:hover {
-  background: #357ab7;
-  transform: scale(1.03);
+.form-select:focus {
+  outline: none;
+  border-color: var(--secondary-color);
+  background: var(--white);
+  box-shadow: 0 0 0 4px rgba(0, 135, 147, 0.1);
 }
+
+.form-select option {
+  padding: 10px;
+}
+
+.select-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gray-400);
+  pointer-events: none;
+  transition: color var(--transition-base);
+}
+
+.form-select:focus ~ .select-icon {
+  color: var(--secondary-color);
+}
+
+/* Seta do select */
+.select-wrapper::after {
+  content: '\f078'; /* Font Awesome chevron-down */
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gray-400);
+  pointer-events: none;
+  transition: color var(--transition-base);
+}
+
+.form-select:focus ~ .select-wrapper::after {
+  color: var(--secondary-color);
+}
+
+/* ===== CHECKBOX DOS TERMOS ===== */
+
+.checkbox-text {
+  font-size: 14px;
+  color: var(--gray-700);
+  line-height: 1.5;
+}
+
+.link-termos {
+  color: var(--secondary-color);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color var(--transition-base);
+}
+
+.link-termos:hover {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+/* ===== SEÇÃO DE LOGIN ===== */
+
+.login-section {
+  text-align: center;
+}
+
+.login-section p {
+  font-size: 14px;
+  color: var(--gray-600);
+  margin-bottom: 10px;
+}
+
+.link-login {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--secondary-color);
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: all var(--transition-base);
+}
+
+.link-login:hover {
+  background: var(--gray-100);
+  color: var(--primary-color);
+}
+
+.link-login i {
+  transition: transform var(--transition-base);
+}
+
+.link-login:hover i {
+  transform: translateX(4px);
+}
+
+/* ===== GRID DE CAMPOS (2 COLUNAS EM DESKTOP) ===== */
+
+@media (min-width: 769px) {
+  .cadastro-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  
+  /* Campos que ocupam 2 colunas */
+  .form-group:has(#nome),
+  .form-group:has(#email),
+  .form-group:has(#instituicao),
+  .form-group:has(#senha),
+  .form-group:has(#confirmarSenha),
+  .form-group:has(#termos),
+  .status-message,
+  .btn-submit {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ===== RESPONSIVIDADE ===== */
+
+@media (max-width: 768px) {
+  .cadastro-container {
+    max-width: 100%;
+  }
+  
+  .cadastro-container .form-card {
+    padding: 30px 24px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cadastro-container .form-card {
+    padding: 24px 20px;
+  }
+  
+  .form-input,
+  .form-select {
+    padding: 12px 14px 12px 42px;
+    font-size: 15px;
+  }
+  
+  .checkbox-text {
+    font-size: 13px;
+  }
+}
+
+/* ===== AJUSTES DE ESPAÇAMENTO ===== */
+
+.cadastro-form .form-group {
+  margin-bottom: 20px;
+}
+
+.cadastro-form .btn-submit {
+  margin-top: 10px;
+}
+
+/* ===== ANIMAÇÃO DO BOTÃO ===== */
+
+.cadastro-container .btn-submit {
+  background: linear-gradient(135deg, #00a86b 0%, #00d084 100%);
+  box-shadow: 0 4px 12px rgba(0, 168, 107, 0.3);
+}
+
+.cadastro-container .btn-submit:hover:not(:disabled) {
+  background: linear-gradient(135deg, #008a57 0%, #00b56f 100%);
+  box-shadow: 0 6px 20px rgba(0, 168, 107, 0.4);
+}
+
+/* ===== FIM ===== */

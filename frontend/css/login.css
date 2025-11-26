@@ -1,0 +1,381 @@
+* {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', Arial, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(180deg, #006b8f 0%, #004d6d 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ========================================
+       SHAPES ANIMADAS
+       ======================================== */
+    .shape {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      animation: float 20s infinite ease-in-out;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .shape-1 {
+      width: 400px;
+      height: 400px;
+      top: -100px;
+      left: -100px;
+      animation-delay: 0s;
+    }
+
+    .shape-2 {
+      width: 500px;
+      height: 500px;
+      bottom: -150px;
+      right: -150px;
+      animation-delay: 5s;
+    }
+
+    .shape-3 {
+      width: 350px;
+      height: 350px;
+      top: 40%;
+      left: 50%;
+      animation-delay: 10s;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translate(0, 0) scale(1);
+      }
+      33% {
+        transform: translate(30px, -30px) scale(1.1);
+      }
+      66% {
+        transform: translate(-20px, 20px) scale(0.9);
+      }
+    }
+
+    /* ========================================
+       HEADER (FORA DO CARD)
+       ======================================== */
+    .header-wrapper {
+      text-align: center;
+      margin-bottom: 24px;
+      color: white;
+      position: relative;
+      z-index: 10;
+    }
+
+    .logo-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding: 10px 24px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+    }
+
+    .logo-top i {
+      font-size: 22px;
+      color: white;
+    }
+
+    .logo-top span {
+      font-size: 20px;
+      font-weight: 600;
+      color: white;
+    }
+
+    .header-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: white;
+    }
+
+    .header-subtitle {
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    /* ========================================
+       CARD BRANCO
+       ======================================== */
+    .card-wrapper {
+      background: white;
+      padding: 40px 36px;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+      width: 100%;
+      max-width: 480px;
+      animation: slideUp 0.5s ease-out;
+      position: relative;
+      z-index: 10;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ========================================
+       ÍCONE AZUL
+       ======================================== */
+    .icon-circle {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 32px;
+      background: linear-gradient(135deg, #006b8f, #004d6d);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(0, 107, 143, 0.3);
+    }
+
+    .icon-circle i {
+      color: white;
+      font-size: 36px;
+    }
+
+    /* ========================================
+       FORMULÁRIO
+       ======================================== */
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Label */
+    .form-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #006b8f;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+    }
+
+    .form-label i {
+      font-size: 0.95rem;
+    }
+
+    /* Input wrapper */
+    .input-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #999;
+      font-size: 1rem;
+    }
+
+    /* Inputs */
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 13px 14px 13px 42px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      background: #f9fafb;
+      transition: all 0.2s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #006b8f;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(0, 107, 143, 0.1);
+    }
+
+    /* ========================================
+       LINK ESQUECEU SENHA
+       ======================================== */
+    .link-esqueceu {
+      text-align: right;
+      margin-top: -8px;
+      margin-bottom: 8px;
+    }
+
+    .link-esqueceu a {
+      color: #006b8f;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .link-esqueceu a:hover {
+      text-decoration: underline;
+    }
+
+    /* ========================================
+       MENSAGEM
+       ======================================== */
+    #loginMessage {
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      text-align: center;
+      display: none;
+    }
+
+    #loginMessage.success {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #6ee7b7;
+      display: block;
+    }
+
+    #loginMessage.error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fca5a5;
+      display: block;
+    }
+
+    /* ========================================
+       BOTÃO ENTRAR
+       ======================================== */
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #006b8f, #004d6d);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1.05rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 107, 143, 0.3);
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 107, 143, 0.4);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    /* ========================================
+       DIVIDER
+       ======================================== */
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 20px 0;
+      color: #9ca3af;
+      font-size: 0.85rem;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .divider span {
+      padding: 0 12px;
+    }
+
+    /* ========================================
+       LINK CADASTRO
+       ======================================== */
+    .cadastro-section {
+      text-align: center;
+    }
+
+    .cadastro-section p {
+      font-size: 0.9rem;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
+
+    .link-cadastro {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #006b8f;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+    }
+
+    .link-cadastro:hover {
+      gap: 10px;
+    }
+
+    .link-cadastro i {
+      font-size: 0.85rem;
+    }
+
+    /* ========================================
+       FOOTER
+       ======================================== */
+    .footer-wrapper {
+      margin-top: 24px;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.85rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* ========================================
+       RESPONSIVO
+       ======================================== */
+    @media (max-width: 480px) {
+      .card-wrapper {
+        padding: 32px 28px;
+        max-width: 100%;
+      }
+
+      .header-title {
+        font-size: 1.7rem;
+      }
+
+      .icon-circle {
+        width: 70px;
+        height: 70px;
+      }
+
+      .icon-circle i {
+        font-size: 32px;
+      }
+
+      input[type="email"],
+      input[type="password"] {
+        font-size: 0.9rem;
+        padding: 12px 12px 12px 40px;
+      }
+    }
