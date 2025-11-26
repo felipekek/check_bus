@@ -3,158 +3,226 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin • Calendário de Ônibus</title>
+  <title>Calendário de Ônibus - Check Bus</title>
 
-  <!-- gradiente + tipografia global do site (garante mesmo fundo em todas as páginas) -->
-  <link rel="stylesheet" href="../css/style.css" />
-
-  <!-- CSS específico desta página -->
-  <link rel="stylesheet" href="../css/adm-lista-de-horarios.css" />
-  <link rel="stylesheet" href="../css/draw.css" />
-  <link rel="stylesheet" href="../css/perfil.css" />
-  <link rel="stylesheet" href="../css/style.css">
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <link rel="stylesheet" href="../css/adm-lista-de-horarios.css">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS externos -->
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/draw.css">
+
+
 </head>
 <body>
-  <button class="menu-btn" onclick="toggleMenu()">☰</button>
-  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-  <!-- Sidebar (Draw) -->
-  <div id="sidebar-container"></div>
-
-  <!-- Botão Perfil -->
-  <button class="perfil-btn" id="abrirPerfilAdmin">
-    <i class="fa-solid fa-user"></i> Perfil
+  <!-- Botão Menu (drawer) -->
+  <button class="menu-btn" onclick="toggleMenu()">
+    <i class="fas fa-bars"></i>
   </button>
 
-  <!-- Modal Perfil Admin -->
-  <div id="modalPerfilAdmin" class="modal">
-    <div class="modal-content">
-      <span id="fecharPerfilAdmin" class="close">&times;</span>
-      <h2 style="color: #008793;">Perfil do Administrador</h2>
+  <!-- Overlay -->
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-      <div class="perfil-card">
-        <p><strong>Nome:</strong> <span id="nomeUsuario">Carregando...</span></p>
-        <p><strong>Email:</strong> <span id="emailUsuario">Carregando...</span></p>
-        <p><strong>ID do Usuário:</strong> <span id="idUsuario">Carregando...</span></p>
-        <p><strong>CPF:</strong> <span id="cpfUsuario">Carregando...</span></p>
-      </div>
+  <!-- Sidebar (será carregada pelo JS) -->
+  <div id="sidebar-container"></div>
 
-      <div class="perfil-modal-buttons">
-        <button id="btnAtualizarEmail" class="btn primary">Atualizar E-mail</button>
-        <button id="btnAlterarSenha" class="btn">Alterar Senha</button>
-        <button id="btnLogout" class="btn danger">Sair</button>
-      </div>
+  <!-- HEADER (FORA DO CONTAINER) -->
+  <div class="header-wrapper">
+    <div class="logo-top">
+      <i class="fas fa-bus"></i>
+      <span>Check Bus</span>
+    </div>
+    <h1 class="header-title">Calendário de Ônibus</h1>
+    <p class="header-subtitle">Gerencie a disponibilidade de ônibus e turnos</p>
+    
+    <!-- Legenda -->
+    <div class="legend">
+      <span class="pill">
+        <span class="dot available"></span>
+        Tem ônibus
+      </span>
+      <span class="pill">
+        <span class="dot no-bus"></span>
+        Sem ônibus
+      </span>
+      <span class="pill">
+        <span class="dot going"></span>
+        Aluno vai (lado aluno)
+      </span>
     </div>
   </div>
 
-  <!-- Conteúdo principal -->
-  <header>
-    <h1>Admin • Calendário de Ônibus</h1>
-    <div class="legend">
-      <span class="pill"><span class="dot available"></span>Tem ônibus</span>
-      <span class="pill"><span class="dot no-bus"></span>Sem ônibus</span>
-      <span class="pill"><span class="dot going"></span>Aluno vai (lado aluno)</span>
-    </div>
-  </header>
+  <!-- Botão Perfil (será gerenciado pelo perfil.js) -->
+  <button class="perfil-btn" id="btnPerfil">
+    <i class="fa-solid fa-user"></i>
+    Perfil
+  </button>
 
-  <main>
-    <section class="card">
-      <div class="calendar-nav">
-        <button id="prev">◀</button>
-        <div><strong id="monthLabel"></strong></div>
-        <button id="next">▶</button>
-      </div>
-      <div class="calendar" id="calendar"></div>
-    </section>
+  <!-- Container principal -->
+  <div class="container">
+    <main>
+      <!-- Calendário -->
+      <section class="card">
+        <div class="calendar-nav">
+          <button id="prev" title="Mês anterior">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <strong id="monthLabel"></strong>
+          <button id="next" title="Próximo mês">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+        <div class="calendar" id="calendar"></div>
+      </section>
 
-    <aside class="card tools">
-      <h3 style="margin-top:0">Ferramentas</h3>
+      <!-- Ferramentas -->
+      <aside class="card tools">
+        <h3>
+          <i class="fas fa-tools"></i>
+          Ferramentas
+        </h3>
 
-      <div class="row">
-        <select id="bulkWeekday">
-          <option value="">Aplicar por dia da semana…</option>
-          <option value="1">Segunda</option>
-          <option value="2">Terça</option>
-          <option value="3">Quarta</option>
-          <option value="4">Quinta</option>
-          <option value="5">Sexta</option>
-          <option value="0">Domingo</option>
-          <option value="6">Sábado</option>
-        </select>
-        <select id="bulkState">
-          <option value="available">Tem ônibus</option>
-          <option value="no_bus">Sem ônibus</option>
-        </select>
-        <button class="btn" id="applyWeekday">Aplicar</button>
-      </div>
+        <!-- Aplicar por dia da semana -->
+        <div class="row">
+          <select id="bulkWeekday">
+            <option value="">Selecione o dia...</option>
+            <option value="1">Segunda</option>
+            <option value="2">Terça</option>
+            <option value="3">Quarta</option>
+            <option value="4">Quinta</option>
+            <option value="5">Sexta</option>
+            <option value="0">Domingo</option>
+            <option value="6">Sábado</option>
+          </select>
+          <select id="bulkState">
+            <option value="available">Tem ônibus</option>
+            <option value="no_bus">Sem ônibus</option>
+          </select>
+        </div>
+        <button class="btn" id="applyWeekday">
+          <i class="fas fa-check"></i>
+          Aplicar
+        </button>
 
-      <div class="row">
-        <input type="date" id="rangeStart" />
-        <input type="date" id="rangeEnd" />
-        <select id="rangeState">
-          <option value="available">Tem ônibus</option>
-          <option value="no_bus">Sem ônibus</option>
-        </select>
+        <hr/>
+
+        <!-- Aplicar por intervalo -->
+        <h4>
+          <i class="fas fa-calendar-range"></i>
+          Intervalo de Datas
+        </h4>
+        <div class="row">
+          <input type="date" id="rangeStart" placeholder="Data inicial"/>
+          <input type="date" id="rangeEnd" placeholder="Data final"/>
+        </div>
+        <div class="row">
+          <select id="rangeState">
+            <option value="available">Tem ônibus</option>
+            <option value="no_bus">Sem ônibus</option>
+          </select>
+        </div>
 
         <div class="dias-semana-header">
-          <span>Selecione os dias que deseja alterar:</span>
-          <button type="button" class="btn btn-small" id="toggleDias">Marcar/Desmarcar Todos</button>
+          <span>Dias para alterar:</span>
+          <button type="button" class="btn btn-small" id="toggleDias">
+            Todos
+          </button>
         </div>
         <div class="dias-semana">
           <label title="Domingo">
-            <input type="checkbox" value="0" class="skip-day"> D
+            <input type="checkbox" value="0" class="skip-day"/>
+            D
           </label>
           <label title="Segunda">
-            <input type="checkbox" value="1" class="skip-day"> S
+            <input type="checkbox" value="1" class="skip-day"/>
+            S
           </label>
           <label title="Terça">
-            <input type="checkbox" value="2" class="skip-day"> T
+            <input type="checkbox" value="2" class="skip-day"/>
+            T
           </label>
           <label title="Quarta">
-            <input type="checkbox" value="3" class="skip-day"> Q
+            <input type="checkbox" value="3" class="skip-day"/>
+            Q
           </label>
           <label title="Quinta">
-            <input type="checkbox" value="4" class="skip-day"> Q
+            <input type="checkbox" value="4" class="skip-day"/>
+            Q
           </label>
           <label title="Sexta">
-            <input type="checkbox" value="5" class="skip-day"> S
+            <input type="checkbox" value="5" class="skip-day"/>
+            S
           </label>
           <label title="Sábado">
-            <input type="checkbox" value="6" class="skip-day"> S
+            <input type="checkbox" value="6" class="skip-day"/>
+            S
           </label>
         </div>
-        <button class="btn" id="applyRange">Aplicar intervalo</button>
-      </div>
+        <button class="btn" id="applyRange">
+          <i class="fas fa-calendar-check"></i>
+          Aplicar Intervalo
+        </button>
 
-      <hr/>
-      <h4>Turnos e horários</h4>
-      <table class="table">
-        <thead>
-          <tr><th>Turno</th><th>Saída</th><th>Chegada</th><th></th></tr>
-        </thead>
-        <tbody id="turnosBody"></tbody>
-      </table>
-      <div class="row">
-        <input type="text" id="novoTurno" placeholder="Nome do turno (ex.: Manhã)"/>
-        <input type="time" id="novoSaida"/>
-        <input type="time" id="novoChegada"/>
-        <button class="btn" id="addTurno">Adicionar turno</button>
-      </div>
+        <hr/>
 
-      <hr/>
-      <div class="row">
-        <button class="btn primary" id="saveMonth">Salvar mês</button>
-        <button class="btn" id="loadMonth">Recarregar</button>
-        <button class="btn danger" id="clearMonth">Limpar mês</button>
-      </div>
-      <small style="opacity:.7">
-        Os dados deste calendário são salvos no Firestore (coleção <code>calendars_admin</code>) através do backend.
-      </small>
-    </aside>
-  </main>
+        <!-- Turnos -->
+        <h4>
+          <i class="fas fa-clock"></i>
+          Turnos e Horários
+        </h4>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Turno</th>
+              <th>Saída</th>
+              <th>Chegada</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="turnosBody"></tbody>
+        </table>
+        
+        <div class="row">
+          <input type="text" id="novoTurno" placeholder="Nome (ex: Manhã)"/>
+          <input type="time" id="novoSaida" title="Horário de saída"/>
+          <input type="time" id="novoChegada" title="Horário de chegada"/>
+        </div>
+        <button class="btn primary" id="addTurno">
+          <i class="fas fa-plus"></i>
+          Adicionar Turno
+        </button>
 
-  <!-- AGORA COMO MÓDULO -->
+        <hr/>
+
+        <!-- Ações do mês -->
+        <div class="row">
+          <button class="btn primary" id="saveMonth">
+            <i class="fas fa-save"></i>
+            Salvar Mês
+          </button>
+          <button class="btn" id="loadMonth">
+            <i class="fas fa-sync"></i>
+            Recarregar
+          </button>
+          <button class="btn danger" id="clearMonth">
+            <i class="fas fa-trash"></i>
+            Limpar
+          </button>
+        </div>
+        <small>
+          Os dados são salvos no Firestore (coleção <code>calendars_admin</code>) através do backend.
+        </small>
+      </aside>
+    </main>
+  </div>
+
+  <!-- Scripts -->
   <script type="module" src="../js/adm-lista-de-horarios.js"></script>
 
   <script>
@@ -163,37 +231,37 @@
       const sidebar = document.getElementById("sidebar");
       const overlay = document.getElementById("overlay");
       const menuBtn = document.querySelector(".menu-btn");
-      sidebar.classList.toggle("active");
-      overlay.classList.toggle("active");
-      menuBtn.classList.toggle("hidden");
+      
+      if (sidebar) {
+        sidebar.classList.toggle("active");
+      }
+      if (overlay) {
+        overlay.classList.toggle("active");
+      }
+      if (menuBtn) {
+        menuBtn.classList.toggle("hidden");
+      }
     };
 
-    // Perfil modal open/close
-    const btnPerfil = document.getElementById('abrirPerfilAdmin');
-    const modal = document.getElementById('modalPerfilAdmin');
-    const fechar = document.getElementById('fecharPerfilAdmin');
-    const btnLogout = document.getElementById('btnLogout');
-
-    if (btnPerfil) btnPerfil.addEventListener('click', () => { modal.style.display = 'block'; });
-    if (fechar) fechar.addEventListener('click', () => { modal.style.display = 'none'; });
-    if (btnLogout) btnLogout.addEventListener('click', () => {
-      localStorage.removeItem('token'); localStorage.removeItem('tipoUsuario'); location.href = 'index.html';
-    });
-
-    window.addEventListener('click', (e) => {
-      if (e.target === modal) modal.style.display = 'none';
-    });
-
-    document.getElementById('overlay').addEventListener('click', () => {
-      document.getElementById('sidebar').classList.remove('active');
-      document.getElementById('overlay').classList.remove('active');
+    // Fechar sidebar ao clicar no overlay
+    document.getElementById('overlay')?.addEventListener('click', () => {
+      document.getElementById('sidebar')?.classList.remove('active');
+      document.getElementById('overlay')?.classList.remove('active');
       document.querySelector('.menu-btn')?.classList.remove('hidden');
     });
   </script>
 
+  <!-- Carregar sidebar e perfil -->
   <script type="module">
     import { inicializarSidebar } from "../js/sidebar-universal.js";
+    import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
+
+    // Inicializar sidebar
     await inicializarSidebar();
+
+    // Inicializar perfil
+    await carregarModalPerfil();
+    document.getElementById("btnPerfil")?.addEventListener("click", abrirPerfil);
   </script>
 
 </body>

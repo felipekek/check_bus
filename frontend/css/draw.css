@@ -6,12 +6,12 @@
 /* ===== Botão do Menu (drawer) no canto superior esquerdo ===== */
 .menu-btn {
   position: absolute;
-  top: 20px;
-  left: 20px;
-  font-size: 28px;
+  top: 30px;
+  left: 30px;
+  font-size: 24px;
   width: 54px;
   height: 54px;
-  background: linear-gradient(135deg, #004d7a 60%, #008793 100%);
+  background: linear-gradient(135deg, #006b8f, #004d6d);
   color: #fff;
   border: none;
   border-radius: 50%;
@@ -19,24 +19,38 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1501;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.18);
-  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+  z-index: 1201;
+  box-shadow: 0 4px 15px rgba(0, 107, 143, 0.3);
+  transition: all 0.3s ease;
 }
 
 .menu-btn:hover {
-  background: linear-gradient(135deg, #008793 60%, #004d7a 100%);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.22);
-  transform: scale(1.08);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 107, 143, 0.4);
+}
+
+.menu-btn:active {
+  transform: translateY(0);
+}
+
+.menu-btn.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.menu-btn i {
+  font-size: 20px;
 }
 
 /* ===== Overlay da Sidebar ===== */
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
   display: none;
   z-index: 1500;
+  transition: opacity 0.3s ease;
 }
 
 .overlay.active {
@@ -48,55 +62,142 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 250px;
+  width: 280px;
   height: 100%;
-  background: #00677a;
+  background: linear-gradient(180deg, #006b8f 0%, #004d6d 100%);
   color: #fff;
-  box-shadow: 2px 0 8px rgba(0,0,0,0.2);
-  padding: 20px;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+  padding: 30px 20px;
   transform: translateX(-100%);
-  transition: transform 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1502;
+  overflow-y: auto;
 }
 
 .sidebar.active {
   transform: translateX(0);
 }
 
+/* Header da sidebar */
+.sidebar-header {
+  text-align: center;
+  padding-bottom: 20px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  margin-bottom: 20px;
+}
+
+.sidebar-header i {
+  font-size: 48px;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.sidebar-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: white;
+}
+
+/* Botões da sidebar */
 .sidebar button {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   width: 100%;
-  margin: 10px 0;
-  padding: 10px;
-  background: #008793;
+  margin: 8px 0;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.1);
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 12px;
   cursor: pointer;
   text-align: left;
-  font-weight: 500;
-  font-size: 16px;
-  transition: opacity 0.2s;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
 }
 
 .sidebar button:hover {
-  opacity: 0.9;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateX(5px);
+}
+
+.sidebar button.active {
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar button i {
+  font-size: 1.1rem;
+  width: 24px;
+  text-align: center;
 }
 
 .sidebar button.logout {
-  background: #dc3545;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  margin-top: 20px;
 }
 
-/* ===== Espaçamento superior do body para não cobrir conteúdo ===== */
-/* REMOVIDO: Não é mais necessário com position: absolute */
+.sidebar button.logout:hover {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  transform: translateX(5px);
+}
+
+/* Scrollbar customizada */
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
 
 /* ===== Responsividade ===== */
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .menu-btn {
+    top: 20px;
+    left: 20px;
     width: 48px;
     height: 48px;
-    font-size: 24px;
-    top: 16px;
-    left: 16px;
+    font-size: 20px;
+  }
+
+  .menu-btn i {
+    font-size: 18px;
+  }
+
+  .sidebar {
+    width: 260px;
+  }
+}
+
+@media (max-width: 480px) {
+  .menu-btn {
+    top: 15px;
+    left: 15px;
+    width: 44px;
+    height: 44px;
+  }
+
+  .sidebar {
+    width: 240px;
+    padding: 24px 16px;
+  }
+
+  .sidebar button {
+    padding: 12px 14px;
+    font-size: 0.9rem;
   }
 }
