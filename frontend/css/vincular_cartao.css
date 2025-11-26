@@ -137,18 +137,18 @@
     }
 
     /* ========================================
-       ÍCONE VERDE (CARTÃO RFID)
+       ÍCONE VERDE-ÁGUA (CARTÃO RFID)
        ======================================== */
     .icon-circle {
       width: 80px;
       height: 80px;
       margin: 0 auto 32px;
-      background: linear-gradient(135deg, #10b981, #059669);
+      background: linear-gradient(135deg, #00c896, #00a67c);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+      box-shadow: 0 4px 15px rgba(0, 200, 150, 0.3);
     }
 
     .icon-circle i {
@@ -208,9 +208,9 @@
 
     input:focus {
       outline: none;
-      border-color: #10b981;
+      border-color: #00c896;
       background: white;
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+      box-shadow: 0 0 0 3px rgba(0, 200, 150, 0.1);
     }
 
     input::placeholder {
@@ -254,7 +254,7 @@
     .btn-submit {
       width: 100%;
       padding: 14px;
-      background: linear-gradient(135deg, #10b981, #059669);
+      background: linear-gradient(135deg, #00c896, #00a67c);
       color: white;
       border: none;
       border-radius: 8px;
@@ -262,12 +262,12 @@
       font-size: 1.05rem;
       cursor: pointer;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      box-shadow: 0 4px 12px rgba(0, 200, 150, 0.3);
     }
 
     .btn-submit:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+      box-shadow: 0 6px 20px rgba(0, 200, 150, 0.4);
     }
 
     .btn-submit:active {

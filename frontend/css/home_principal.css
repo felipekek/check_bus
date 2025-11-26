@@ -1,4 +1,9 @@
-* {
+/* ========================================
+       ESTILOS ADICIONAIS PARA NOVO VISUAL
+       (Sobrescrevem os estilos antigos mantendo funcionalidade)
+       ======================================== */
+    
+    * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
@@ -55,6 +60,48 @@
       }
     }
 
+    /* Header */
+    .header-wrapper {
+      text-align: center;
+      margin-bottom: 24px;
+      color: white;
+      position: relative;
+      z-index: 10;
+    }
+
+    .logo-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding: 10px 24px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+    }
+
+    .logo-top i {
+      font-size: 22px;
+      color: white;
+    }
+
+    .logo-top span {
+      font-size: 20px;
+      font-weight: 600;
+      color: white;
+    }
+
+    .header-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: white;
+    }
+
+    .header-subtitle {
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
     /* Container principal com novo visual */
     .container.container--wide {
       max-width: 1200px;
@@ -80,18 +127,9 @@
       }
     }
 
-    /* Header */
-    header h1 {
-      margin: 0 0 30px 0;
-      color: #004d7a;
-      text-align: center;
-      font-weight: 700;
-      font-size: 2.2rem;
-    }
-
     /* Botão Perfil - Ajustado para novo layout */
     .perfil-btn {
-      position: fixed !important;
+      position: absolute !important;
       top: 30px;
       right: 30px;
       background: linear-gradient(135deg, #006b8f, #004d6d);
@@ -121,7 +159,7 @@
 
     /* Botão Feedback - Ajustado */
     .feedback-btn {
-      position: fixed !important;
+      position: absolute !important;
       bottom: 30px;
       right: 30px;
       background: linear-gradient(135deg, #f59e0b, #d97706);
@@ -363,7 +401,7 @@
 
       .perfil-btn,
       .feedback-btn {
-        position: fixed !important;
+        position: absolute !important;
         padding: 10px 20px;
         font-size: 0.9rem;
       }
@@ -380,16 +418,41 @@
     }
 
     @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+
+      .header-wrapper {
+        margin-bottom: 16px;
+      }
+
+      .logo-top {
+        padding: 8px 20px;
+        margin-bottom: 12px;
+      }
+
+      .logo-top i {
+        font-size: 20px;
+      }
+
+      .logo-top span {
+        font-size: 18px;
+      }
+
+      .header-title {
+        font-size: 1.8rem;
+        margin-bottom: 4px;
+      }
+
+      .header-subtitle {
+        font-size: 0.85rem;
+      }
+
       .container.container--wide {
         width: 100%;
         padding: 24px 20px;
-        border-radius: 0;
-        margin: 0;
-      }
-
-      header h1 {
-        font-size: 1.8rem;
-        margin-bottom: 20px;
+        border-radius: 16px;
+        margin: 10px auto;
       }
 
       .grid {

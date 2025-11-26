@@ -1,92 +1,274 @@
 <div id="modalPerfil" class="modal">
   <div class="modal-content">
     <span id="btnFecharPerfil" class="close">&times;</span>
-    <h2 style="color: #008793;">Meu Perfil</h2>
+    
+    <!-- Header do modal -->
+    <div class="modal-header">
+      <div class="modal-icon">
+        <i class="fas fa-user-circle"></i>
+      </div>
+      <h2>Meu Perfil</h2>
+      <p class="modal-subtitle">Informações da sua conta</p>
+    </div>
 
+    <!-- Dados do perfil -->
     <div class="perfil-card">
-      <p><strong>Nome:</strong> <span id="nomeUsuario">Carregando...</span></p>
-      <p><strong>Email:</strong> <span id="emailUsuario">Carregando...</span></p>
-      <p><strong>ID do Usuário:</strong> <span id="idUsuario">Carregando...</span></p>
-      <p><strong>CPF:</strong> <span id="cpfUsuario">Carregando...</span></p>
-      <p><strong>Instituição:</strong> <span id="instituicaoUsuario">Carregando...</span></p>
-      <p><strong>Telefone:</strong> <span id="telefoneUsuario">Carregando...</span></p>
-      <p><strong>Curso:</strong> <span id="cursoUsuario">Carregando...</span></p>
-      <p><strong>Turno:</strong> <span id="turnoUsuario">Carregando...</span></p>
-      <p><strong>Período:</strong> <span id="periodoUsuario">Carregando...</span></p>
+      <div class="perfil-item">
+        <div class="perfil-label">
+          <i class="fas fa-user"></i>
+          <strong>Nome</strong>
+        </div>
+        <span id="nomeUsuario" class="perfil-value">Carregando...</span>
+      </div>
+
+      <div class="perfil-item">
+        <div class="perfil-label">
+          <i class="fas fa-envelope"></i>
+          <strong>Email</strong>
+        </div>
+        <span id="emailUsuario" class="perfil-value">Carregando...</span>
+      </div>
+
+      <div class="perfil-item">
+        <div class="perfil-label">
+          <i class="fas fa-fingerprint"></i>
+          <strong>ID do Usuário</strong>
+        </div>
+        <span id="idUsuario" class="perfil-value">Carregando...</span>
+      </div>
+
+      <div class="perfil-item">
+        <div class="perfil-label">
+          <i class="fas fa-id-card"></i>
+          <strong>CPF</strong>
+        </div>
+        <span id="cpfUsuario" class="perfil-value">Carregando...</span>
+      </div>
+
+      <div class="perfil-item">
+        <div class="perfil-label">
+          <i class="fas fa-school"></i>
+          <strong>Instituição</strong>
+        </div>
+        <span id="instituicaoUsuario" class="perfil-value">Carregando...</span>
+      </div>
+
+      <div class="perfil-item">
+        <div class="perfil-label">
+          <i class="fas fa-phone"></i>
+          <strong>Telefone</strong>
+        </div>
+        <span id="telefoneUsuario" class="perfil-value">Carregando...</span>
+      </div>
+
+      <div class="perfil-item">
+        <div class="perfil-label">
+          <i class="fas fa-graduation-cap"></i>
+          <strong>Curso</strong>
+        </div>
+        <span id="cursoUsuario" class="perfil-value">Carregando...</span>
+      </div>
+
+      <div class="perfil-item">
+        <div class="perfil-label">
+          <i class="fas fa-clock"></i>
+          <strong>Turno</strong>
+        </div>
+        <span id="turnoUsuario" class="perfil-value">Carregando...</span>
+      </div>
+
+      <div class="perfil-item">
+        <div class="perfil-label">
+          <i class="fas fa-calendar"></i>
+          <strong>Período</strong>
+        </div>
+        <span id="periodoUsuario" class="perfil-value">Carregando...</span>
+      </div>
     </div>
 
+    <!-- Botões de ação -->
     <div class="perfil-modal-buttons">
-      <button id="btnAtualizarPerfil">Atualizar Perfil</button>
-      <button id="btnAtualizarEmail">Atualizar E-mail</button>
-      <button id="btnAlterarSenha">Alterar Senha</button>
+      <button id="btnAtualizarPerfil" class="btn-primary">
+        <i class="fas fa-edit"></i>
+        Atualizar Perfil
+      </button>
+      <button id="btnAtualizarEmail" class="btn-secondary">
+        <i class="fas fa-envelope"></i>
+        Atualizar E-mail
+      </button>
+      <button id="btnAlterarSenha" class="btn-tertiary">
+        <i class="fas fa-lock"></i>
+        Alterar Senha
+      </button>
     </div>
   </div>
 </div>
 
+<!-- Modal Alterar Senha -->
 <div id="modalAlterarSenha" class="modal">
-  <div class="modal-content">
+  <div class="modal-content modal-form">
     <span class="close" id="btnFecharSenha">&times;</span>
-    <h2 style="color: #008793;">Alterar Senha</h2>
+    
+    <div class="modal-header">
+      <div class="modal-icon modal-icon-orange">
+        <i class="fas fa-lock"></i>
+      </div>
+      <h2>Alterar Senha</h2>
+      <p class="modal-subtitle">Escolha uma senha forte e segura</p>
+    </div>
 
-    <form id="formAlterarSenha" class="senha-form">
-      <label for="senhaAtual">Senha Atual:</label>
-      <input type="password" id="senhaAtual" required>
+    <form id="formAlterarSenha" class="modal-form-content">
+      <div class="form-group">
+        <label for="senhaAtual">
+          <i class="fas fa-key"></i>
+          Senha Atual
+        </label>
+        <input type="password" id="senhaAtual" placeholder="Digite sua senha atual" required>
+      </div>
 
-      <label for="novaSenha">Nova Senha:</label>
-      <input type="password" id="novaSenha" required>
+      <div class="form-group">
+        <label for="novaSenha">
+          <i class="fas fa-lock"></i>
+          Nova Senha
+        </label>
+        <input type="password" id="novaSenha" placeholder="Mínimo 6 caracteres" required>
+      </div>
 
-      <label for="confirmaNovaSenha">Confirmar Nova Senha:</label>
-      <input type="password" id="confirmaNovaSenha" required>
+      <div class="form-group">
+        <label for="confirmaNovaSenha">
+          <i class="fas fa-lock"></i>
+          Confirmar Nova Senha
+        </label>
+        <input type="password" id="confirmaNovaSenha" placeholder="Repita a nova senha" required>
+      </div>
 
-      <button type="submit" id="btnSalvarSenha">Salvar</button>
+      <button type="submit" id="btnSalvarSenha" class="btn-submit">
+        <i class="fas fa-check"></i>
+        Salvar Senha
+      </button>
     </form>
   </div>
 </div>
 
+<!-- Modal Atualizar Perfil -->
 <div id="modalAtualizarPerfil" class="modal">
-  <div class="modal-content">
+  <div class="modal-content modal-form">
     <span class="close" id="btnFecharAtualizarPerfil">&times;</span>
-    <h2 style="color: #008793;">Atualizar Perfil</h2>
+    
+    <div class="modal-header">
+      <div class="modal-icon modal-icon-green">
+        <i class="fas fa-user-edit"></i>
+      </div>
+      <h2>Atualizar Perfil</h2>
+      <p class="modal-subtitle">Edite suas informações pessoais</p>
+    </div>
 
-    <form id="formAtualizarPerfil" class="senha-form">
-      <label for="nomeAtualizar">Nome:</label>
-      <input type="text" id="nomeAtualizar" required>
+    <form id="formAtualizarPerfil" class="modal-form-content">
+      <div class="form-group">
+        <label for="nomeAtualizar">
+          <i class="fas fa-user"></i>
+          Nome Completo
+        </label>
+        <input type="text" id="nomeAtualizar" placeholder="Seu nome completo" required>
+      </div>
 
-      <label for="telefoneAtualizar">Telefone:</label>
-      <input type="text" id="telefoneAtualizar">
+      <div class="form-group">
+        <label for="telefoneAtualizar">
+          <i class="fas fa-phone"></i>
+          Telefone
+        </label>
+        <input type="text" id="telefoneAtualizar" placeholder="(00) 00000-0000">
+      </div>
 
-      <label for="instituicaoAtualizar">Instituição:</label>
-      <input type="text" id="instituicaoAtualizar">
+      <div class="form-group">
+        <label for="instituicaoAtualizar">
+          <i class="fas fa-school"></i>
+          Instituição
+        </label>
+        <input type="text" id="instituicaoAtualizar" placeholder="Nome da instituição">
+      </div>
 
-      <label for="cursoAtualizar">Curso:</label>
-      <input type="text" id="cursoAtualizar">
+      <div class="form-group">
+        <label for="cursoAtualizar">
+          <i class="fas fa-graduation-cap"></i>
+          Curso
+        </label>
+        <input type="text" id="cursoAtualizar" placeholder="Nome do curso">
+      </div>
 
-      <label for="turnoAtualizar">Turno:</label>
-      <input type="text" id="turnoAtualizar">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="turnoAtualizar">
+            <i class="fas fa-clock"></i>
+            Turno
+          </label>
+          <input type="text" id="turnoAtualizar" placeholder="Ex: Matutino">
+        </div>
 
-      <label for="periodoAtualizar">Período:</label>
-      <input type="text" id="periodoAtualizar">
+        <div class="form-group">
+          <label for="periodoAtualizar">
+            <i class="fas fa-calendar"></i>
+            Período
+          </label>
+          <input type="text" id="periodoAtualizar" placeholder="Ex: 3º">
+        </div>
+      </div>
 
-      <button type="submit" id="btnSalvarPerfil">Salvar Alterações</button>
+      <button type="submit" id="btnSalvarPerfil" class="btn-submit">
+        <i class="fas fa-save"></i>
+        Salvar Alterações
+      </button>
     </form>
   </div>
 </div>
 
+<!-- Modal Atualizar Email -->
 <div id="modalAtualizarEmail" class="modal">
-  <div class="modal-content">
+  <div class="modal-content modal-form">
     <span id="btnFecharEmail" class="close">&times;</span>
-    <h2>Atualizar E-mail</h2>
-    <form id="formAtualizarEmail">
-      <label for="emailAtual">E-mail atual:</label>
-      <input type="email" id="emailAtual" required>
+    
+    <div class="modal-header">
+      <div class="modal-icon modal-icon-blue">
+        <i class="fas fa-envelope"></i>
+      </div>
+      <h2>Atualizar E-mail</h2>
+      <p class="modal-subtitle">Altere o e-mail da sua conta</p>
+    </div>
 
-      <label for="senhaAtualEmail">Senha atual:</label>
-      <input type="password" id="senhaAtualEmail" required>
+    <form id="formAtualizarEmail" class="modal-form-content">
+      <div class="info-alert">
+        <i class="fas fa-info-circle"></i>
+        <p>Você receberá um link de verificação no novo e-mail para confirmar a alteração.</p>
+      </div>
 
-      <label for="novoEmail">Novo e-mail:</label>
-      <input type="email" id="novoEmail" required>
+      <div class="form-group">
+        <label for="emailAtual">
+          <i class="fas fa-envelope"></i>
+          E-mail Atual
+        </label>
+        <input type="email" id="emailAtual" placeholder="seu.email@atual.com" required readonly>
+      </div>
 
-      <button type="submit">Salvar</button>
+      <div class="form-group">
+        <label for="senhaAtualEmail">
+          <i class="fas fa-lock"></i>
+          Senha Atual
+        </label>
+        <input type="password" id="senhaAtualEmail" placeholder="Digite sua senha" required>
+      </div>
+
+      <div class="form-group">
+        <label for="novoEmail">
+          <i class="fas fa-envelope"></i>
+          Novo E-mail
+        </label>
+        <input type="email" id="novoEmail" placeholder="seu.novo@email.com" required>
+      </div>
+
+      <button type="submit" class="btn-submit">
+        <i class="fas fa-paper-plane"></i>
+        Enviar Link de Verificação
+      </button>
     </form>
   </div>
 </div>
