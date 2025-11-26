@@ -1,34 +1,137 @@
-<!--
-  Página de recuperação de senha.
-  Permite que o usuário solicite um link de redefinição via Firebase.
-  Toda a lógica está em js/esqueceu_senha.js.
--->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Recuperar Senha</title>
-  <link rel="stylesheet" href="../css/style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recuperar Senha - Check Bus</title>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- CSS -->
   <link rel="stylesheet" href="../css/esquec_senha.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="container">
-    <h1>Recuperar Senha</h1>
-    <form id="resetForm">
-      <label for="email">Digite seu E-mail:</label>
-      <input type="email" id="email" required placeholder="exemplo@email.com" />
-      <p id="emailMessage" class="msg-erro"></p>
-
-      <button type="submit">Redefinir</button>
-    </form>
-
-    <p>Voltar ao <a href="index.html">Login?</a></p>
-    <p id="message"></p>
+  <!-- Background animado -->
+  <div class="background-animated">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
   </div>
 
+  <!-- Container principal -->
+  <div class="recuperar-container">
+    
+    <!-- Logo e título -->
+    <div class="header-section">
+      <div class="logo-container">
+        <i class="fas fa-bus"></i>
+        <span class="logo-text">Check Bus</span>
+      </div>
+      <h1 class="page-title">Recuperar Senha</h1>
+      <p class="page-subtitle">Insira seu email para receber o link de recuperação</p>
+    </div>
+
+    <!-- Card do formulário -->
+    <div class="form-card">
+      
+      <!-- Ícone de chave -->
+      <div class="icon-wrapper">
+        <div class="icon-circle">
+          <i class="fas fa-key"></i>
+        </div>
+      </div>
+
+      <!-- Formulário -->
+      <form id="recuperarSenhaForm" class="recuperar-form">
+        
+        <!-- Campo Email -->
+        <div class="form-group">
+          <label for="email" class="form-label">
+            <i class="fas fa-envelope"></i>
+            Email
+          </label>
+          <div class="input-wrapper">
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              class="form-input" 
+              placeholder="seu.email@exemplo.com"
+              required
+              autocomplete="email"
+            >
+            <span class="input-icon">
+              <i class="fas fa-envelope"></i>
+            </span>
+          </div>
+          <span class="error-message" id="emailError"></span>
+        </div>
+
+        <!-- Mensagem de status -->
+        <div class="status-message" id="statusMessage" style="display: none;">
+          <i class="fas fa-info-circle"></i>
+          <span id="statusText"></span>
+        </div>
+
+        <!-- Botão Enviar -->
+        <button type="submit" class="btn-submit" id="btnSubmit">
+          <span class="btn-text">Enviar Link de Recuperação</span>
+          <span class="btn-loading" style="display: none;">
+            <i class="fas fa-spinner fa-spin"></i>
+            Enviando...
+          </span>
+        </button>
+
+        <!-- Informação adicional -->
+        <div class="info-box">
+          <i class="fas fa-info-circle"></i>
+          <p>Você receberá um email com instruções para redefinir sua senha.</p>
+        </div>
+
+      </form>
+
+      <!-- Links de navegação -->
+      <div class="links-section">
+        <a href="index.html" class="link-voltar">
+          <i class="fas fa-arrow-left"></i>
+          Voltar para o login
+        </a>
+        
+        <div class="divider">
+          <span>ou</span>
+        </div>
+        
+        <a href="cadastro.html" class="link-cadastro">
+          Ainda não tem conta? <strong>Cadastre-se</strong>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer-section">
+      <p>&copy; 2024 Check Bus. Todos os direitos reservados.</p>
+      <div class="footer-links">
+        <a href="#">Termos de Uso</a>
+        <span>•</span>
+        <a href="#">Política de Privacidade</a>
+        <span>•</span>
+        <a href="#">Suporte</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Firebase SDK (modo módulo) -->
   <script type="module" src="../js/esquec_senha.js"></script>
 
+  <!-- Script de animação de entrada (inline porque é simples) -->
+  <script>
+    // Animação de entrada
+    window.addEventListener('load', () => {
+      document.querySelector('.recuperar-container').classList.add('loaded');
+    });
+  </script>
 </body>
 </html>

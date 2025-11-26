@@ -3,30 +3,105 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login - Ônibus Conectado</title>
-  <link rel="stylesheet" href="../css/style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <title>Login - Check Bus</title>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <link rel="stylesheet" href="../css/login.css">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
 </head>
 <body>
-  <div class="container">
-    <img src="../assets/logo_do_TCC.jpeg" alt="" class="img">
-    <h1>Login</h1>
-    <form id="loginForm">
-      <label for="email">E-mail</label>
-      <input type="email" id="email" required placeholder="exemplo@email.com" />
 
-      <label for="password">Senha</label>
-      <input type="password" id="password" required placeholder="Digite sua senha" />
+  <!-- Shapes animadas -->
+  <div class="shape shape-1"></div>
+  <div class="shape shape-2"></div>
+  <div class="shape shape-3"></div>
 
-      <button type="submit" class="btn">Entrar</button>
-      <a href="../html/esquec_senha.html" class="esqueceu-senha-link">Esqueceu a senha?</a>
-      
-    </form>
-
-    <p>Não tem conta? <a href="../html/cadastro.html">Cadastre-se aqui</a></p>
-    <p id="loginMessage"></p>
+  <!-- HEADER (FORA DO CARD) -->
+  <div class="header-wrapper">
+    <div class="logo-top">
+      <i class="fas fa-bus"></i>
+      <span>Check Bus</span>
+    </div>
+    <h1 class="header-title">Bem-vindo de volta!</h1>
+    <p class="header-subtitle">Faça login para acessar sua conta</p>
   </div>
 
+  <!-- CARD BRANCO -->
+  <div class="card-wrapper">
+    
+    <!-- Ícone azul -->
+    <div class="icon-circle">
+      <i class="fas fa-user"></i>
+    </div>
+
+    <!-- FORMULÁRIO -->
+    <form id="loginForm">
+      
+      <!-- Email -->
+      <div>
+        <label for="email" class="form-label">
+          <i class="fas fa-envelope"></i>
+          Email
+        </label>
+        <div class="input-wrapper">
+          <i class="fas fa-envelope input-icon"></i>
+          <input type="email" id="email" placeholder="staff@adm.com" required>
+        </div>
+      </div>
+
+      <!-- Senha -->
+      <div>
+        <label for="password" class="form-label">
+          <i class="fas fa-lock"></i>
+          Senha
+        </label>
+        <div class="input-wrapper">
+          <i class="fas fa-lock input-icon"></i>
+          <input type="password" id="password" placeholder="••••••••" required>
+        </div>
+      </div>
+
+      <!-- Link Esqueceu Senha -->
+      <div class="link-esqueceu">
+        <a href="esquec_senha.html">Esqueceu a senha?</a>
+      </div>
+
+      <!-- Mensagem -->
+      <p id="loginMessage"></p>
+
+      <!-- Botão -->
+      <button type="submit" class="btn-submit">Entrar</button>
+
+    </form>
+
+    <!-- Divider -->
+    <div class="divider">
+      <span>ou</span>
+    </div>
+
+    <!-- Link Cadastro -->
+    <div class="cadastro-section">
+      <p>Ainda não tem uma conta?</p>
+      <a href="cadastro.html" class="link-cadastro">
+        Criar conta grátis
+        <i class="fas fa-arrow-right"></i>
+      </a>
+    </div>
+
+  </div>
+
+  <!-- FOOTER (FORA DO CARD) -->
+  <div class="footer-wrapper">
+    <p>© 2024 Check Bus. Todos os direitos reservados.</p>
+  </div>
+
+  <!-- Script do main.js -->
   <script type="module" src="../js/main.js"></script>
+
 </body>
 </html>

@@ -1,83 +1,705 @@
-<!--
-  Página de cadastro de aluno.
-  Permite criar uma nova conta informando dados pessoais e senha.
-  O formulário chama o cadastro no Firebase (ver js/cadastro.js).
--->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Cadastro de Aluno</title>
-  <link rel="stylesheet" href="../css/style.css" />
-  <link rel="stylesheet" href="../css/cadastro.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <title>Cadastro - Check Bus</title>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', Arial, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(180deg, #006b8f 0%, #004d6d 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 20px;
+      position: relative;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    /* ========================================
+       SHAPES ANIMADAS
+       ======================================== */
+    .shape {
+      position: fixed;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      animation: float 20s infinite ease-in-out;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .shape-1 {
+      width: 400px;
+      height: 400px;
+      top: -100px;
+      left: -100px;
+      animation-delay: 0s;
+    }
+
+    .shape-2 {
+      width: 500px;
+      height: 500px;
+      bottom: -150px;
+      right: -150px;
+      animation-delay: 5s;
+    }
+
+    .shape-3 {
+      width: 350px;
+      height: 350px;
+      top: 40%;
+      left: 50%;
+      animation-delay: 10s;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translate(0, 0) scale(1);
+      }
+      33% {
+        transform: translate(30px, -30px) scale(1.1);
+      }
+      66% {
+        transform: translate(-20px, 20px) scale(0.9);
+      }
+    }
+
+    /* ========================================
+       HEADER (FORA DO CARD)
+       ======================================== */
+    .header-wrapper {
+      text-align: center;
+      margin-bottom: 24px;
+      color: white;
+      position: relative;
+      z-index: 10;
+    }
+
+    .logo-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding: 8px 20px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+    }
+
+    .logo-top i {
+      font-size: 20px;
+      color: white;
+    }
+
+    .logo-top span {
+      font-size: 18px;
+      font-weight: 600;
+      color: white;
+    }
+
+    .header-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: white;
+    }
+
+    .header-subtitle {
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    /* ========================================
+       CARD BRANCO
+       ======================================== */
+    .card-wrapper {
+      background: white;
+      padding: 36px 32px;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+      width: 100%;
+      max-width: 420px;
+      animation: slideUp 0.5s ease-out;
+      position: relative;
+      z-index: 10;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ========================================
+       ÍCONE VERDE
+       ======================================== */
+    .icon-circle {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 28px;
+      background: linear-gradient(135deg, #00c896, #00a67c);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(0, 200, 150, 0.3);
+    }
+
+    .icon-circle i {
+      color: white;
+      font-size: 32px;
+    }
+
+    /* ========================================
+       FORMULÁRIO
+       ======================================== */
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Label */
+    .form-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #006b8f;
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin-bottom: 6px;
+    }
+
+    .form-label i {
+      font-size: 0.9rem;
+    }
+
+    /* Input wrapper */
+    .input-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #999;
+      font-size: 0.95rem;
+    }
+
+    /* Inputs */
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    select {
+      width: 100%;
+      padding: 11px 14px 11px 40px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      background: #f9fafb;
+      transition: all 0.2s ease;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: #00c896;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(0, 200, 150, 0.1);
+    }
+
+    /* Select */
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      cursor: pointer;
+    }
+
+    /* Grid 2 colunas */
+    .row-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    /* Mensagens de erro */
+    .error-message {
+      color: #ef4444;
+      font-size: 0.8rem;
+      margin-top: 4px;
+      display: block;
+      min-height: 16px;
+    }
+
+    /* ========================================
+       CHECKBOX DOS TERMOS
+       ======================================== */
+    .checkbox-wrapper {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .checkbox-wrapper input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      cursor: pointer;
+      accent-color: #00c896;
+    }
+
+    .checkbox-text {
+      font-size: 0.85rem;
+      color: #4b5563;
+      line-height: 1.5;
+    }
+
+    .checkbox-text a {
+      color: #006b8f;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .checkbox-text a:hover {
+      text-decoration: underline;
+    }
+
+    /* ========================================
+       BOTÃO CRIAR CONTA
+       ======================================== */
+    .btn-submit {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, #00c896, #00a67c);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 200, 150, 0.3);
+      margin-top: 8px;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 200, 150, 0.4);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    /* ========================================
+       DIVIDER
+       ======================================== */
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 20px 0;
+      color: #9ca3af;
+      font-size: 0.85rem;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .divider span {
+      padding: 0 12px;
+    }
+
+    /* ========================================
+       LINK LOGIN
+       ======================================== */
+    .login-section {
+      text-align: center;
+    }
+
+    .login-section p {
+      font-size: 0.9rem;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
+
+    .link-login {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #006b8f;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+    }
+
+    .link-login:hover {
+      gap: 10px;
+    }
+
+    .link-login i {
+      font-size: 0.85rem;
+    }
+
+    /* ========================================
+       FOOTER
+       ======================================== */
+    .footer-wrapper {
+      margin-top: 24px;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.8rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      font-size: 0.8rem;
+    }
+
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-links span {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* ========================================
+       MENSAGEM DE STATUS
+       ======================================== */
+    #message {
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      text-align: center;
+      display: none;
+      margin-top: 8px;
+    }
+
+    #message.success {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #6ee7b7;
+      display: block;
+    }
+
+    #message.error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fca5a5;
+      display: block;
+    }
+
+    /* ========================================
+       RESPONSIVO
+       ======================================== */
+    @media (max-width: 480px) {
+      .card-wrapper {
+        padding: 28px 24px;
+        max-width: 100%;
+      }
+
+      .header-title {
+        font-size: 1.5rem;
+      }
+
+      .row-grid {
+        grid-template-columns: 1fr;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="password"],
+      select {
+        font-size: 0.85rem;
+        padding: 10px 12px 10px 36px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Cadastro de Aluno</h1>
-    <form id="registerForm">
-      <div class="campo">
-        <label for="nome">Nome completo</label>
-        <input type="text" id="nome" required placeholder="Digite seu nome completo" />
-        <p id="nomeMessage" class="msg-erro"></p>
-      </div>
-      <div class="campo">
-        <label for="cpf">CPF</label>
-        <input type="text" id="cpf" required placeholder="000.000.000-00" maxlength="14"/>
-        <p id="cpfMessage" class="msg-erro"></p>
-      </div>
-      <div class="campo">
-        <label for="instituicao">Instituição</label>
-        <input type="text" id="instituicao" required placeholder="Nome da instituição" />
-        <p id="instituicaoMessage" class="msg-erro"></p>
-      </div>
-      <div class="campo">
-        <label for="email">E-mail</label>
-        <input type="email" id="email" required placeholder="exemplo@email.com" />
-        <p id="emailMessage" class="msg-erro"></p>
-      </div>
-      <div class="campo">
-        <label for="telefone">Telefone</label>
-        <input type="tel" id="telefone" required placeholder="(99) 99999-9999" maxlength="15" />
-        <p id="telefoneMessage" class="msg-erro"></p>
-      </div>
-      <div class="campo">
-        <label for="curso">Curso</label>
-        <input type="text" id="curso" required placeholder="Nome do curso" />
-        <p id="cursoMessage" class="msg-erro"></p>
-      </div>
-      <div class="campo">
-        <label for="turno">Turno</label>
-        <select id="turno" required>
-          <option value="">Selecione</option>
-          <option value="Manhã">Manhã</option>
-          <option value="Tarde">Tarde</option>
-          <option value="Noite">Noite</option>
-        </select>
-        <p id="turnoMessage" class="msg-erro"></p>
-      </div>
-      <div class="campo">
-        <label for="periodo">Período</label>
-        <input type="number" id="periodo" required min="1" max="12" placeholder="Ex: 1, 2, 3..." />
-        <p id="periodoMessage" class="msg-erro"></p>
-      </div>
-      <div class="campo">
-        <label for="senha">Senha</label>
-        <input type="password" id="senha" required placeholder="Crie uma senha" />
-        <p id="senhaMessage" class="msg-erro"></p>
-      </div>
-      <div class="campo">
-        <label for="confirmarSenha">Confirmar Senha</label>
-        <input type="password" id="confirmarSenha" required placeholder="Repita a senha" />
-        <p id="confirmarSenhaMessage" class="msg-erro"></p>
-      </div>
-      <button type="submit">Cadastrar</button>
-    </form>
-    <p>Já tem conta? <a href="index.html">Login aqui</a></p>
-    <p id="message"></p>
+
+  <!-- Shapes animadas -->
+  <div class="shape shape-1"></div>
+  <div class="shape shape-2"></div>
+  <div class="shape shape-3"></div>
+
+  <!-- HEADER (FORA DO CARD) -->
+  <div class="header-wrapper">
+    <div class="logo-top">
+      <i class="fas fa-bus"></i>
+      <span>Check Bus</span>
+    </div>
+    <h1 class="header-title">Criar sua conta</h1>
+    <p class="header-subtitle">Preencha os dados para começar</p>
   </div>
-  
+
+  <!-- CARD BRANCO -->
+  <div class="card-wrapper">
+    
+    <!-- Ícone verde -->
+    <div class="icon-circle">
+      <i class="fas fa-user-plus"></i>
+    </div>
+
+    <!-- FORMULÁRIO -->
+    <form id="registerForm">
+      
+      <!-- Nome Completo -->
+      <div>
+        <label for="nome" class="form-label">
+          <i class="fas fa-user"></i>
+          Nome Completo
+        </label>
+        <div class="input-wrapper">
+          <i class="fas fa-user input-icon"></i>
+          <input type="text" id="nome" placeholder="Seu nome completo" required>
+        </div>
+        <span id="nomeMessage" class="error-message"></span>
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label for="email" class="form-label">
+          <i class="fas fa-envelope"></i>
+          Email
+        </label>
+        <div class="input-wrapper">
+          <i class="fas fa-envelope input-icon"></i>
+          <input type="email" id="email" placeholder="seu.email@exemplo.com" required>
+        </div>
+        <span id="emailMessage" class="error-message"></span>
+      </div>
+
+      <!-- CPF e Telefone (Grid 2 colunas) -->
+      <div class="row-grid">
+        <div>
+          <label for="cpf" class="form-label">
+            <i class="fas fa-id-card"></i>
+            CPF
+          </label>
+          <div class="input-wrapper">
+            <i class="fas fa-id-card input-icon"></i>
+            <input type="text" id="cpf" placeholder="000.000.000-00" maxlength="14" required>
+          </div>
+          <span id="cpfMessage" class="error-message"></span>
+        </div>
+
+        <div>
+          <label class="form-label">
+            <i class="fas fa-phone"></i>
+            Telefone
+          </label>
+          <div class="input-wrapper">
+            <i class="fas fa-phone input-icon"></i>
+            <input type="text" id="telefone" placeholder="(00) 00000-0000" maxlength="15">
+          </div>
+        </div>
+      </div>
+
+      <!-- Instituição de Ensino -->
+      <div>
+        <label for="instituicao" class="form-label">
+          <i class="fas fa-school"></i>
+          Instituição de Ensino
+        </label>
+        <div class="input-wrapper">
+          <i class="fas fa-school input-icon"></i>
+          <input type="text" id="instituicao" placeholder="Nome da sua escola/faculdade" required>
+        </div>
+        <span id="instituicaoMessage" class="error-message"></span>
+      </div>
+
+      <!-- Curso e Período (Grid 2 colunas) -->
+      <div class="row-grid">
+        <div>
+          <label class="form-label">
+            <i class="fas fa-graduation-cap"></i>
+            Curso
+          </label>
+          <div class="input-wrapper">
+            <i class="fas fa-graduation-cap input-icon"></i>
+            <input type="text" id="curso" placeholder="Seu curso">
+          </div>
+        </div>
+
+        <div>
+          <label class="form-label">
+            <i class="fas fa-calendar"></i>
+            Período
+          </label>
+          <div class="input-wrapper">
+            <i class="fas fa-calendar input-icon"></i>
+            <input type="text" id="periodo" placeholder="Ex: 3º período">
+          </div>
+        </div>
+      </div>
+
+      <!-- Turno -->
+      <div>
+        <label class="form-label">
+          <i class="fas fa-clock"></i>
+          Turno
+        </label>
+        <div class="input-wrapper">
+          <i class="fas fa-clock input-icon"></i>
+          <select id="turno">
+            <option value="">Selecione o turno</option>
+            <option value="matutino">Matutino</option>
+            <option value="vespertino">Vespertino</option>
+            <option value="noturno">Noturno</option>
+            <option value="integral">Integral</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Senha -->
+      <div>
+        <label for="senha" class="form-label">
+          <i class="fas fa-lock"></i>
+          Senha
+        </label>
+        <div class="input-wrapper">
+          <i class="fas fa-lock input-icon"></i>
+          <input type="password" id="senha" placeholder="Mínimo 6 caracteres" required>
+        </div>
+        <span id="senhaMessage" class="error-message"></span>
+      </div>
+
+      <!-- Confirmar Senha -->
+      <div>
+        <label class="form-label">
+          <i class="fas fa-lock"></i>
+          Confirmar Senha
+        </label>
+        <div class="input-wrapper">
+          <i class="fas fa-lock input-icon"></i>
+          <input type="password" id="confirmarSenha" placeholder="Repita sua senha" required>
+        </div>
+      </div>
+
+      <!-- Checkbox Termos -->
+      <div class="checkbox-wrapper">
+        <input type="checkbox" id="termos" required>
+        <label for="termos" class="checkbox-text">
+          Aceito os <a href="#">Termos de Uso</a> e a <a href="#">Política de Privacidade</a>
+        </label>
+      </div>
+
+      <!-- Mensagem -->
+      <div id="message"></div>
+
+      <!-- Botão -->
+      <button type="submit" class="btn-submit">Criar Conta</button>
+
+    </form>
+
+    <!-- Divider -->
+    <div class="divider">
+      <span>ou</span>
+    </div>
+
+    <!-- Link Login -->
+    <div class="login-section">
+      <p>Já tem uma conta?</p>
+      <a href="index.html" class="link-login">
+        Fazer login
+        <i class="fas fa-arrow-right"></i>
+      </a>
+    </div>
+
+  </div>
+
+  <!-- FOOTER (FORA DO CARD) -->
+  <div class="footer-wrapper">
+    <p>&copy; 2024 Check Bus. Todos os direitos reservados.</p>
+    <div class="footer-links">
+      <a href="#">Termos de Uso</a>
+      <span>•</span>
+      <a href="#">Política de Privacidade</a>
+      <span>•</span>
+      <a href="#">Suporte</a>
+    </div>
+  </div>
+
+  <!-- Máscaras inline -->
+  <script>
+    // Máscara CPF
+    const cpfInput = document.getElementById('cpf');
+    if (cpfInput) {
+      cpfInput.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length <= 11) {
+          value = value.replace(/(\d{3})(\d)/, '$1.$2');
+          value = value.replace(/(\d{3})(\d)/, '$1.$2');
+          value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+          e.target.value = value;
+        }
+      });
+    }
+
+    // Máscara Telefone
+    const telefoneInput = document.getElementById('telefone');
+    if (telefoneInput) {
+      telefoneInput.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length <= 11) {
+          if (value.length <= 10) {
+            value = value.replace(/(\d{2})(\d)/, '($1) $2');
+            value = value.replace(/(\d{4})(\d)/, '$1-$2');
+          } else {
+            value = value.replace(/(\d{2})(\d)/, '($1) $2');
+            value = value.replace(/(\d{5})(\d)/, '$1-$2');
+          }
+          e.target.value = value;
+        }
+      });
+    }
+  </script>
+
+  <!-- Script do cadastro.js -->
   <script type="module" src="../js/cadastro.js"></script>
+
 </body>
 </html>

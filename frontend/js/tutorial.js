@@ -1,4 +1,4 @@
-export function initTutorial(passos, storageKey) {
+/* export function initTutorial(passos, storageKey) {
   const tutorialVisto = localStorage.getItem(storageKey);
   if (tutorialVisto) return;
 
@@ -122,4 +122,4 @@ export function initTutorial(passos, storageKey) {
   overlay.style.display = 'block';
   showStep();
   window.addEventListener('resize', showStep);
-}
+} */
