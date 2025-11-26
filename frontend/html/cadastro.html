@@ -8,454 +8,13 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   
+  <link rel="stylesheet" href="../css/cadastro.css">
+
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Inter', Arial, sans-serif;
-    }
-
-    body {
-      background: linear-gradient(180deg, #006b8f 0%, #004d6d 100%);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 30px 20px;
-      position: relative;
-      overflow-x: hidden;
-      overflow-y: auto;
-    }
-
-    /* ========================================
-       SHAPES ANIMADAS
-       ======================================== */
-    .shape {
-      position: fixed;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.05);
-      animation: float 20s infinite ease-in-out;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    .shape-1 {
-      width: 400px;
-      height: 400px;
-      top: -100px;
-      left: -100px;
-      animation-delay: 0s;
-    }
-
-    .shape-2 {
-      width: 500px;
-      height: 500px;
-      bottom: -150px;
-      right: -150px;
-      animation-delay: 5s;
-    }
-
-    .shape-3 {
-      width: 350px;
-      height: 350px;
-      top: 40%;
-      left: 50%;
-      animation-delay: 10s;
-    }
-
-    @keyframes float {
-      0%, 100% {
-        transform: translate(0, 0) scale(1);
-      }
-      33% {
-        transform: translate(30px, -30px) scale(1.1);
-      }
-      66% {
-        transform: translate(-20px, 20px) scale(0.9);
-      }
-    }
-
-    /* ========================================
-       HEADER (FORA DO CARD)
-       ======================================== */
-    .header-wrapper {
-      text-align: center;
-      margin-bottom: 24px;
-      color: white;
-      position: relative;
-      z-index: 10;
-    }
-
-    .logo-top {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 16px;
-      padding: 8px 20px;
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 30px;
-    }
-
-    .logo-top i {
-      font-size: 20px;
-      color: white;
-    }
-
-    .logo-top span {
-      font-size: 18px;
-      font-weight: 600;
-      color: white;
-    }
-
-    .header-title {
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-      color: white;
-    }
-
-    .header-subtitle {
-      font-size: 0.95rem;
-      color: rgba(255, 255, 255, 0.9);
-    }
-
-    /* ========================================
-       CARD BRANCO
-       ======================================== */
-    .card-wrapper {
-      background: white;
-      padding: 36px 32px;
-      border-radius: 16px;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-      width: 100%;
-      max-width: 420px;
-      animation: slideUp 0.5s ease-out;
-      position: relative;
-      z-index: 10;
-    }
-
-    @keyframes slideUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* ========================================
-       ÍCONE VERDE
-       ======================================== */
-    .icon-circle {
-      width: 70px;
-      height: 70px;
-      margin: 0 auto 28px;
-      background: linear-gradient(135deg, #00c896, #00a67c);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 15px rgba(0, 200, 150, 0.3);
-    }
-
-    .icon-circle i {
-      color: white;
-      font-size: 32px;
-    }
-
-    /* ========================================
-       FORMULÁRIO
-       ======================================== */
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    /* Label */
-    .form-label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #006b8f;
-      font-weight: 600;
-      font-size: 0.85rem;
-      margin-bottom: 6px;
-    }
-
-    .form-label i {
-      font-size: 0.9rem;
-    }
-
-    /* Input wrapper */
-    .input-wrapper {
-      position: relative;
-      width: 100%;
-    }
-
-    .input-icon {
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #999;
-      font-size: 0.95rem;
-    }
-
-    /* Inputs */
-    input[type="text"],
-    input[type="email"],
-    input[type="password"],
-    select {
-      width: 100%;
-      padding: 11px 14px 11px 40px;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      background: #f9fafb;
-      transition: all 0.2s ease;
-    }
-
-    input:focus,
-    select:focus {
-      outline: none;
-      border-color: #00c896;
-      background: white;
-      box-shadow: 0 0 0 3px rgba(0, 200, 150, 0.1);
-    }
-
-    /* Select */
-    select {
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 14px center;
-      cursor: pointer;
-    }
-
-    /* Grid 2 colunas */
-    .row-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    /* Mensagens de erro */
-    .error-message {
-      color: #ef4444;
-      font-size: 0.8rem;
-      margin-top: 4px;
-      display: block;
-      min-height: 16px;
-    }
-
-    /* ========================================
-       CHECKBOX DOS TERMOS
-       ======================================== */
-    .checkbox-wrapper {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      margin-top: 4px;
-    }
-
-    .checkbox-wrapper input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      margin-top: 2px;
-      cursor: pointer;
-      accent-color: #00c896;
-    }
-
-    .checkbox-text {
-      font-size: 0.85rem;
-      color: #4b5563;
-      line-height: 1.5;
-    }
-
-    .checkbox-text a {
-      color: #006b8f;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .checkbox-text a:hover {
-      text-decoration: underline;
-    }
-
-    /* ========================================
-       BOTÃO CRIAR CONTA
-       ======================================== */
-    .btn-submit {
-      width: 100%;
-      padding: 13px;
-      background: linear-gradient(135deg, #00c896, #00a67c);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(0, 200, 150, 0.3);
-      margin-top: 8px;
-    }
-
-    .btn-submit:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 200, 150, 0.4);
-    }
-
-    .btn-submit:active {
-      transform: translateY(0);
-    }
-
-    /* ========================================
-       DIVIDER
-       ======================================== */
-    .divider {
-      display: flex;
-      align-items: center;
-      text-align: center;
-      margin: 20px 0;
-      color: #9ca3af;
-      font-size: 0.85rem;
-    }
-
-    .divider::before,
-    .divider::after {
-      content: '';
-      flex: 1;
-      border-bottom: 1px solid #e5e7eb;
-    }
-
-    .divider span {
-      padding: 0 12px;
-    }
-
-    /* ========================================
-       LINK LOGIN
-       ======================================== */
-    .login-section {
-      text-align: center;
-    }
-
-    .login-section p {
-      font-size: 0.9rem;
-      color: #6b7280;
-      margin-bottom: 8px;
-    }
-
-    .link-login {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: #006b8f;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.95rem;
-      transition: all 0.2s ease;
-    }
-
-    .link-login:hover {
-      gap: 10px;
-    }
-
-    .link-login i {
-      font-size: 0.85rem;
-    }
-
-    /* ========================================
-       FOOTER
-       ======================================== */
-    .footer-wrapper {
-      margin-top: 24px;
-      text-align: center;
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 0.8rem;
-      position: relative;
-      z-index: 10;
-    }
-
-    .footer-links {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin-top: 8px;
-      flex-wrap: wrap;
-    }
-
-    .footer-links a {
-      color: rgba(255, 255, 255, 0.9);
-      text-decoration: none;
-      font-size: 0.8rem;
-    }
-
-    .footer-links a:hover {
-      text-decoration: underline;
-    }
-
-    .footer-links span {
-      color: rgba(255, 255, 255, 0.5);
-    }
-
-    /* ========================================
-       MENSAGEM DE STATUS
-       ======================================== */
-    #message {
-      padding: 12px;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      text-align: center;
-      display: none;
-      margin-top: 8px;
-    }
-
-    #message.success {
-      background: #d1fae5;
-      color: #065f46;
-      border: 1px solid #6ee7b7;
-      display: block;
-    }
-
-    #message.error {
-      background: #fee2e2;
-      color: #991b1b;
-      border: 1px solid #fca5a5;
-      display: block;
-    }
-
-    /* ========================================
-       RESPONSIVO
-       ======================================== */
-    @media (max-width: 480px) {
-      .card-wrapper {
-        padding: 28px 24px;
-        max-width: 100%;
-      }
-
-      .header-title {
-        font-size: 1.5rem;
-      }
-
-      .row-grid {
-        grid-template-columns: 1fr;
-      }
-
-      input[type="text"],
-      input[type="email"],
-      input[type="password"],
-      select {
-        font-size: 0.85rem;
-        padding: 10px 12px 10px 36px;
-      }
-    }
+    
   </style>
 </head>
 <body>
@@ -527,7 +86,7 @@
         </div>
 
         <div>
-          <label class="form-label">
+          <label for="telefone" class="form-label">
             <i class="fas fa-phone"></i>
             Telefone
           </label>
@@ -554,7 +113,7 @@
       <!-- Curso e Período (Grid 2 colunas) -->
       <div class="row-grid">
         <div>
-          <label class="form-label">
+          <label for="curso" class="form-label">
             <i class="fas fa-graduation-cap"></i>
             Curso
           </label>
@@ -565,7 +124,7 @@
         </div>
 
         <div>
-          <label class="form-label">
+          <label for="periodo" class="form-label">
             <i class="fas fa-calendar"></i>
             Período
           </label>
@@ -578,7 +137,7 @@
 
       <!-- Turno -->
       <div>
-        <label class="form-label">
+        <label for="turno" class="form-label">
           <i class="fas fa-clock"></i>
           Turno
         </label>
@@ -609,7 +168,7 @@
 
       <!-- Confirmar Senha -->
       <div>
-        <label class="form-label">
+        <label for="confirmarSenha" class="form-label">
           <i class="fas fa-lock"></i>
           Confirmar Senha
         </label>
@@ -617,6 +176,7 @@
           <i class="fas fa-lock input-icon"></i>
           <input type="password" id="confirmarSenha" placeholder="Repita sua senha" required>
         </div>
+        <span id="confirmarSenhaMessage" class="error-message"></span>
       </div>
 
       <!-- Checkbox Termos -->
@@ -628,7 +188,7 @@
       </div>
 
       <!-- Mensagem -->
-      <div id="message"></div>
+      <div id="message" class="message-box"></div>
 
       <!-- Botão -->
       <button type="submit" class="btn-submit">Criar Conta</button>
@@ -662,41 +222,6 @@
       <a href="#">Suporte</a>
     </div>
   </div>
-
-  <!-- Máscaras inline -->
-  <script>
-    // Máscara CPF
-    const cpfInput = document.getElementById('cpf');
-    if (cpfInput) {
-      cpfInput.addEventListener('input', (e) => {
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length <= 11) {
-          value = value.replace(/(\d{3})(\d)/, '$1.$2');
-          value = value.replace(/(\d{3})(\d)/, '$1.$2');
-          value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-          e.target.value = value;
-        }
-      });
-    }
-
-    // Máscara Telefone
-    const telefoneInput = document.getElementById('telefone');
-    if (telefoneInput) {
-      telefoneInput.addEventListener('input', (e) => {
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length <= 11) {
-          if (value.length <= 10) {
-            value = value.replace(/(\d{2})(\d)/, '($1) $2');
-            value = value.replace(/(\d{4})(\d)/, '$1-$2');
-          } else {
-            value = value.replace(/(\d{2})(\d)/, '($1) $2');
-            value = value.replace(/(\d{5})(\d)/, '$1-$2');
-          }
-          e.target.value = value;
-        }
-      });
-    }
-  </script>
 
   <!-- Script do cadastro.js -->
   <script type="module" src="../js/cadastro.js"></script>
