@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cadastro de Ônibus - CheckBus</title>
 
-  <!-- CSS -->
+  <!-- CSS PRINCIPAIS -->
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="stylesheet" href="../css/admin.css" />
   <link rel="stylesheet" href="../css/perfil.css" />
@@ -29,7 +29,7 @@
 
     <form id="formOnibus" class="grid-photo">
 
-      <!-- CARD DA FOTO -->
+      <!-- CARD FOTO -->
       <section class="card photo-card slide-left">
         <h2><i class="fa-solid fa-image"></i> Foto do Ônibus</h2>
 
@@ -38,22 +38,18 @@
         </div>
 
         <label class="upload-btn">
-            <input type="file" id="fotoOnibus" accept="image/*">
-            Selecionar Imagem
+          <input type="file" id="fotoOnibus" accept="image/*">
+          Selecionar Imagem
         </label>
 
-        <button type="button" id="btnRemoverFoto" class="remove-btn">
-        Remover Imagem
-        </button>
-
+        <button type="button" id="btnRemoverFoto" class="remove-btn">Remover Imagem</button>
       </section>
 
-      <!-- CARD DOS DADOS -->
+      <!-- CARD DADOS -->
       <section class="card slide-up">
         <h2><i class="fa-solid fa-info-circle"></i> Dados do Ônibus</h2>
 
         <div class="grid-2">
-
           <div>
             <label for="numero">Número do Ônibus</label>
             <input type="text" id="numero" placeholder="Ex: 01" required />
@@ -101,19 +97,84 @@
         </div>
       </section>
 
-      <!-- OBSERVAÇÕES -->
-      <section class="card slide-up full-row">
+      <!-- OBSERVAÇÕES (MANTIDO 100% IGUAL AO SEU LAYOUT ANTIGO) -->
+      <section class="card full-row slide-up">
         <h2><i class="fa-solid fa-notes-medical"></i> Observações</h2>
         <textarea id="observacoes" placeholder="Opcional: Informações adicionais sobre o ônibus"></textarea>
       </section>
 
+      <!-- BOTÃO (MANTIDO EXACTAMENTE COMO ERA) -->
       <button type="submit" class="btn-submit full-row">
         <i class="fa-solid fa-check"></i> Cadastrar Ônibus
       </button>
 
     </form>
+
+    <!-- LISTA DE ÔNIBUS (LOGO ABAIXO DO FORMULÁRIO, COMO VOCÊ PEDIU) -->
+    <section class="card lista-onibus-card slide-up">
+      <h2><i class="fa-solid fa-list"></i> Ônibus Cadastrados</h2>
+
+      <input 
+        type="text" 
+        id="buscarOnibus" 
+        class="input-busca" 
+        placeholder="Buscar por número, placa ou modelo..."
+      />
+
+      <div id="listaOnibus" class="lista-onibus">
+        <p class="carregando">Carregando ônibus...</p>
+      </div>
+    </section>
+
   </main>
 
+  <!-- MODAL EDITAR -->
+  <div id="modalEditarOnibus" class="modal-editar">
+    <div class="modal-editar-content">
+      <span id="fecharEditarOnibus" class="modal-close">&times;</span>
+      <h2>Editar Ônibus</h2>
+
+      <form id="formEditarOnibus">
+        <input type="hidden" id="editId">
+
+        <label>Número</label>
+        <input type="text" id="editNumero" required>
+
+        <label>Placa</label>
+        <input type="text" id="editPlaca" required>
+
+        <label>Modelo</label>
+        <input type="text" id="editModelo" required>
+
+        <label>Ano</label>
+        <input type="number" id="editAno" required>
+
+        <label>Capacidade</label>
+        <input type="number" id="editCapacidade" required>
+
+        <label>Tipo</label>
+        <select id="editTipo">
+          <option value="Convencional">Convencional</option>
+          <option value="Executivo">Executivo</option>
+          <option value="Micro-ônibus">Micro-ônibus</option>
+        </select>
+
+        <label>Status</label>
+        <select id="editStatus">
+          <option value="Ativo">Ativo</option>
+          <option value="Em Manutenção">Em Manutenção</option>
+          <option value="Inativo">Inativo</option>
+        </select>
+
+        <label>Observações</label>
+        <textarea id="editObservacoes"></textarea>
+
+        <button type="submit" class="btn-submit">Salvar Alterações</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- JS -->
   <script type="module" src="../js/cadastro_onibus.js"></script>
 
   <script>
