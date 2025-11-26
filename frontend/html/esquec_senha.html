@@ -1,137 +1,94 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Recuperar Senha - Check Bus</title>
   
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   
-  <!-- CSS -->
   <link rel="stylesheet" href="../css/esquec_senha.css">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    
+  </style>
 </head>
 <body>
-  <!-- Background animado -->
-  <div class="background-animated">
-    <div class="shape shape-1"></div>
-    <div class="shape shape-2"></div>
-    <div class="shape shape-3"></div>
+
+  <!-- Shapes animadas -->
+  <div class="shape shape-1"></div>
+  <div class="shape shape-2"></div>
+  <div class="shape shape-3"></div>
+
+  <!-- HEADER (FORA DO CARD) -->
+  <div class="header-wrapper">
+    <div class="logo-top">
+      <i class="fas fa-bus"></i>
+      <span>Check Bus</span>
+    </div>
+    <h1 class="header-title">Recuperar Senha</h1>
+    <p class="header-subtitle">Insira seu email para receber o link de recuperação</p>
   </div>
 
-  <!-- Container principal -->
-  <div class="recuperar-container">
+  <!-- CARD BRANCO -->
+  <div class="card-wrapper">
     
-    <!-- Logo e título -->
-    <div class="header-section">
-      <div class="logo-container">
-        <i class="fas fa-bus"></i>
-        <span class="logo-text">Check Bus</span>
-      </div>
-      <h1 class="page-title">Recuperar Senha</h1>
-      <p class="page-subtitle">Insira seu email para receber o link de recuperação</p>
+    <!-- Ícone laranja (chave) -->
+    <div class="icon-circle">
+      <i class="fas fa-key"></i>
     </div>
 
-    <!-- Card do formulário -->
-    <div class="form-card">
+    <!-- FORMULÁRIO -->
+    <form id="resetForm">
       
-      <!-- Ícone de chave -->
-      <div class="icon-wrapper">
-        <div class="icon-circle">
-          <i class="fas fa-key"></i>
+      <!-- Email -->
+      <div>
+        <label for="email" class="form-label">
+          <i class="fas fa-envelope"></i>
+          Email
+        </label>
+        <div class="input-wrapper">
+          <i class="fas fa-envelope input-icon"></i>
+          <input type="email" id="email" placeholder="seu.email@exemplo.com" required>
         </div>
       </div>
 
-      <!-- Formulário -->
-      <form id="recuperarSenhaForm" class="recuperar-form">
-        
-        <!-- Campo Email -->
-        <div class="form-group">
-          <label for="email" class="form-label">
-            <i class="fas fa-envelope"></i>
-            Email
-          </label>
-          <div class="input-wrapper">
-            <input 
-              type="email" 
-              id="email" 
-              name="email" 
-              class="form-input" 
-              placeholder="seu.email@exemplo.com"
-              required
-              autocomplete="email"
-            >
-            <span class="input-icon">
-              <i class="fas fa-envelope"></i>
-            </span>
-          </div>
-          <span class="error-message" id="emailError"></span>
-        </div>
+      <!-- Mensagem (manipulada pelo JS) -->
+      <div id="message"></div>
 
-        <!-- Mensagem de status -->
-        <div class="status-message" id="statusMessage" style="display: none;">
-          <i class="fas fa-info-circle"></i>
-          <span id="statusText"></span>
-        </div>
+      <!-- Botão -->
+      <button type="submit" class="btn-submit">Enviar Link de Recuperação</button>
 
-        <!-- Botão Enviar -->
-        <button type="submit" class="btn-submit" id="btnSubmit">
-          <span class="btn-text">Enviar Link de Recuperação</span>
-          <span class="btn-loading" style="display: none;">
-            <i class="fas fa-spinner fa-spin"></i>
-            Enviando...
-          </span>
-        </button>
+    </form>
 
-        <!-- Informação adicional -->
-        <div class="info-box">
-          <i class="fas fa-info-circle"></i>
-          <p>Você receberá um email com instruções para redefinir sua senha.</p>
-        </div>
-
-      </form>
-
-      <!-- Links de navegação -->
-      <div class="links-section">
-        <a href="index.html" class="link-voltar">
-          <i class="fas fa-arrow-left"></i>
-          Voltar para o login
-        </a>
-        
-        <div class="divider">
-          <span>ou</span>
-        </div>
-        
-        <a href="cadastro.html" class="link-cadastro">
-          Ainda não tem conta? <strong>Cadastre-se</strong>
-        </a>
-      </div>
-
+    <!-- Divider -->
+    <div class="divider">
+      <span>ou</span>
     </div>
 
-    <!-- Footer -->
-    <div class="footer-section">
-      <p>&copy; 2024 Check Bus. Todos os direitos reservados.</p>
-      <div class="footer-links">
-        <a href="#">Termos de Uso</a>
-        <span>•</span>
-        <a href="#">Política de Privacidade</a>
-        <span>•</span>
-        <a href="#">Suporte</a>
-      </div>
-    </div>
+    <!-- Links -->
+    <a href="index.html" class="link-voltar">
+      <i class="fas fa-arrow-left"></i>
+      Voltar para o login
+    </a>
+
+    <a href="cadastro.html" class="link-cadastro">
+      Ainda não tem conta? <strong>Cadastre-se</strong>
+    </a>
 
   </div>
 
-  <!-- Firebase SDK (modo módulo) -->
+  <!-- FOOTER (FORA DO CARD) -->
+  <div class="footer-wrapper">
+    <p>© 2024 Check Bus. Todos os direitos reservados.</p>
+  </div>
+
+  <!-- Script do esquec_senha.js -->
   <script type="module" src="../js/esquec_senha.js"></script>
 
-  <!-- Script de animação de entrada (inline porque é simples) -->
-  <script>
-    // Animação de entrada
-    window.addEventListener('load', () => {
-      document.querySelector('.recuperar-container').classList.add('loaded');
-    });
-  </script>
 </body>
 </html>
