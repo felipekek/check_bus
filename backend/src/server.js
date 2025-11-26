@@ -17,6 +17,7 @@ import feedbackRoutes from "./routes/feedbackRoutes.js";
 import staffRoutes from "./routes/staffRoutes.js";
 import motoristaRoutes from "./routes/motoristaRoutes.js";
 import onibusRoutes from "./routes/OnibusRoutes.js"; // ✅ Nova rota de ônibus
+import alunoRoutes from "./routes/alunoRoutes.js";
 
 /* ---------- Inicialização do app ---------- */
 const app = express();
@@ -49,6 +50,7 @@ app.use("/relatorios", relatorioRoutes);
 app.use("/feedback", feedbackRoutes);
 app.use("/motoristas", motoristaRoutes);
 app.use("/onibus", onibusRoutes); // ✅ Cadastro e gerenciamento de ônibus
+app.use("/alunos", alunoRoutes);
 
 /* ============================================================
  *                      ROTAS DE PÁGINAS
