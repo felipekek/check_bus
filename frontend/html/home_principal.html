@@ -3,56 +3,81 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home Principal</title>
+  <title>Home Principal - Check Bus</title>
 
-  <!-- CSS principal (mantenha esta ordem para garantir que o home_principal.css prevaleça) -->
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS FILES - ORDEM IMPORTANTE -->
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/horarios.css">
   <link rel="stylesheet" href="../css/perfil.css">
   <link rel="stylesheet" href="../css/feedback.css">
   <link rel="stylesheet" href="../css/home_principal.css">
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
 </head>
 <body>
+  
   <div class="container container--wide">
     <header>
       <h1>Home Principal</h1>
     </header>
 
     <main>
+      <!-- Grid de menu (preenchido pelo home.js) -->
       <div class="grid" id="menuGrid"></div>
 
+      <!-- Seção do calendário -->
       <section class="card calendar-section">
+        <!-- Legenda -->
         <div class="legend">
-          <span class="pill"><span class="dot av"></span>Tem ônibus</span>
-          <span class="pill"><span class="dot no"></span>Sem ônibus</span>
-          <span class="pill"><span class="dot go"></span>Você vai</span>
           <span class="pill">
-            <span class="dot" style="background-image:linear-gradient(135deg,#0077b6 0 50%, #e0f8e9 50% 100%);border:1px solid #a9ccff;"></span>
+            <span class="dot av"></span>
+            Tem ônibus
+          </span>
+          <span class="pill">
+            <span class="dot no"></span>
+            Sem ônibus
+          </span>
+          <span class="pill">
+            <span class="dot go"></span>
+            Você vai
+          </span>
+          <span class="pill">
+            <span class="dot" style="background-image:linear-gradient(135deg,#006b8f 0 50%, #d1fae5 50% 100%);border:1px solid #93c5fd;"></span>
             Vai + tem ônibus
           </span>
         </div>
 
+        <!-- Navegação do calendário -->
         <div class="calendar-nav">
           <button id="prev" aria-label="Mês anterior">◀</button>
           <span id="calendar-month-year"></span>
           <button id="next" aria-label="Próximo mês">▶</button>
         </div>
 
+        <!-- Calendário (preenchido pelo horarios.js) -->
         <div class="calendar" id="calendar"></div>
       </section>
     </main>
   </div>
 
+  <!-- Botão Perfil (fixed) -->
   <button class="perfil-btn" id="btnPerfil">
-    <i class="fa fa-user"></i> Perfil
+    <i class="fa fa-user"></i>
+    Perfil
   </button>
 
+  <!-- Botão Feedback (fixed) -->
   <button class="feedback-btn" id="btnFeedback">
-    <i class="fa fa-comment"></i> Feedback
+    <i class="fa fa-comment"></i>
+    Feedback
   </button>
 
+  <!-- Modal de Feedback (mantém estrutura original) -->
   <div class="modal-feedback" id="modalFeedback">
     <div class="modal-content">
       <span class="close-feedback" id="closeFeedback">&times;</span>
@@ -62,6 +87,7 @@
     </div>
   </div>
 
+  <!-- Scripts - ORDEM IMPORTANTE -->
   <script type="module">
     import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
     import { initFeedbackModal } from "../js/feedback.js";

@@ -1,11 +1,122 @@
-<form id="formCartao">
-  <label>ID do Aluno (UID do Firebase)</label>
-  <input type="text" id="uidAluno" required>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vincular Cartão - Check Bus</title>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <link rel="stylesheet" href="../css/vincular_cartao.css">
 
-  <label>UID do Cartão RFID</label>
-  <input type="text" id="uidCartao" required>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
 
-  <button type="submit">Vincular Cartão</button>
-</form>
+</head>
+<body>
 
-<script src="../js/vincular_cartao.js"></script>
+  <!-- Shapes animadas -->
+  <div class="shape shape-1"></div>
+  <div class="shape shape-2"></div>
+  <div class="shape shape-3"></div>
+
+  <!-- HEADER (FORA DO CARD) -->
+  <div class="header-wrapper">
+    <div class="logo-top">
+      <i class="fas fa-bus"></i>
+      <span>Check Bus</span>
+    </div>
+    <h1 class="header-title">Vincular Cartão RFID</h1>
+    <p class="header-subtitle">Associe um cartão RFID ao aluno</p>
+  </div>
+
+  <!-- CARD BRANCO -->
+  <div class="card-wrapper">
+    
+    <!-- Ícone verde (cartão RFID) -->
+    <div class="icon-circle">
+      <i class="fas fa-id-card"></i>
+    </div>
+
+    <!-- Info box -->
+    <div class="info-box">
+      <i class="fas fa-info-circle"></i>
+      <p>
+        <strong>Atenção:</strong> O UID do aluno é o identificador único do Firebase Authentication. 
+        O UID do cartão é o código lido pelo leitor RFID.
+      </p>
+    </div>
+
+    <!-- FORMULÁRIO -->
+    <form id="formCartao">
+      
+      <!-- ID do Aluno -->
+      <div>
+        <label for="uidAluno">
+          <i class="fas fa-user"></i>
+          ID do Aluno (UID Firebase)
+        </label>
+        <div class="input-wrapper">
+          <i class="fas fa-user input-icon"></i>
+          <input 
+            type="text" 
+            id="uidAluno" 
+            placeholder="Ex: abc123def456..." 
+            required
+          >
+        </div>
+      </div>
+
+      <!-- UID do Cartão RFID -->
+      <div>
+        <label for="uidCartao">
+          <i class="fas fa-id-card"></i>
+          UID do Cartão RFID
+        </label>
+        <div class="input-wrapper">
+          <i class="fas fa-id-card input-icon"></i>
+          <input 
+            type="text" 
+            id="uidCartao" 
+            placeholder="Ex: A1B2C3D4" 
+            required
+          >
+        </div>
+      </div>
+
+      <!-- Mensagem -->
+      <div id="message"></div>
+
+      <!-- Botão -->
+      <button type="submit" class="btn-submit">
+        <i class="fas fa-link"></i>
+        Vincular Cartão
+      </button>
+
+    </form>
+
+    <!-- Divider -->
+    <div class="divider">
+      <span>ou</span>
+    </div>
+
+    <!-- Link Voltar -->
+    <a href="home_principal.html" class="link-voltar">
+      <i class="fas fa-arrow-left"></i>
+      Voltar para o menu
+    </a>
+
+  </div>
+
+  <!-- FOOTER (FORA DO CARD) -->
+  <div class="footer-wrapper">
+    <p>© 2024 Check Bus. Todos os direitos reservados.</p>
+  </div>
+
+  <!-- Script -->
+  <script src="vincular_cartao.js"></script>
+
+</body>
+</html>
