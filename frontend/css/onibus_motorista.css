@@ -1,234 +1,500 @@
-/* Layout geral da página */
-.page-container {
-  width: 95%;
-  max-width: 1200px;
-  margin: 40px auto;
-  color: #fff;
-}
+* {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', Arial, sans-serif;
+    }
 
-.page-header {
-  margin-bottom: 25px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 16px;
-}
+    /* Override: Garantir position absolute */
+    .perfil-btn {
+      position: absolute !important;
+      top: 30px;
+      right: 30px;
+    }
 
-.page-header h1 {
-  font-size: 2.2rem;
-  margin: 0;
-  color: #ffffff;
-}
+    .menu-btn {
+      position: absolute !important;
+      top: 30px;
+      left: 30px;
+    }
 
-.subtitle {
-  opacity: 0.9;
-  margin-top: 6px;
-}
+    body {
+      background: linear-gradient(180deg, #006b8f 0%, #004d6d 100%);
+      min-height: 100vh;
+      padding: 30px 20px;
+      position: relative;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
 
-/* GRID principal com áreas nomeadas */
-.grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr;   /* 70% mapa | 30% coluna direita */
-  grid-template-areas:
-    "mapa turno"
-    "mapa dias"
-    "instituicoes motorista"
-    "instituicoes onibus"
-    "botao botao"
-    "resumo resumo";
-  gap: 20px;
-}
+    /* Shapes animadas */
+    body::before,
+    body::after {
+      content: '';
+      position: fixed;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      pointer-events: none;
+      z-index: 0;
+    }
 
-/* Cards / blocos */
-.card {
-  background: rgba(255, 255, 255, 0.96);
-  color: #004d7a;
-  padding: 18px 20px 20px 20px;
-  border-radius: 14px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.18);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
+    body::before {
+      width: 400px;
+      height: 400px;
+      top: -100px;
+      left: -100px;
+      animation: float 20s infinite ease-in-out;
+    }
 
-.card h2 {
-  margin: 0;
-  font-size: 1.15rem;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+    body::after {
+      width: 500px;
+      height: 500px;
+      bottom: -150px;
+      right: -150px;
+      animation: float 20s infinite ease-in-out 5s;
+    }
 
-.card-help {
-  font-size: 0.85rem;
-  opacity: 0.8;
-  margin: 0 0 5px 0;
-}
+    @keyframes float {
+      0%, 100% {
+        transform: translate(0, 0) scale(1);
+      }
+      33% {
+        transform: translate(30px, -30px) scale(1.1);
+      }
+      66% {
+        transform: translate(-20px, 20px) scale(0.9);
+      }
+    }
 
-/* Associa cada card à sua área */
-.card-mapa {
-  grid-area: mapa;
-}
+    /* Header (fora do container) */
+    .header-wrapper {
+      text-align: center;
+      margin-bottom: 24px;
+      color: white;
+      position: relative;
+      z-index: 10;
+    }
 
-.card-turno {
-  grid-area: turno;
-}
+    .logo-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding: 10px 24px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+    }
 
-.card-dias {
-  grid-area: dias;
-}
+    .logo-top i {
+      font-size: 22px;
+      color: white;
+    }
 
-.card-instituicoes {
-  grid-area: instituicoes;
-}
+    .logo-top span {
+      font-size: 20px;
+      font-weight: 600;
+      color: white;
+    }
 
-.card-motorista {
-  grid-area: motorista;
-}
+    .header-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
 
-.card-onibus {
-  grid-area: onibus;
-}
+    .header-subtitle {
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.9);
+      max-width: 700px;
+      margin: 0 auto;
+    }
 
-.resumo-card {
-  grid-area: resumo;
-}
+    /* Container principal */
+    .page-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+    }
 
-/* Inputs */
-select {
-  width: 100%;
-  padding: 10px 12px;
-  font-size: 0.95rem;
-  border-radius: 10px;
-  border: 1px solid #cfd8dc;
-  outline: none;
-}
+    /* Grid principal */
+    .grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      grid-template-areas:
+        "mapa turno"
+        "mapa dias"
+        "instituicoes motorista"
+        "instituicoes onibus"
+        "botao botao"
+        "resumo resumo";
+      gap: 20px;
+      animation: slideUp 0.5s ease-out;
+    }
 
-select:focus {
-  border-color: #008793;
-  box-shadow: 0 0 0 2px rgba(0,135,147,0.25);
-}
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-/* Dias da semana */
-.dias-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-}
+    /* Cards */
+    .card {
+      background: white;
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
 
-.dias-grid label {
-  background: #e0f2f1;
-  border-radius: 999px;
-  padding: 6px 10px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  border: 1px solid transparent;
-  transition: background 0.15s, border-color 0.15s, transform 0.1s;
-}
+    .card h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #004d6d;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-.dias-grid input {
-  accent-color: #008793;
-}
+    .card h2 i {
+      color: #006b8f;
+      font-size: 1.3rem;
+    }
 
-.dias-grid label:hover {
-  background: #b2dfdb;
-  transform: translateY(-1px);
-}
+    .card-help {
+      font-size: 0.85rem;
+      color: #6b7280;
+      margin: 0;
+      line-height: 1.5;
+    }
 
-/* Lista de instituições */
-.checkbox-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 8px 16px;
-  margin-top: 8px;
-}
+    /* Áreas do grid */
+    .card-mapa {
+      grid-area: mapa;
+    }
 
-.checkbox-list label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.9rem;
-}
+    .card-turno {
+      grid-area: turno;
+    }
 
-/* Mapa – altura média */
-#mapa {
-  height: 340px;
-  border-radius: 12px;
-  margin-top: 8px;
-  border: 1px solid #cfd8dc;
-}
+    .card-dias {
+      grid-area: dias;
+    }
 
-/* Resumo */
-.resumo-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+    .card-instituicoes {
+      grid-area: instituicoes;
+    }
 
-.resumo-badge {
-  background: #e0f2f1;
-  color: #006064;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
+    .card-motorista {
+      grid-area: motorista;
+    }
 
-.resumo-lista {
-  list-style: none;
-  padding-left: 0;
-  margin-top: 10px;
-  font-size: 0.95rem;
-}
+    .card-onibus {
+      grid-area: onibus;
+    }
 
-.resumo-lista li {
-  padding: 6px 0;
-  border-bottom: 1px solid #eeeeee;
-}
+    .resumo-card {
+      grid-area: resumo;
+    }
 
-.resumo-lista li:last-child {
-  border-bottom: none;
-}
+    /* Mapa */
+    #mapa {
+      height: 420px;
+      border-radius: 12px;
+      border: 3px solid #e5e7eb;
+      margin-top: 8px;
+    }
 
-/* Botão Salvar – fica na linha própria acima do resumo */
-.btn-submit {
-  grid-area: botao;
-  background: linear-gradient(135deg, #00a884, #008793);
-  border: none;
-  padding: 14px;
-  font-size: 1.05rem;
-  border-radius: 14px;
-  cursor: pointer;
-  color: #fff;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.22);
-  margin-top: 5px;
-}
+    /* Selects */
+    select {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 0.95rem;
+      border-radius: 10px;
+      border: 2px solid #e5e7eb;
+      background: #f9fafb;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
 
-.btn-submit:hover {
-  filter: brightness(1.05);
-  transform: translateY(-1px);
-}
+    select:focus {
+      outline: none;
+      border-color: #006b8f;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(0, 107, 143, 0.1);
+    }
 
-/* Responsividade – empilha tudo no mobile */
-@media (max-width: 900px) {
-  .grid {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "mapa"
-      "turno"
-      "dias"
-      "instituicoes"
-      "motorista"
-      "onibus"
-      "botao"
-      "resumo";
-  }
-}
+    /* Dias da semana */
+    .dias-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .dias-grid label {
+      background: #f9fafb;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 12px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .dias-grid label:hover {
+      background: #f0f9ff;
+      border-color: #006b8f;
+    }
+
+    .dias-grid input:checked + span,
+    .dias-grid label:has(input:checked) {
+      background: linear-gradient(135deg, #006b8f, #004d6d);
+      color: white;
+      border-color: #006b8f;
+    }
+
+    .dias-grid input {
+      accent-color: #006b8f;
+    }
+
+    /* Lista de instituições */
+    .checkbox-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .checkbox-list label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: #f9fafb;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .checkbox-list label:hover {
+      background: #f0f9ff;
+      border-color: #006b8f;
+    }
+
+    .checkbox-list input:checked + span,
+    .checkbox-list label:has(input:checked) {
+      background: #e0f2f1;
+      border-color: #10b981;
+    }
+
+    .checkbox-list input {
+      accent-color: #10b981;
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Botão Salvar */
+    .btn-submit {
+      grid-area: botao;
+      background: linear-gradient(135deg, #10b981, #059669);
+      border: none;
+      padding: 16px 32px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    .btn-submit i {
+      font-size: 1.2rem;
+    }
+
+    /* Resumo */
+    .resumo-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .resumo-header h2 {
+      margin: 0;
+    }
+
+    .resumo-badge {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: white;
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .resumo-lista {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+
+    .resumo-lista li {
+      padding: 14px 16px;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 0.95rem;
+      color: #374151;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .resumo-lista li:last-child {
+      border-bottom: none;
+    }
+
+    .resumo-lista li strong {
+      color: #006b8f;
+      min-width: 140px;
+      font-weight: 600;
+    }
+
+    /* Responsivo */
+    @media (max-width: 1024px) {
+      .grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+          "mapa mapa"
+          "turno dias"
+          "instituicoes instituicoes"
+          "motorista onibus"
+          "botao botao"
+          "resumo resumo";
+      }
+
+      #mapa {
+        height: 350px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 20px 15px;
+      }
+
+      .header-wrapper {
+        margin-bottom: 20px;
+      }
+
+      .logo-top {
+        padding: 8px 20px;
+        margin-bottom: 12px;
+      }
+
+      .header-title {
+        font-size: 1.7rem;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .header-subtitle {
+        font-size: 0.85rem;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "mapa"
+          "turno"
+          "dias"
+          "instituicoes"
+          "motorista"
+          "onibus"
+          "botao"
+          "resumo";
+        gap: 16px;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      #mapa {
+        height: 300px;
+      }
+
+      .dias-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .checkbox-list {
+        grid-template-columns: 1fr;
+      }
+
+      .resumo-lista li {
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .resumo-lista li strong {
+        min-width: unset;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header-title {
+        font-size: 1.5rem;
+      }
+
+      .card {
+        padding: 16px;
+      }
+
+      .card h2 {
+        font-size: 1.1rem;
+      }
+
+      #mapa {
+        height: 250px;
+      }
+
+      .btn-submit {
+        padding: 14px 24px;
+        font-size: 1rem;
+      }
+    }
