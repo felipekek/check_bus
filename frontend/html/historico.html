@@ -3,27 +3,39 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
-    <title>Histórico de Embarques</title>
-
-    <link rel="stylesheet" href="../css/style.css"/>
-    <link rel="stylesheet" href="../css/draw.css"/>
+    <title>Histórico de Embarques - CheckBus</title>
     <link rel="stylesheet" href="../css/historico.css"/>
-
+    <link rel="stylesheet" href="../css/draw.css">
+    <link rel="stylesheet" href="../css/perfil_aluno.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 </head>
 
 <body>
-
+<!-- ===== Botão do menu lateral ===== -->
 <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+<!-- ===== Botão de Perfil ===== -->
+<button class="perfil-btn" id="btnPerfil">
+    <i class="fa fa-user"></i> Perfil
+</button>
+
+<!-- Overlay escuro -->
 <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
+<!-- ===== Sidebar ===== -->
 <div id="sidebar-container"></div>
 
+<!-- ===== HEADER (Título no fundo azul) ===== -->
+<header class="page-header">
+    <h1>📜 Histórico de Embarques</h1>
+    <p>Visualize todos os seus embarques registrados</p>
+</header>
+
+<!-- ===== CONTEÚDO PRINCIPAL ===== -->
 <div class="historico-container">
     <div class="titulo-container">
-        <h1>Histórico de Embarques</h1>
-        <input type="text" id="barraPesquisa" placeholder="Pesquisar...">
+        <h2>Registros de Embarque</h2>
+        <input type="text" id="barraPesquisa" placeholder="🔍 Pesquisar...">
     </div>
 
     <div id="lista">
@@ -41,6 +53,13 @@
         </table>
     </div>
 </div>
+
+<!-- ===== Scripts ===== -->
+<script type="module">
+    import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
+    carregarModalPerfil();
+    document.getElementById("btnPerfil").addEventListener("click", abrirPerfil);
+</script>
 
 <script type="module">
     import { inicializarSidebar } from "../js/sidebar-universal.js";
