@@ -3,105 +3,206 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Relatórios de Acesso</title>
+    <title>Relatórios de Acesso - Check Bus</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- CSS externos -->
+     <link rel="stylesheet" href="../css/relatorios.css">
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/draw.css" />
-    <link rel="stylesheet" href="../css/relatorios.css" />
-    <link rel="stylesheet" href="../css/perfil.css">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Scripts externos -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.7.0/jspdf.plugin.autotable.min.js"></script>
+
+    <style>
+      
+    </style>
 </head>
 
 <body>
-<div id="modalRelatorio" class="modal">
-  <div class="modal-content">
-    <span id="fecharModal" class="close">&times;</span>
-    <h2>Relatório</h2>
-    <p>Filtrar colunas:</p>
+    <!-- Botão Menu -->
+    <button class="menu-btn" onclick="toggleMenu()">
+        <i class="fas fa-bars"></i>
+    </button>
 
-    <div class="filtros">
-      <label><input type="checkbox" class="checkbox-coluna" data-chave="aluno" checked> Aluno</label>
-      <label><input type="checkbox" class="checkbox-coluna" data-chave="idCartao" checked> ID Cartão</label>
-      <label><input type="checkbox" class="checkbox-coluna" data-chave="curso" checked> Curso</label>
-      <label><input type="checkbox" class="checkbox-coluna" data-chave="instituicao" checked> Instituição</label>
-      <label><input type="checkbox" class="checkbox-coluna" data-chave="periodo" checked> Período</label>
-      <label><input type="checkbox" class="checkbox-coluna" data-chave="turno" checked> Turno</label>
-      <label><input type="checkbox" class="checkbox-coluna" data-chave="data" checked> Data</label>
-      <label><input type="checkbox" class="checkbox-coluna" data-chave="horario" checked> Horário</label>
-      <label><input type="checkbox" id="checkboxTodas" checked> Todas as opções</label>
+    <!-- Overlay -->
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+    <!-- Sidebar -->
+    <div id="sidebar-container"></div>
+
+    <!-- Botão Perfil -->
+    <button class="perfil-btn" id="btnPerfil">
+        <i class="fa fa-user"></i>
+        Perfil
+    </button>
+
+    <!-- Header (fora do container) -->
+    <div class="header-wrapper">
+        <div class="logo-top">
+            <i class="fas fa-bus"></i>
+            <span>Check Bus</span>
+        </div>
+        <h1 class="header-title">Relatórios de Acesso</h1>
+        <p class="header-subtitle">Visualize e gerencie todos os registros de acesso ao sistema</p>
     </div>
 
-    <button id="confirmarDownload">Baixar</button>
-  </div>
-</div>
-
-<button class="menu-btn" onclick="toggleMenu()">☰</button>
-<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-
-<div id="sidebar-container"></div>
-
-<button class="perfil-btn" onclick="location.href='perfil.html'">Perfil</button>
-
-<div class="relatorio-container">
-    <div class="titulo-container">
-        <h1>Relatórios</h1>
-        <input type="text" id="barraPesquisa" placeholder="Pesquisar...">
-    </div>
-
-    <p class="filtro-label">Filtrar por: </p>
-    <div class="filtros-e-botao">
-        <div class="filtros-container">
-            <select id="filtro-instituicao"></select>
-            <select id="filtro-turno"></select>
-            <input type="date" id="filtro-data" />
+    <!-- Container principal -->
+    <div class="relatorio-container">
+        <!-- Título + Pesquisa -->
+        <div class="titulo-container">
+            <h2>
+                <i class="fas fa-table"></i>
+                Registros
+            </h2>
+            <input type="text" id="barraPesquisa" placeholder="Pesquisar...">
         </div>
 
-        <button class="btn-direita" id="botaoBaixarRelatorio">Baixar Relatório</button>
+        <!-- Filtros -->
+        <p class="filtro-label">
+            <i class="fas fa-filter"></i>
+            Filtrar por:
+        </p>
+        <div class="filtros-e-botao">
+            <div class="filtros-container">
+                <select id="filtro-instituicao"></select>
+                <select id="filtro-turno"></select>
+                <input type="date" id="filtro-data" />
+            </div>
+
+            <button class="btn-direita" id="botaoBaixarRelatorio">
+                <i class="fas fa-download"></i>
+                Baixar Relatório
+            </button>
+        </div>
+
+        <!-- Tabela -->
+        <div id="lista">
+            <table id="tabela-relatorios">
+                <thead>
+                    <tr>
+                        <th>Aluno</th>
+                        <th>ID Cartão</th>
+                        <th>Curso</th>
+                        <th>Instituição</th>
+                        <th>Período</th>
+                        <th>Turno</th>
+                        <th>Data</th>
+                        <th>Horário</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="9" class="no-data">Carregando registros...</td></tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <div id="lista">
-        <table id="tabela-relatorios">
-            <thead>
-                <tr>
-                    <th>Aluno</th>
-                    <th>ID Cartão</th>
-                    <th>Curso</th>
-                    <th>Instituição</th>
-                    <th>Período</th>
-                    <th>Turno</th>
-                    <th>Data</th>
-                    <th>Horário</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr><td colspan="9" class="no-data">Carregando registros...</td></tr>
-            </tbody>
-        </table>
+    <!-- Modal de Download -->
+    <div id="modalRelatorio" class="modal">
+        <div class="modal-content">
+            <span id="fecharModal" class="close">&times;</span>
+            
+            <div class="modal-header">
+                <h2>Configurar Download</h2>
+            </div>
+
+            <div class="modal-body">
+                <p>Filtrar colunas:</p>
+
+                <div class="filtros">
+                    <label>
+                        <input type="checkbox" class="checkbox-coluna" data-chave="aluno" checked>
+                        Aluno
+                    </label>
+                    <label>
+                        <input type="checkbox" class="checkbox-coluna" data-chave="idCartao" checked>
+                        ID Cartão
+                    </label>
+                    <label>
+                        <input type="checkbox" class="checkbox-coluna" data-chave="curso" checked>
+                        Curso
+                    </label>
+                    <label>
+                        <input type="checkbox" class="checkbox-coluna" data-chave="instituicao" checked>
+                        Instituição
+                    </label>
+                    <label>
+                        <input type="checkbox" class="checkbox-coluna" data-chave="periodo" checked>
+                        Período
+                    </label>
+                    <label>
+                        <input type="checkbox" class="checkbox-coluna" data-chave="turno" checked>
+                        Turno
+                    </label>
+                    <label>
+                        <input type="checkbox" class="checkbox-coluna" data-chave="data" checked>
+                        Data
+                    </label>
+                    <label>
+                        <input type="checkbox" class="checkbox-coluna" data-chave="horario" checked>
+                        Horário
+                    </label>
+                    <label>
+                        <input type="checkbox" id="checkboxTodas" checked>
+                        <strong>Todas as opções</strong>
+                    </label>
+                </div>
+
+                <button id="confirmarDownload">
+                    <i class="fas fa-file-pdf"></i>
+                    Baixar PDF
+                </button>
+            </div>
+        </div>
     </div>
-</div>
 
-<button class="perfil-btn" id="btnPerfil">
-  <i class="fa fa-user"></i> Perfil
-</button>
+    <!-- Scripts -->
+    <script>
+        // Toggle menu
+        window.toggleMenu = function() {
+            const sidebar = document.getElementById("sidebar");
+            const overlay = document.getElementById("overlay");
+            const menuBtn = document.querySelector(".menu-btn");
+            
+            if (sidebar) {
+                sidebar.classList.toggle("active");
+            }
+            if (overlay) {
+                overlay.classList.toggle("active");
+            }
+            if (menuBtn) {
+                menuBtn.classList.toggle("hidden");
+            }
+        };
 
-  <script type="module">
-    import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
+        // Fechar sidebar ao clicar no overlay
+        document.getElementById('overlay')?.addEventListener('click', () => {
+            document.getElementById('sidebar')?.classList.remove('active');
+            document.getElementById('overlay')?.classList.remove('active');
+            document.querySelector('.menu-btn')?.classList.remove('hidden');
+        });
+    </script>
 
-    carregarModalPerfil();
+    <script type="module">
+        import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
+        import { inicializarSidebar } from "../js/sidebar-universal.js";
 
-    const btnPerfil = document.getElementById("btnPerfil");
-    btnPerfil.addEventListener("click", abrirPerfil);
-  </script>
+        // Inicializar sidebar e perfil
+        await inicializarSidebar();
+        await carregarModalPerfil();
+        
+        document.getElementById("btnPerfil")?.addEventListener("click", abrirPerfil);
+    </script>
 
-  <script type="module">
-    import { inicializarSidebar } from "../js/sidebar-universal.js";
-    await inicializarSidebar();
-  </script>
-
-<script type="module" src="../js/relatorios.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.7.0/jspdf.plugin.autotable.min.js"></script>
+    <script type="module" src="../js/relatorios.js"></script>
 </body>
 </html>
