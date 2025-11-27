@@ -21,10 +21,17 @@ export async function listarRelatorios(_req, res) {
           idCartao: "-",
         };
 
-        if (dados.uid) {
-          const alunoDoc = await db.collection("alunos").doc(dados.uid).get();
-          if (alunoDoc.exists) alunoData = { ...alunoData, ...alunoDoc.data() };
-        }
+          if (dados.uid) {
+    const alunoQuery = await db.collection("alunos")
+      .where("uid", "==", dados.uid)
+      .limit(1)
+      .get();
+
+    if (!alunoQuery.empty) {
+      alunoData = { ...alunoData, ...alunoQuery.docs[0].data() };
+    }
+  }
+
 
         return {
           id: docSnap.id,
@@ -58,3 +65,4 @@ export async function excluirRelatorio(req, res) {
     res.status(500).json({ error: "Erro ao excluir relatório" });
   }
 }
+

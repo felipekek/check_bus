@@ -1,5 +1,5 @@
 // backend/src/middlewares/authMiddleware.js
-import { admin } from "../config/firebase-admin.js";
+import  admin  from "../config/firebase-admin.js";
 
 /**
  * Extrai o token do header Authorization: Bearer <token>

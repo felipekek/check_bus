@@ -1,0 +1,78 @@
+.historico-container {
+    max-width: 900px;
+    margin: 40px auto;
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    color: #222;
+}
+
+.titulo-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.titulo-container h1 {
+    margin: 0;
+    color: #004d7a;
+}
+
+#barraPesquisa {
+    padding: 8px 14px;
+    font-size: 0.95rem;
+    width: 220px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    outline: none;
+    transition: 0.2s;
+}
+
+#barraPesquisa:focus {
+    border-color: #008793;
+    box-shadow: 0 0 4px rgba(0,135,147,0.4);
+}
+
+/* tabela */
+#tabela-historico {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#tabela-historico thead {
+    background: linear-gradient(90deg, #004d7a, #008793);
+    color: white;
+}
+
+#tabela-historico th,
+#tabela-historico td {
+    padding: 10px 14px;
+    font-size: 0.95rem;
+    border-bottom: 1px solid #ddd;
+}
+
+#tabela-historico tbody tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+#tabela-historico tbody tr:hover {
+    background: #eef8fa;
+    transition: 0.2s;
+}
+
+.no-data {
+    text-align: center;
+    padding: 20px;
+    color: #555;
+}
+
+@media (max-width: 768px) {
+    .historico-container { padding: 15px; }
+    .titulo-container { flex-direction: column; gap: 10px; }
+    #barraPesquisa { width: 100%; }
+    #tabela-historico { display: block; overflow-x: auto; white-space: nowrap; }
+}

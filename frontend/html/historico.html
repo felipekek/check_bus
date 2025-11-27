@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <title>Histórico de Embarques</title>
+
+    <link rel="stylesheet" href="../css/style.css"/>
+    <link rel="stylesheet" href="../css/draw.css"/>
+    <link rel="stylesheet" href="../css/historico.css"/>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+
+<body>
+
+<button class="menu-btn" onclick="toggleMenu()">☰</button>
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<div id="sidebar-container"></div>
+
+<div class="historico-container">
+    <div class="titulo-container">
+        <h1>Histórico de Embarques</h1>
+        <input type="text" id="barraPesquisa" placeholder="Pesquisar...">
+    </div>
+
+    <div id="lista">
+        <table id="tabela-historico">
+            <thead>
+                <tr>
+                    <th>ID do Cartão</th>
+                    <th>Data</th>
+                    <th>Horário</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td colspan="3" class="no-data">Carregando registros...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="module">
+    import { inicializarSidebar } from "../js/sidebar-universal.js";
+    await inicializarSidebar();
+</script>
+
+<script type="module" src="../js/historico.js"></script>
+
+</body>
+</html>
