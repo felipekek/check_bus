@@ -19,6 +19,7 @@ const SIDEBAR_CONFIG = {
         { icon: 'fa-solid fa-house', label: 'Principal', url: 'home_principal.html' },
         { icon: 'fa-solid fa-users', label: 'Lista de Alunos', url: 'admin.html' },
         { icon: 'fa-solid fa-user-plus', label: 'Cadastrar Motorista', url: 'cadast_motorista.html' },
+        { icon: 'fa-solid fa-id-card', label: 'Vincular Cartão', url: 'vincular_cartao.html'},
         { icon: 'fa-solid fa-bus', label: 'Cadastrar Ônibus', url: 'cadastro_onibus.html' },
         { icon: 'fa-solid fa-list', label: 'Gerenciar Motoristas & Ônibus', url: 'onibus_motorista.html' },
         { icon: 'fa-solid fa-calendar-days', label: 'Horários', url: 'adm-lista-de-horarios.html' },

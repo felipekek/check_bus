@@ -1,115 +1,138 @@
 /* ===================================================
-   ADMIN.CSS — Página "Lista de Alunos"
-   Design refinado e profissional - CheckBus
+   ADMIN.CSS – Página "Lista de Alunos"
+   Design consistente com as outras páginas - CheckBus
    =================================================== */
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-  background: linear-gradient(to right, #004d7a, #008793);
-  font-family: "Inter", Arial, sans-serif;
+  background: linear-gradient(135deg, #004d7a 0%, #008793 100%);
+  font-family: "Inter", "Segoe UI", Arial, sans-serif;
   color: #222;
   min-height: 100vh;
   margin: 0;
   padding: 0;
+  position: relative;
+}
+
+/* ====== BOTÕES (Menu e Perfil) - Posição absoluta no topo ====== */
+.menu-btn,
+.perfil-btn {
+  position: absolute;
+  z-index: 1000;
+  border: none;
+  cursor: pointer;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.menu-btn {
+  top: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.menu-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
+}
+
+.perfil-btn {
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 25px;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+}
+
+.perfil-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.perfil-btn i {
+  font-size: 1.1rem;
+}
+
+/* ====== OVERLAY ====== */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 998;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ====== SEÇÃO SUPERIOR (Título no fundo azul) ====== */
+.page-header {
+  text-align: center;
+  padding: 80px 20px 40px 20px;
+  color: white;
+}
+
+.page-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.page-header p {
+  font-size: 1.1rem;
+  opacity: 0.95;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 /* ====== LAYOUT PRINCIPAL ====== */
 .main-dashboard {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px 40px 20px;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
   gap: 30px;
   flex-wrap: wrap;
-  margin-top: 80px;
-  margin-bottom: 40px;
-  padding: 0 20px;
+  justify-content: center;
+  align-items: flex-start;
 }
 
-/* ====== BLOCO BRANCO (Lista de Alunos) ====== */
+/* ====== CONTAINER BRANCO (Lista de Alunos) ====== */
 .alunos-container {
-  flex: 0.65;
-  background: #fff;
-  padding: 35px 40px;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-  min-width: 600px;
+  flex: 1 1 900px;
   max-width: 1000px;
-}
-
-/* ====== MINI DASHBOARD LATERAL ====== */
-.mini-dashboard {
-  flex: 0.35;
-  background: #fff;
-  border-radius: 16px;
-  padding: 25px 20px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  min-width: 280px;
-  max-width: 340px;
-  color: #004d7a;
-  height: fit-content;
-}
-
-.mini-dashboard h2 {
-  font-size: 1.3rem;
-  margin-bottom: 20px;
-  color: #004d7a;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border-bottom: 2px solid #008793;
-  padding-bottom: 10px;
-}
-
-/* Suporta ambas as classes usadas no HTML (.dash-grid e .dashboard-cards) */
-.dash-grid,
-.dashboard-cards {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 18px;
-}
-
-.dash-card {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  background: linear-gradient(135deg, #004d7a, #008793);
-  color: #fff;
-  padding: 16px 18px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.dash-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
-}
-
-.dash-card i {
-  font-size: 1.8rem;
-}
-
-.dash-card h3 {
-  font-size: 1.8rem;
-  margin: 0;
-  font-weight: 700;
-  color: #ffdd57;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.25);
-}
-
-.dash-card p {
-  margin: 0;
-  font-size: 0.9rem;
-  opacity: 0.9;
-}
-
-/* ====== Animação de atualização ====== */
-@keyframes countPulse {
-  0% { transform: scale(1); color: #ffdd57; }
-  50% { transform: scale(1.1); color: #fff; }
-  100% { transform: scale(1); color: #ffdd57; }
-}
-.dash-card h3.updated {
-  animation: countPulse 0.6s ease;
+  background: white;
+  padding: 35px 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 /* ====== Título e Pesquisa ====== */
@@ -124,93 +147,103 @@ body {
 
 .titulo-container h1 {
   flex: 1;
-  font-size: 2rem;
+  font-size: 1.8rem;
   color: #004d7a;
   font-weight: 700;
-  letter-spacing: 0.5px;
   margin: 0;
 }
 
 #barraPesquisa {
-  flex: 0.6;
-  min-width: 220px;
-  padding: 10px 14px;
-  border-radius: 20px;
-  border: 1px solid #ccc;
+  flex: 0.5;
+  min-width: 250px;
+  padding: 12px 18px;
+  border-radius: 25px;
+  border: 2px solid #e0e0e0;
   background: #f8f9fa;
   font-size: 0.95rem;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 #barraPesquisa:focus {
   outline: none;
   border-color: #008793;
-  box-shadow: 0 0 8px rgba(0, 135, 147, 0.4);
-  background: #fff;
+  box-shadow: 0 0 0 3px rgba(0, 135, 147, 0.1);
+  background: white;
 }
 
-/* ====== Cabeçalho da Lista ====== */
+/* ====== Cabeçalho da Tabela ====== */
 .table-header {
   display: grid;
   grid-template-columns: 1.8fr 1fr 1fr 1fr 0.3fr;
-  background: linear-gradient(90deg, #004d7a, #008793);
-  color: #fff;
+  background: linear-gradient(90deg, #005f7a, #007a8a);
+  color: white;
   font-weight: 600;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  padding: 12px 20px;
+  border-radius: 12px;
+  padding: 14px 20px;
   font-size: 0.95rem;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: 20px;
 }
 
 .table-header span {
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .table-header span:first-child {
   text-align: left;
+  justify-content: flex-start;
   padding-left: 10px;
 }
 
 /* ====== Accordion (Lista de Alunos) ====== */
+#accordionContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
 .accordion-item {
-  border: 1px solid #e0e0e0;
-  border-radius: 10px;
-  margin: 12px 0;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
   background: #fdfdfd;
   overflow: hidden;
-  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .accordion-item:hover {
   border-color: #008793;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 135, 147, 0.15);
 }
 
 /* ====== Cabeçalho do Accordion ====== */
 .accordion-header {
   display: flex;
   align-items: center;
-  background: linear-gradient(90deg, #004d7a, #008793);
-  color: #fff;
-  padding: 12px 20px;
+  background: linear-gradient(90deg, #005f7a, #007a8a);
+  color: white;
+  padding: 14px 20px;
   cursor: pointer;
   font-weight: 600;
   position: relative;
 }
 
 .toggle-btn {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  background: #fff;
+  background: white;
   color: #004d7a;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 12px;
+  margin-right: 14px;
   font-weight: bold;
+  font-size: 1.2rem;
   transition: transform 0.3s ease;
+  flex-shrink: 0;
 }
 
 .accordion-item.open .toggle-btn {
@@ -228,20 +261,19 @@ body {
 .aluno-nome {
   flex: 1.5;
   text-align: left;
-  font-weight: bold;
-  font-size: 1rem;
+  font-weight: 700;
+  font-size: 1.05rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* ====== Resumo ====== */
 .summary-info {
   display: flex;
   flex: 3;
   justify-content: space-between;
-  font-size: 15px;
-  color: #dff9fb;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
   padding: 0 10px;
   width: 100%;
 }
@@ -254,182 +286,314 @@ body {
   text-overflow: ellipsis;
 }
 
+/* ====== Botão de Excluir ====== */
+.delete-btn {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  background: #ef4444;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  color: white;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
+}
+
+.delete-btn:hover {
+  background: #dc2626;
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4);
+}
+
+.delete-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
 /* ====== Conteúdo do Accordion ====== */
 .accordion-content {
   max-height: 0;
   opacity: 0;
   overflow: hidden;
-  transition: all 0.5s ease;
-  background: #fff;
-  padding: 0 15px;
+  transition: all 0.4s ease;
+  background: white;
+  padding: 0 20px;
   display: flex;
   gap: 30px;
 }
 
 .accordion-item.open .accordion-content {
-  max-height: 650px;
+  max-height: 700px;
   opacity: 1;
-  padding: 20px 15px;
+  padding: 25px 20px;
 }
 
-/* ====== Infos e Horários ====== */
+/* ====== Info Grid ====== */
 .info-grid {
   flex: 2;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 15px 25px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
 }
 
 .info-item {
-  background: #f8f9fa;
-  padding: 10px;
-  border-radius: 6px;
+  background: #f9fafb;
+  padding: 12px 14px;
+  border-radius: 8px;
   border-left: 4px solid #008793;
+  transition: all 0.2s ease;
+}
+
+.info-item:hover {
+  background: #f3f4f6;
+  border-left-color: #005f7a;
 }
 
 .info-item strong {
   color: #004d7a;
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
 }
 
+/* ====== Horários ====== */
 .horarios {
-  flex: 1.1;
+  flex: 1.2;
 }
 
 .horarios h3 {
   color: #004d7a;
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 14px;
+  font-size: 1.1rem;
 }
 
 .horarios table {
   width: 100%;
   border-collapse: collapse;
-  border-radius: 8px;
+  border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
 .horarios th,
 .horarios td {
-  padding: 8px;
+  padding: 10px;
   text-align: center;
-  border-bottom: 1px solid #eee;
-  font-size: 14px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.95rem;
 }
 
 .horarios th {
-  background: linear-gradient(90deg, #004d7a, #008793);
+  background: linear-gradient(90deg, #005f7a, #007a8a);
   color: white;
   font-weight: 600;
 }
 
-/* ====== Botão de Excluir ====== */
-.delete-btn {
-  position: absolute;
-  top: 8px;
-  right: 12px;
-  background: #e74c3c;
-  border: none;
-  border-radius: 6px;
-  padding: 6px 10px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s, transform 0.2s;
-  color: #fff;
+.horarios tbody tr:last-child td {
+  border-bottom: none;
 }
 
-.delete-btn:hover {
-  background: #c0392b;
-  transform: scale(1.1);
+.horarios tbody tr:hover {
+  background: #f9fafb;
 }
 
-/* ====== Gráfico (versão grande — mantida para outras páginas) ====== */
-.grafico-container {
-  max-width: 1200px;
-  padding: 25px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  margin: 20px auto 40px auto;
-  transition: all 0.3s ease-in-out;
+/* ====== COLUNA DIREITA (Estatísticas + Gráfico) ====== */
+.right-column {
+  flex: 0 1 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.grafico-container h2 {
-  text-align: left;
-  color: #004d7a;
+/* ====== Mini Dashboard ====== */
+.mini-dashboard {
+  background: white;
+  border-radius: 20px;
+  padding: 25px 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.mini-dashboard h2 {
+  font-size: 1.3rem;
   margin-bottom: 20px;
+  color: #004d7a;
   display: flex;
   align-items: center;
   gap: 10px;
+  padding-bottom: 12px;
+  border-bottom: 3px solid #008793;
 }
 
-/* canvas padrão (para a versão grande) */
-.grafico-container #instituicoesChart {
-  max-width: 300px;
-  max-height: 300px;
-  margin: 0 auto;
-  display: block;
+.mini-dashboard h2 i {
+  color: #008793;
 }
 
-/* ====== Gráfico pequeno (igual largura do mini-dashboard) ====== */
-.grafico-container.small {
-  max-width: 100%; /* usar a largura da coluna direita */
-  padding: 16px;
-  margin: 0; /* já posicionado pela coluna direita */
-  box-sizing: border-box;
+.dash-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
 }
 
-.grafico-container.small h2 {
-  font-size: 1rem;
-  margin-bottom: 12px;
+.dash-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #005f7a, #007a8a);
+  color: white;
+  padding: 20px 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 95, 122, 0.3);
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.dash-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0, 95, 122, 0.4);
+}
+
+.dash-card h3 {
+  font-size: 2.2rem;
+  margin: 0 0 8px 0;
+  font-weight: 700;
+  color: #ffdd57;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.dash-card p {
+  margin: 0;
+  font-size: 0.95rem;
+  opacity: 0.95;
+  font-weight: 500;
+}
+
+/* ====== Animação de Atualização ====== */
+@keyframes countPulse {
+  0% { transform: scale(1); color: #ffdd57; }
+  50% { transform: scale(1.15); color: #fff; }
+  100% { transform: scale(1); color: #ffdd57; }
+}
+
+.dash-card h3.updated {
+  animation: countPulse 0.6s ease;
+}
+
+/* ====== Gráfico ====== */
+.grafico-container {
+  background: white;
+  border-radius: 20px;
+  padding: 25px 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.grafico-container h2 {
+  font-size: 1.3rem;
+  margin-bottom: 20px;
   color: #004d7a;
   display: flex;
-  gap: 8px;
   align-items: center;
+  gap: 10px;
+  padding-bottom: 12px;
+  border-bottom: 3px solid #008793;
+}
+
+.grafico-container h2 i {
+  color: #008793;
 }
 
 .grafico-container.small #instituicoesChart {
-  max-width: 220px;
-  max-height: 220px;
-  width: 100%;
-  height: auto;
+  max-width: 260px;
+  max-height: 260px;
   margin: 0 auto;
   display: block;
 }
 
-/* ====== RIGHT COLUMN: agrupa mini-dashboard + gráfico (stack vertical) */
-.right-column {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  flex: 0.35;
-  min-width: 280px;
-  max-width: 340px;
-  align-items: stretch;
-  margin-top: 0; /* mantém alinhamento com .alunos-container */
+/* ====== Mensagem Sem Dados ====== */
+.no-data {
+  text-align: center;
+  color: #6b7280;
+  font-style: italic;
+  padding: 40px 20px;
+  font-size: 1rem;
+}
+
+/* ====== Destaque de Busca ====== */
+mark.hl {
+  background: #fef08a;
+  color: #004d7a;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-weight: 600;
 }
 
 /* ====== Responsividade ====== */
-@media (max-width: 992px) {
+@media (max-width: 1200px) {
   .main-dashboard {
     flex-direction: column;
     align-items: center;
   }
 
-  .alunos-container, .mini-dashboard {
-    width: 90%;
-    max-width: 800px;
+  .alunos-container,
+  .right-column {
+    width: 100%;
+    max-width: 900px;
   }
 
-  .mini-dashboard {
+  .right-column {
     order: -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header h1 {
+    font-size: 2rem;
   }
 
   .table-header {
+    display: none;
+  }
+
+  .header-flex {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding-right: 50px;
+  }
+
+  .summary-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .summary-info span {
+    text-align: left;
+  }
+
+  .accordion-content {
+    flex-direction: column;
+  }
+
+  .menu-btn,
+  .perfil-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 1.2rem;
+  }
+
+  .perfil-btn {
+    padding: 0;
+    border-radius: 50%;
+  }
+
+  .perfil-btn span {
     display: none;
   }
 
