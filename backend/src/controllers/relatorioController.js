@@ -1,69 +1,74 @@
 // backend/src/controllers/relatorioController.js
+
 import { db } from "../config/firebase-admin.js";
 
-// Listar todos os relatórios (coleção "acessos")
-export async function listarRelatorios(_req, res) {
+/**
+ * Lista todos os registros de ACESSOS (admin)
+ * Junta com a coleção ALUNOS para exibir informações completas
+ */
+export const listarRelatorios = async (req, res) => {
   try {
-    const registrosRef = db.collection("acessos");
-    const snapshot = await registrosRef.orderBy("data", "desc").get();
-    if (snapshot.empty) return res.json([]);
+    // 1. Buscar todos os acessos
+    const acessosSnap = await db.collection("acessos").get();
 
-    const lista = await Promise.all(
-      snapshot.docs.map(async (docSnap) => {
-        const dados = docSnap.data();
+    const lista = [];
 
-        let alunoData = {
-          nome: "Desconhecido",
-          curso: "-",
-          instituicao: "-",
-          periodo: "-",
-          turno: "-",
-          idCartao: "-",
-        };
+    for (const doc of acessosSnap.docs) {
+      const dados = doc.data();
+      const uidCartao = dados.uid; // UID DO CARTÃO
 
-          if (dados.uid) {
-    const alunoQuery = await db.collection("alunos")
-      .where("uid", "==", dados.uid)
-      .limit(1)
-      .get();
+      // =============================
+      // 2. Buscar aluno pelo campo CERTO: idCartao
+      // =============================
+      const alunoSnap = await db
+        .collection("alunos")
+        .where("idCartao", "==", uidCartao)
+        .limit(1)
+        .get();
 
-    if (!alunoQuery.empty) {
-      alunoData = { ...alunoData, ...alunoQuery.docs[0].data() };
+      let aluno = null;
+      if (!alunoSnap.empty) {
+        aluno = alunoSnap.docs[0].data();
+      }
+
+      // =============================
+      // 3. Montar objeto final da linha da tabela
+      // =============================
+      lista.push({
+        id: doc.id,
+        idCartao: uidCartao,
+        horario: dados.horario,
+        data: dados.data,
+
+        aluno: aluno ? aluno.nome : "Desconhecido",
+        curso: aluno ? aluno.curso : "-",
+        instituicao: aluno ? aluno.instituicao : "-",
+        periodo: aluno ? aluno.periodo : "-",
+        turno: aluno ? aluno.turno : "-"
+      });
     }
+
+    return res.json(lista);
+
+  } catch (error) {
+    console.error("Erro ao listar relatórios:", error);
+    return res.status(500).json({ erro: "Erro ao listar relatórios." });
   }
+};
 
 
-            return {
-        id: docSnap.id,
-        aluno: alunoData.nome || "Desconhecido",
-        idCartao: dados.idCartao || dados.uid || alunoData.idCartao || "-",
-        curso: alunoData.curso || "-",
-        instituicao: alunoData.instituicao || "-",
-        periodo: alunoData.periodo || "-",
-        turno: alunoData.turno || "-",
-        data: dados.data || "-",
-        horario: dados.horario || "-"
-      };
-
-      })
-    );
-
-    res.json(lista);
-  } catch (err) {
-    console.error("Erro ao listar relatórios:", err);
-    res.status(500).json({ error: "Erro ao listar relatórios" });
-  }
-}
-
-// Excluir um relatório por ID
-export async function excluirRelatorio(req, res) {
-  const { id } = req.params;
+/**
+ * Excluir um registro da coleção ACESSOS
+ */
+export const excluirRelatorio = async (req, res) => {
   try {
-    await db.collection("acessos").doc(id).delete();
-    res.json({ message: "Registro excluído com sucesso" });
-  } catch (err) {
-    console.error("Erro ao excluir relatório:", err);
-    res.status(500).json({ error: "Erro ao excluir relatório" });
-  }
-}
+    const { id } = req.params;
 
+    await db.collection("acessos").doc(id).delete();
+
+    return res.json({ sucesso: true });
+  } catch (error) {
+    console.error("Erro ao excluir relatório:", error);
+    return res.status(500).json({ erro: "Erro ao excluir relatório." });
+  }
+};
