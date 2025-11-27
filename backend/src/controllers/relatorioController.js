@@ -33,17 +33,18 @@ export async function listarRelatorios(_req, res) {
   }
 
 
-        return {
-          id: docSnap.id,
-          aluno: alunoData.nome || "Desconhecido",
-          idCartao: dados.idCartao || alunoData.idCartao || "-",
-          curso: alunoData.curso || "-",
-          instituicao: alunoData.instituicao || "-",
-          periodo: alunoData.periodo || "-",
-          turno: alunoData.turno || "-",
-          data: dados.data || new Date().toISOString().split("T")[0],
-          horario: dados.horario || "-",
-        };
+            return {
+        id: docSnap.id,
+        aluno: alunoData.nome || "Desconhecido",
+        idCartao: dados.idCartao || dados.uid || alunoData.idCartao || "-",
+        curso: alunoData.curso || "-",
+        instituicao: alunoData.instituicao || "-",
+        periodo: alunoData.periodo || "-",
+        turno: alunoData.turno || "-",
+        data: dados.data || "-",
+        horario: dados.horario || "-"
+      };
+
       })
     );
 
