@@ -3,50 +3,108 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Localização - Ônibus</title>
+  <title>Localização do Ônibus - Check Bus</title>
 
+  <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
-  <link rel="stylesheet" href="../css/style.css" />
-  <link rel="stylesheet" href="../css/gps.css" />
-  <link rel="stylesheet" href="../css/draw.css" />
-  <link rel="stylesheet" href="../css/perfil.css" />
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+  <!-- CSS externos -->
+   <link rel="stylesheet" href="../css/gps.css">
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/draw.css" />
+
+  <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js" type="module"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js" type="module"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js" type="module"></script>
+
 </head>
 <body>
-  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+  <!-- Botão Menu -->
+  <button class="menu-btn" onclick="toggleMenu()">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <!-- Overlay -->
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
+  <!-- Sidebar -->
   <div id="sidebar-container"></div>
 
+  <!-- Botão Perfil -->
+  <button class="perfil-btn" id="btnPerfil">
+    <i class="fa fa-user"></i>
+    Perfil
+  </button>
+
+  <!-- Header (fora do container) -->
+  <div class="header-wrapper">
+    <div class="logo-top">
+      <i class="fas fa-bus"></i>
+      <span>Check Bus</span>
+    </div>
+    <h1 class="header-title">Localização do Ônibus</h1>
+    <p class="header-subtitle">Acompanhe em tempo real a localização do ônibus</p>
+  </div>
+
+  <!-- Container principal -->
   <div class="main-content">
-    <h1>Localização do Ônibus</h1>
-    <div class="info-msg">Clique no botão abaixo para buscar sua localização atual no mapa.</div>
+    <div class="info-msg">
+      <i class="fas fa-info-circle"></i>
+      <span>Clique no botão abaixo para buscar sua localização atual no mapa</span>
+    </div>
+    
     <div id="map"></div>
+    
     <div class="buttons">
-      <button onclick="getLocation()">Buscar Localização</button>
+      <button onclick="getLocation()">
+        <i class="fas fa-location-crosshairs"></i>
+        Buscar Localização
+      </button>
     </div>
   </div>
 
-<button class="perfil-btn" id="btnPerfil">
-  <i class="fa fa-user"></i> Perfil
-</button>
+  <!-- Scripts -->
+  <script>
+    // Toggle menu
+    window.toggleMenu = function() {
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
+      const menuBtn = document.querySelector(".menu-btn");
+      
+      if (sidebar) {
+        sidebar.classList.toggle("active");
+      }
+      if (overlay) {
+        overlay.classList.toggle("active");
+      }
+      if (menuBtn) {
+        menuBtn.classList.toggle("hidden");
+      }
+    };
 
-  <script type="module">
-    import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
-
-    carregarModalPerfil();
-
-    const btnPerfil = document.getElementById("btnPerfil");
-    btnPerfil.addEventListener("click", abrirPerfil);
+    // Fechar sidebar ao clicar no overlay
+    document.getElementById('overlay')?.addEventListener('click', () => {
+      document.getElementById('sidebar')?.classList.remove('active');
+      document.getElementById('overlay')?.classList.remove('active');
+      document.querySelector('.menu-btn')?.classList.remove('hidden');
+    });
   </script>
 
   <script type="module">
+    import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
     import { inicializarSidebar } from "../js/sidebar-universal.js";
+
+    // Inicializar sidebar e perfil
     await inicializarSidebar();
+    await carregarModalPerfil();
+    
+    document.getElementById("btnPerfil")?.addEventListener("click", abrirPerfil);
   </script>
 
   <script type="module" src="../js/gps.js"></script>

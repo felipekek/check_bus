@@ -1,56 +1,257 @@
-/* Estilos da página de GPS */
+* {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', Arial, sans-serif;
+    }
 
-.main-content {
-  max-width: 700px;
-  margin-top: 90px;
-  margin: 80px auto 0;
-  padding: 24px;
-  background: #fff;
-  color: #222;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
-  position: relative;
-}
+    /* Override: Garantir position absolute */
+    .perfil-btn {
+      position: absolute !important;
+      top: 30px;
+      right: 30px;
+    }
 
-h1 {
-  color: #004d7a;
-  text-align: center;
-  margin-bottom: 18px;
-  margin-top: auto;
-}
+    .menu-btn {
+      position: absolute !important;
+      top: 30px;
+      left: 30px;
+    }
 
-#map {
-  height: 350px;
-  width: 100%;
-  border-radius: 10px;
-  margin-bottom: 18px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
+    body {
+      background: linear-gradient(180deg, #006b8f 0%, #004d6d 100%);
+      min-height: 100vh;
+      padding: 30px 20px;
+      position: relative;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
 
-.buttons {
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-  margin-bottom: 10px;
-}
+    /* Shapes animadas */
+    body::before,
+    body::after {
+      content: '';
+      position: fixed;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      pointer-events: none;
+      z-index: 0;
+    }
 
-.buttons button {
-  padding: 10px 24px;
-  background-color: #008793;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background 0.2s;
-}
-.buttons button:hover {
-  background-color: #004d7a;
-}
+    body::before {
+      width: 400px;
+      height: 400px;
+      top: -100px;
+      left: -100px;
+      animation: float 20s infinite ease-in-out;
+    }
 
-.info-msg {
-  text-align: center;
-  color: #004d7a;
-  font-size: 15px;
-  margin-bottom: 10px;
-}
+    body::after {
+      width: 500px;
+      height: 500px;
+      bottom: -150px;
+      right: -150px;
+      animation: float 20s infinite ease-in-out 5s;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translate(0, 0) scale(1);
+      }
+      33% {
+        transform: translate(30px, -30px) scale(1.1);
+      }
+      66% {
+        transform: translate(-20px, 20px) scale(0.9);
+      }
+    }
+
+    /* Header (fora do container) */
+    .header-wrapper {
+      text-align: center;
+      margin-bottom: 24px;
+      color: white;
+      position: relative;
+      z-index: 10;
+    }
+
+    .logo-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding: 10px 24px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+    }
+
+    .logo-top i {
+      font-size: 22px;
+      color: white;
+    }
+
+    .logo-top span {
+      font-size: 20px;
+      font-weight: 600;
+      color: white;
+    }
+
+    .header-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: white;
+    }
+
+    .header-subtitle {
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    /* Container principal */
+    .main-content {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 36px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      position: relative;
+      z-index: 10;
+      animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Info message */
+    .info-msg {
+      text-align: center;
+      color: #6b7280;
+      font-size: 0.95rem;
+      margin-bottom: 24px;
+      padding: 12px 20px;
+      background: #f0f9ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .info-msg i {
+      color: #3b82f6;
+      font-size: 1.1rem;
+    }
+
+    /* Mapa */
+    #map {
+      height: 450px;
+      width: 100%;
+      border-radius: 16px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      border: 3px solid #e5e7eb;
+    }
+
+    /* Botões */
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .buttons button {
+      padding: 14px 28px;
+      background: linear-gradient(135deg, #006b8f, #004d6d);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 107, 143, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .buttons button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 107, 143, 0.4);
+    }
+
+    .buttons button:active {
+      transform: translateY(0);
+    }
+
+    .buttons button i {
+      font-size: 1.1rem;
+    }
+
+    /* Responsivo */
+    @media (max-width: 768px) {
+      body {
+        padding: 20px 15px;
+      }
+
+      .header-wrapper {
+        margin-bottom: 20px;
+      }
+
+      .logo-top {
+        padding: 8px 20px;
+        margin-bottom: 12px;
+      }
+
+      .header-title {
+        font-size: 1.7rem;
+      }
+
+      .header-subtitle {
+        font-size: 0.85rem;
+      }
+
+      .main-content {
+        padding: 30px 24px;
+      }
+
+      #map {
+        height: 350px;
+      }
+
+      .buttons button {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header-title {
+        font-size: 1.5rem;
+      }
+
+      .main-content {
+        padding: 24px 20px;
+      }
+
+      #map {
+        height: 300px;
+        border-radius: 12px;
+      }
+
+      .info-msg {
+        font-size: 0.85rem;
+        padding: 10px 16px;
+      }
+    }
