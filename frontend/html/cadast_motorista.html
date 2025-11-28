@@ -5,49 +5,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cadastro de Motorista - CheckBus</title>
 
-  <!-- ESTILOS ORIGINAIS DO PROJETO (IMPORTANTE!) -->
-  <link rel="stylesheet" href="../css/style.css" />
-  <link rel="stylesheet" href="../css/admin.css" />
+  <!-- CSS -->
+  <link rel="stylesheet" href="../css/cadast_motorista.css"/>
+  <link rel="stylesheet" href="../css/admin.css">
   <link rel="stylesheet" href="../css/perfil.css" />
   <link rel="stylesheet" href="../css/draw.css" />
-  <link rel="stylesheet" href="../css/cadast_motorista.css" />
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
+  <!-- ===== Bolas animadas no fundo ===== -->
+  <div class="background-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
+    <div class="shape shape-5"></div>
+  </div>
 
-  <!-- Botão de menu lateral -->
+  <!-- Botão do Menu -->
   <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+  <!-- Botão de Perfil -->
+  <button class="perfil-btn" id="btnPerfil">
+    <i class="fa-solid fa-user-shield"></i> Perfil
+  </button>
+
+  <!-- Overlay -->
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
   <!-- Sidebar -->
   <div id="sidebar-container"></div>
 
-  <!-- Botão Perfil ADM -->
-  <button class="perfil-btn" id="btnPerfil">
-    <i class="fa-solid fa-user-shield"></i> Perfil ADM
-  </button>
-
-  <!-- Modal Perfil ADM -->
-  <div id="modalPerfil" class="modal">
-    <div class="modal-content">
-      <span id="btnFecharPerfil" class="close">&times;</span>
-      <h2 style="color:#008793;">Perfil do Administrador</h2>
-
-      <div class="perfil-card">
-        <p><strong>Nome:</strong> <span id="nomeUsuario"></span></p>
-        <p><strong>Email:</strong> <span id="emailUsuario"></span></p>
-        <p><strong>ID:</strong> <span id="idUsuario"></span></p>
-        <p><strong>CPF:</strong> <span id="cpfUsuario"></span></p>
-      </div>
-
-      <div class="perfil-modal-buttons">
-        <button id="btnAtualizarEmail">Atualizar E-mail</button>
-        <button id="btnAlterarSenha">Alterar Senha</button>
-      </div>
-    </div>
-  </div>
+  <!-- ===== HEADER (Título no fundo azul) ===== -->
+  <header class="page-header">
+    <h1>Cadastro de Motorista</h1>
+    <p>Gerencie os motoristas do sistema CheckBus</p>
+  </header>
 
   <!-- MODAL EDITAR MOTORISTA -->
   <div id="modalEditar" class="modal-editar">
@@ -77,172 +71,195 @@
           <option value="Inativo">Inativo</option>
         </select>
 
-        <button type="submit" class="btn-submit">Salvar Alterações</button>
+        <button type="submit" class="btn-submit">
+          <i class="fas fa-save"></i>
+          Salvar Alterações
+        </button>
       </form>
     </div>
   </div>
 
   <!-- CONTEÚDO PRINCIPAL -->
-  <main class="form-container fade-in">
-    <h1><i class="fa-solid fa-id-card-clip"></i> Cadastro de Motorista</h1>
-    <p class="subtitle">Preencha os dados abaixo para cadastrar um novo motorista.</p>
+  <main class="form-container">
+    <div class="titulo-container">
+      <h2>Novo Motorista</h2>
+      <p class="subtitle">Preencha os dados abaixo para cadastrar um novo motorista</p>
+    </div>
 
     <!-- FORMULÁRIO -->
     <form id="formMotorista" class="grid-form">
 
-  <!-- DADOS PESSOAIS -->
-<section class="card slide-up foto-container">
+      <!-- DADOS PESSOAIS -->
+      <section class="card foto-container">
+        <h3>
+          <i class="fa-solid fa-user"></i>
+          Informações Pessoais
+        </h3>
 
-  <h2><i class="fa-solid fa-user"></i> Informações Pessoais</h2>
+        <div class="foto-wrapper">
+          <!-- QUADRADO DA FOTO -->
+          <div class="foto-box">
+            <img id="previewFotoMotorista" class="foto-preview" src="../imagens/placeholder_user.png" alt="Foto do motorista">
+          </div>
 
-  <div class="foto-wrapper">
+          <!-- UPLOAD E REMOVER -->
+          <div class="foto-actions">
+            <label class="label-upload">
+              <i class="fa-solid fa-upload"></i> Escolher foto
+              <input type="file" id="fotoMotorista" accept="image/*">
+            </label>
 
-    <!-- QUADRADO DA FOTO -->
-    <div class="foto-box">
-      <img id="previewFotoMotorista" class="foto-preview" src="../imagens/placeholder_user.png">
-    </div>
+            <button type="button" id="btnRemoverFoto" class="btn-remover-foto">
+              <i class="fa-solid fa-trash"></i> Remover foto
+            </button>
+          </div>
+        </div>
 
-    <!-- UPLOAD E REMOVER -->
-    <div class="foto-actions">
-      <label class="label-upload">
-        <i class="fa-solid fa-upload"></i> Escolher foto
-        <input type="file" id="fotoMotorista" accept="image/*">
-      </label>
+        <!-- CAMPOS DE TEXTO -->
+        <div class="grid-2">
+          <div>
+            <label for="nome">Nome completo</label>
+            <input type="text" id="nome" placeholder="Ex: João Silva" required />
+          </div>
 
-      <button type="button" id="btnRemoverFoto" class="btn-remover-foto">
-        <i class="fa-solid fa-trash"></i> Remover foto
+          <div>
+            <label for="email">E-mail</label>
+            <input type="email" id="email" placeholder="Ex: joao@email.com" required />
+          </div>
+
+          <div>
+            <label for="cpf">CPF</label>
+            <input type="text" id="cpf" placeholder="000.000.000-00" required />
+          </div>
+
+          <div>
+            <label for="telefone">Telefone</label>
+            <input type="text" id="telefone" placeholder="(00) 00000-0000" required />
+          </div>
+        </div>
+      </section>
+
+      <!-- CNH -->
+      <section class="card">
+        <h3>
+          <i class="fa-solid fa-id-card"></i>
+          Informações da CNH
+        </h3>
+
+        <div class="grid-2">
+          <div>
+            <label for="cnh">Número da CNH</label>
+            <input type="text" id="cnh" placeholder="Digite o número da CNH" required />
+          </div>
+
+          <div>
+            <label for="categoria">Categoria</label>
+            <select id="categoria" required>
+              <option value="">Selecione</option>
+              <option value="D">D</option>
+              <option value="E">E</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="validadeCnh">Validade CNH</label>
+            <input type="date" id="validadeCnh" required />
+          </div>
+        </div>
+      </section>
+
+      <!-- OPERACIONAL -->
+      <section class="card">
+        <h3>
+          <i class="fa-solid fa-briefcase"></i>
+          Dados Operacionais
+        </h3>
+
+        <div class="grid-2">
+          <div>
+            <label for="turno">Turno</label>
+            <select id="turno" required>
+              <option value="">Selecione</option>
+              <option value="Matutino">Matutino</option>
+              <option value="Vespertino">Vespertino</option>
+              <option value="Noturno">Noturno</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="status">Status</label>
+            <select id="status" required>
+              <option value="Ativo">Ativo</option>
+              <option value="Inativo">Inativo</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- SENHA -->
+      <section class="card">
+        <h3>
+          <i class="fa-solid fa-lock"></i>
+          Segurança da Conta
+        </h3>
+
+        <div class="grid-2">
+          <div>
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" placeholder="Mínimo 6 caracteres" required />
+          </div>
+
+          <div>
+            <label for="confirmarSenha">Confirmar Senha</label>
+            <input type="password" id="confirmarSenha" placeholder="Repita a senha" required />
+          </div>
+        </div>
+      </section>
+
+      <button type="submit" class="btn-submit">
+        <i class="fa-solid fa-check"></i>
+        Cadastrar Motorista
       </button>
-    </div>
+    </form>
 
-  </div>
-
-  <!-- CAMPOS DE TEXTO -->
-  <div class="grid-2">
-    <div>
-      <label for="nome">Nome completo</label>
-      <input type="text" id="nome" placeholder="Ex: João Silva" required />
-    </div>
-
-    <div>
-      <label for="email">E-mail</label>
-      <input type="email" id="email" placeholder="Ex: joao@email.com" required />
-    </div>
-
-    <div>
-      <label for="cpf">CPF</label>
-      <input type="text" id="cpf" placeholder="000.000.000-00" required />
-    </div>
-
-    <div>
-      <label for="telefone">Telefone</label>
-      <input type="text" id="telefone" placeholder="(00) 00000-0000" required />
-    </div>
-  </div>
-
-</section>
-
-
-  <!-- CNH -->
-  <section class="card slide-up">
-    <h2><i class="fa-solid fa-id-card"></i> Informações da CNH</h2>
-
-    <div class="grid-2">
-      <div>
-        <label for="cnh">Número da CNH</label>
-        <input type="text" id="cnh" placeholder="Digite o número da CNH" required />
-      </div>
-
-      <div>
-        <label for="categoria">Categoria</label>
-        <select id="categoria" required>
-          <option value="">Selecione</option>
-          <option value="D">D</option>
-          <option value="E">E</option>
-        </select>
-      </div>
-
-      <div>
-        <label for="validadeCnh">Validade CNH</label>
-        <input type="date" id="validadeCnh" required />
-      </div>
-    </div>
-  </section>
-
-  <!-- OPERACIONAL -->
-  <section class="card slide-up">
-    <h2><i class="fa-solid fa-briefcase"></i> Dados Operacionais</h2>
-
-    <div class="grid-2">
-      <div>
-        <label for="turno">Turno</label>
-        <select id="turno" required>
-          <option value="">Selecione</option>
-          <option value="Matutino">Matutino</option>
-          <option value="Vespertino">Vespertino</option>
-          <option value="Noturno">Noturno</option>
-        </select>
-      </div>
-
-      <div>
-        <label for="status">Status</label>
-        <select id="status" required>
-          <option value="Ativo">Ativo</option>
-          <option value="Inativo">Inativo</option>
-        </select>
-      </div>
-    </div>
-  </section>
-
-  <!-- SENHA -->
-  <section class="card slide-up">
-    <h2><i class="fa-solid fa-lock"></i> Segurança da Conta</h2>
-
-    <div class="grid-2">
-      <div>
-        <label for="senha">Senha</label>
-        <input type="password" id="senha" placeholder="Mínimo 6 caracteres" required />
-      </div>
-
-      <div>
-        <label for="confirmarSenha">Confirmar Senha</label>
-        <input type="password" id="confirmarSenha" placeholder="Repita a senha" required />
-      </div>
-    </div>
-  </section>
-
-  <button type="submit" class="btn-submit">
-    <i class="fa-solid fa-check"></i> Cadastrar Motorista
-  </button>
-
-</form>
-
-    <!-- LISTA DE MOTORISTAS (FORA DO FORM = CORRETO) -->
-    <section class="card slide-up lista-motoristas-card">
-      <h2><i class="fa-solid fa-users"></i> Motoristas Cadastrados</h2>
+    <!-- LISTA DE MOTORISTAS -->
+    <section class="card lista-motoristas-card">
+      <h3>
+        <i class="fa-solid fa-users"></i>
+        Motoristas Cadastrados
+      </h3>
 
       <input 
         type="text" 
         id="buscarMotorista" 
         class="input-busca" 
-        placeholder="Buscar por nome, e-mail ou CNH..."
+        placeholder="🔍 Buscar por nome, e-mail ou CNH..."
       />
 
       <div id="listaMotoristas" class="lista-motoristas">
         <p class="carregando">Carregando motoristas...</p>
       </div>
     </section>
-
   </main>
 
-  <!-- JS -->
-  <script src="https://unpkg.com/imask"></script>
-  <script type="module" src="../js/cadast_motorista.js"></script>
-
+  <!-- Scripts -->
   <script>
-    function toggleMenu() {
-      document.getElementById("sidebar").classList.toggle("active");
-      document.getElementById("overlay").classList.toggle("active");
-    }
+    window.toggleMenu = function() {
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
+      const menuBtn = document.querySelector(".menu-btn");
+      
+      sidebar.classList.toggle("active");
+      overlay.classList.toggle("active");
+      if (menuBtn) menuBtn.classList.toggle("hidden");
+    };
+  </script>
+
+  <script type="module">
+    import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
+    carregarModalPerfil();
+    const btnPerfil = document.getElementById("btnPerfil");
+    if (btnPerfil) btnPerfil.addEventListener("click", abrirPerfil);
   </script>
 
   <script type="module">
@@ -250,5 +267,7 @@
     await inicializarSidebar();
   </script>
 
+  <script src="https://unpkg.com/imask"></script>
+  <script type="module" src="../js/cadast_motorista.js"></script>
 </body>
 </html>

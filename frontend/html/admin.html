@@ -4,41 +4,58 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Lista de Alunos - CheckBus</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- CSS -->
   <link rel="stylesheet" href="../css/admin.css">
-  <link rel="stylesheet" href="../css/draw.css">
   <link rel="stylesheet" href="../css/perfil.css">
-  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/draw.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
-  <!-- ===== Botão do menu lateral ===== -->
+  <!-- ===== Bolas animadas no fundo ===== -->
+  <div class="background-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
+    <div class="shape shape-5"></div>
+  </div>
+
+  <!-- Botão do Menu (ABSOLUTO) -->
   <button class="menu-btn" onclick="toggleMenu()">☰</button>
 
-  <!-- ===== Botão de Perfil ===== -->
+  <!-- Botão de Perfil (ABSOLUTO) -->
   <button class="perfil-btn" id="btnPerfil">
-    <i class="fa fa-user"></i> Perfil
+    <i class="fa-solid fa-user-shield"></i> Perfil
   </button>
 
-  <!-- Overlay escuro -->
+  <!-- Overlay -->
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-  <!-- ===== Sidebar ===== -->
+  <!-- Sidebar -->
   <div id="sidebar-container"></div>
 
-  <!-- ===== HEADER (Título no fundo azul) ===== -->
-  <header class="page-header">
-    <h1>📋 Lista de Alunos</h1>
-    <p>Gerencie todos os alunos cadastrados e seus horários</p>
-  </header>
+  <!-- ===== HEADER (IGUAL AO HOME PRINCIPAL) ===== -->
+  <div class="header-wrapper">
+    <div class="logo-top">
+      <i class="fas fa-bus"></i>
+      <span>Check Bus</span>
+    </div>
+    <h1 class="header-title">Lista de Alunos</h1>
+    <p class="header-subtitle">Gerencie todos os alunos cadastrados e seus horários</p>
+  </div>
 
   <!-- ===== CONTEÚDO PRINCIPAL ===== -->
   <div class="main-dashboard">
+    
     <!-- ===== Lista de alunos ===== -->
     <div class="alunos-container">
       <div class="titulo-container">
-        <h1>Lista de Alunos</h1>
-        <input type="text" id="barraPesquisa" placeholder="Pesquisar...">
+        <h2>Alunos Cadastrados</h2>
+        <input type="text" id="barraPesquisa" placeholder="🔍 Pesquisar por nome, email, instituição...">
       </div>
 
       <div class="table-header">
@@ -54,51 +71,74 @@
       </div>
     </div>
 
-    <!-- RIGHT COLUMN: estatísticas + gráfico (grafico abaixo das estatísticas) -->
+    <!-- ===== COLUNA DIREITA: Estatísticas + Gráfico ===== -->
     <div class="right-column">
+      
+      <!-- Mini Dashboard de Estatísticas -->
       <aside class="mini-dashboard">
-        <h2><i class="fa fa-chart-line"></i> Estatísticas</h2>
+        <h3>
+          <i class="fa fa-chart-line"></i>
+          Estatísticas
+        </h3>
         <div class="dash-grid">
           <div class="dash-card">
-            <h3 id="totalAlunos">0</h3>
+            <h4 id="totalAlunos">0</h4>
             <p>Total de Alunos</p>
           </div>
           <div class="dash-card">
-            <h3 id="totalInstituicoes">0</h3>
+            <h4 id="totalInstituicoes">0</h4>
             <p>Instituições Cadastradas</p>
           </div>
           <div class="dash-card">
-            <h3 id="turnoMatutino">0</h3>
+            <h4 id="turnoMatutino">0</h4>
             <p>Turno Matutino</p>
           </div>
           <div class="dash-card">
-            <h3 id="turnoNoturno">0</h3>
+            <h4 id="turnoNoturno">0</h4>
             <p>Turno Noturno</p>
           </div>
         </div>
       </aside>
 
-      <!-- Gráfico separado (menor, mesmo tamanho do mini-dashboard) -->
-      <section class="grafico-container small">
-        <h2><i class="fa fa-pie-chart"></i> Distribuição por Instituição</h2>
-        <canvas id="instituicoesChart" width="220" height="220"></canvas>
+      <!-- Gráfico de Distribuição -->
+      <section class="grafico-container">
+        <h3>
+          <i class="fa fa-pie-chart"></i>
+          Distribuição por Instituição
+        </h3>
+        <div class="canvas-wrapper">
+          <canvas id="instituicoesChart"></canvas>
+        </div>
       </section>
+      
     </div>
   </div>
 
   <!-- ===== Scripts ===== -->
+  <script>
+    window.toggleMenu = function() {
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
+      const menuBtn = document.querySelector(".menu-btn");
+      
+      sidebar.classList.toggle("active");
+      overlay.classList.toggle("active");
+      if (menuBtn) menuBtn.classList.toggle("hidden");
+    };
+  </script>
+
   <script type="module">
     import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
     carregarModalPerfil();
-    document.getElementById("btnPerfil").addEventListener("click", abrirPerfil);
+    const btnPerfil = document.getElementById("btnPerfil");
+    if (btnPerfil) btnPerfil.addEventListener("click", abrirPerfil);
   </script>
-
-  <script type="module" src="../js/admin.js"></script>
 
   <script type="module">
     import { inicializarSidebar } from "../js/sidebar-universal.js";
     await inicializarSidebar();
   </script>
 
+  <script type="module" src="../js/admin.js"></script>
 </body>
 </html>

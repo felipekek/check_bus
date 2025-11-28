@@ -1,9 +1,8 @@
 /* ===================================================
    CADASTRO DE MOTORISTA - CheckBus
-   Design limpo e profissional seguindo o padrão
+   Design consistente com as outras páginas
    =================================================== */
 
-/* ===== RESET E BASE ===== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -11,85 +10,282 @@
 }
 
 body {
-  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, #004d7a 0%, #008793 100%);
+  font-family: "Inter", "Segoe UI", Arial, sans-serif;
+  color: #222;
+  min-height: 100vh;
   margin: 0;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
   overflow-x: hidden;
-  background: linear-gradient(to right, #004d7a, #008793);
-  min-height: 100vh;
 }
 
-/* ===== CONTAINER PRINCIPAL ===== */
-.form-container {
-  max-width: 1100px;
-  margin: 90px auto 40px;
-  background: #fff;
-  padding: 35px 45px 45px;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  animation: fadeIn 0.5s ease-out;
+/* ====== BOLAS ANIMADAS NO FUNDO ====== */
+.background-shapes {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
 }
 
-/* ===== TÍTULOS ===== */
-h1 {
-  text-align: center;
-  color: #004d7a;
-  margin: 0 0 10px 0;
-  font-size: 2rem;
-  font-weight: 700;
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  animation: float 20s infinite ease-in-out;
+}
+
+.shape-1 {
+  width: 300px;
+  height: 300px;
+  top: -150px;
+  left: -150px;
+  animation-duration: 25s;
+  animation-delay: 0s;
+}
+
+.shape-2 {
+  width: 200px;
+  height: 200px;
+  top: 60%;
+  right: -100px;
+  animation-duration: 30s;
+  animation-delay: 2s;
+}
+
+.shape-3 {
+  width: 150px;
+  height: 150px;
+  bottom: 10%;
+  left: 10%;
+  animation-duration: 22s;
+  animation-delay: 4s;
+}
+
+.shape-4 {
+  width: 250px;
+  height: 250px;
+  top: 40%;
+  left: 50%;
+  animation-duration: 28s;
+  animation-delay: 1s;
+}
+
+.shape-5 {
+  width: 180px;
+  height: 180px;
+  bottom: -90px;
+  right: 20%;
+  animation-duration: 26s;
+  animation-delay: 3s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.7;
+  }
+  25% {
+    transform: translate(30px, -30px) scale(1.1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(-20px, 20px) scale(0.9);
+    opacity: 0.8;
+  }
+  75% {
+    transform: translate(40px, 10px) scale(1.05);
+    opacity: 0.6;
+  }
+}
+
+/* ====== BOTÕES (Menu e Perfil) ====== */
+.menu-btn,
+.perfil-btn {
+  position: absolute;
+  z-index: 1000;
+  border: none;
+  cursor: pointer;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.menu-btn {
+  top: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  font-size: 1.5rem;
+}
+
+.menu-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
+}
+
+.perfil-btn {
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 25px;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+}
+
+.perfil-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.perfil-btn i {
+  font-size: 1.1rem;
+}
+
+/* ====== OVERLAY ====== */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 998;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ====== HEADER (Título no fundo azul) ====== */
+.page-header {
+  width: 100%;
+  text-align: center;
+  padding: 80px 20px 40px 20px;
+  color: white;
+  position: relative;
+  z-index: 1;
+}
+
+.page-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.page-header p {
+  font-size: 1.1rem;
+  opacity: 0.95;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* ====== CONTAINER PRINCIPAL ====== */
+.form-container {
+  max-width: 1200px;
+  width: 95%;
+  padding: 35px 40px;
+  margin: 0 auto 40px auto;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 1;
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ====== TÍTULOS ====== */
+.titulo-container {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.titulo-container h2 {
+  color: #004d7a;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
 }
 
 .subtitle {
-  text-align: center;
-  color: #555;
-  margin-bottom: 35px;
+  color: #6b7280;
   font-size: 1rem;
   font-weight: 400;
 }
 
-/* ===== FORMULÁRIO ===== */
+/* ====== FORMULÁRIO ====== */
 .grid-form {
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 24px;
 }
 
-/* ===== CARDS (SEÇÕES) ===== */
+/* ====== CARDS (SEÇÕES) ====== */
 .card {
-  background: #f8f9fa;
-  border-radius: 12px;
-  padding: 25px;
-  border: 1px solid #e0e4e8;
+  background: #f9fafb;
+  border-radius: 16px;
+  padding: 28px;
+  border: 2px solid #e5e7eb;
   transition: all 0.3s ease;
 }
 
 .card:hover {
   border-color: #008793;
-  box-shadow: 0 4px 12px rgba(0, 135, 147, 0.1);
+  box-shadow: 0 6px 20px rgba(0, 135, 147, 0.1);
 }
 
-.card h2 {
+.card h3 {
   color: #004d7a;
-  font-size: 1.2rem;
-  margin: 0 0 20px 0;
-  font-weight: 600;
+  font-size: 1.3rem;
+  margin: 0 0 24px 0;
+  font-weight: 700;
   display: flex;
   align-items: center;
   gap: 10px;
-  padding-bottom: 12px;
-  border-bottom: 2px solid #008793;
+  padding-bottom: 14px;
+  border-bottom: 3px solid #008793;
 }
 
-.card h2 i {
+.card h3 i {
   color: #008793;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
 }
 
-/* ===== GRID DE CAMPOS ===== */
+/* ====== GRID DE CAMPOS ====== */
 .grid-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -97,11 +293,11 @@ h1 {
   margin-top: 10px;
 }
 
-/* ===== LABELS E INPUTS ===== */
+/* ====== LABELS E INPUTS ====== */
 label {
   font-weight: 600;
-  color: #333;
-  margin-bottom: 6px;
+  color: #374151;
+  margin-bottom: 8px;
   display: block;
   font-size: 0.95rem;
 }
@@ -109,56 +305,57 @@ label {
 input,
 select {
   width: 100%;
-  padding: 12px 14px;
-  border-radius: 8px;
-  border: 1px solid #d0d4d9;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 2px solid #e5e7eb;
   font-size: 0.95rem;
   font-family: inherit;
   transition: all 0.2s ease;
-  background: #fff;
+  background: white;
 }
 
 input:focus,
 select:focus {
   border-color: #008793;
-  box-shadow: 0 0 0 3px rgba(0, 135, 147, 0.15);
+  box-shadow: 0 0 0 3px rgba(0, 135, 147, 0.1);
   outline: none;
   background: #f9feff;
 }
 
 input::placeholder {
-  color: #999;
+  color: #9ca3af;
 }
 
-/* ===== FOTO DO MOTORISTA ===== */
+/* ====== FOTO DO MOTORISTA ====== */
 .foto-container {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 20px;
 }
 
 .foto-wrapper {
   display: flex;
-  gap: 25px;
+  gap: 28px;
   align-items: flex-start;
 }
 
 .foto-box {
-  width: 160px;
-  height: 160px;
-  background: #e9ecef;
-  border-radius: 12px;
+  width: 180px;
+  height: 180px;
+  background: #f3f4f6;
+  border-radius: 16px;
   overflow: hidden;
-  border: 3px solid #d0d4d9;
+  border: 3px solid #e5e7eb;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: border-color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .foto-box:hover {
   border-color: #008793;
+  box-shadow: 0 4px 12px rgba(0, 135, 147, 0.2);
 }
 
 .foto-preview {
@@ -170,16 +367,16 @@ input::placeholder {
 .foto-actions {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
   flex: 1;
 }
 
 .label-upload {
   cursor: pointer;
-  background: #008793;
+  background: linear-gradient(135deg, #005f7a, #007a8a);
   color: white;
-  padding: 12px 20px;
-  border-radius: 10px;
+  padding: 14px 24px;
+  border-radius: 12px;
   font-weight: 600;
   font-size: 0.95rem;
   display: inline-flex;
@@ -189,12 +386,13 @@ input::placeholder {
   transition: all 0.3s ease;
   border: none;
   text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 95, 122, 0.3);
 }
 
 .label-upload:hover {
-  background: #006f7b;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, #004d6d, #005f7a);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 95, 122, 0.4);
 }
 
 .label-upload input {
@@ -202,11 +400,11 @@ input::placeholder {
 }
 
 .btn-remover-foto {
-  background: #dc3545;
-  color: #fff;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
   border: none;
-  padding: 12px 20px;
-  border-radius: 10px;
+  padding: 14px 24px;
+  border-radius: 12px;
   cursor: pointer;
   font-weight: 600;
   font-size: 0.95rem;
@@ -215,28 +413,29 @@ input::placeholder {
   justify-content: center;
   gap: 10px;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
 .btn-remover-foto:hover {
-  background: #c82333;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
 }
 
-/* ===== BOTÃO SUBMIT ===== */
+/* ====== BOTÃO SUBMIT ====== */
 .btn-submit {
-  margin-top: 30px;
+  margin-top: 10px;
   width: 100%;
   padding: 16px;
-  background: linear-gradient(135deg, #004d7a, #008793);
-  color: #fff;
+  background: linear-gradient(135deg, #005f7a, #007a8a);
+  color: white;
   border: none;
   border-radius: 12px;
   cursor: pointer;
   font-size: 1.1rem;
-  font-weight: 600;
+  font-weight: 700;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 77, 122, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 95, 122, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -244,51 +443,60 @@ input::placeholder {
 }
 
 .btn-submit:hover {
-  background: linear-gradient(135deg, #007a99, #00bf72);
+  background: linear-gradient(135deg, #004d6d, #005f7a);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 77, 122, 0.4);
+  box-shadow: 0 6px 16px rgba(0, 95, 122, 0.4);
 }
 
 .btn-submit:active {
   transform: translateY(0);
 }
 
-/* ===== LISTA DE MOTORISTAS ===== */
+/* ====== LISTA DE MOTORISTAS ====== */
 .lista-motoristas-card {
-  margin-top: 50px;
+  margin-top: 30px;
 }
 
 .input-busca {
   width: 100%;
-  padding: 12px 16px;
-  border-radius: 10px;
-  border: 1px solid #d0d4d9;
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: 2px solid #e5e7eb;
   font-size: 0.95rem;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   transition: all 0.2s ease;
+  background: white;
 }
 
 .input-busca:focus {
   border-color: #008793;
-  box-shadow: 0 0 0 3px rgba(0, 135, 147, 0.15);
+  box-shadow: 0 0 0 3px rgba(0, 135, 147, 0.1);
   outline: none;
 }
 
 .lista-motoristas {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
 }
 
+.carregando {
+  text-align: center;
+  color: #9ca3af;
+  padding: 40px;
+  font-size: 1rem;
+  grid-column: 1 / -1;
+}
+
 .motorista-card {
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
+  background: white;
+  padding: 24px;
+  border-radius: 14px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   border-left: 4px solid #008793;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   transition: all 0.3s ease;
 }
 
@@ -298,155 +506,103 @@ input::placeholder {
   border-left-width: 6px;
 }
 
+.foto-lista {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #e5e7eb;
+  margin-bottom: 8px;
+}
+
 .motorista-nome {
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: #004d7a;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
 }
 
 .motorista-info {
   font-size: 0.9rem;
-  color: #555;
+  color: #6b7280;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .status-ativo {
-  color: #28a745;
-  font-weight: 600;
+  color: #10b981;
+  font-weight: 700;
 }
 
 .status-inativo {
-  color: #dc3545;
-  font-weight: 600;
+  color: #ef4444;
+  font-weight: 700;
 }
 
 .motorista-actions {
   display: flex;
-  margin-top: 12px;
+  margin-top: 16px;
   gap: 10px;
 }
 
 .btn-edit,
 .btn-delete {
   flex: 1;
-  padding: 10px;
+  padding: 12px;
   font-size: 0.9rem;
-  border-radius: 8px;
+  border-radius: 10px;
   border: none;
   cursor: pointer;
   font-weight: 600;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
 .btn-edit {
-  background: #008793;
-  color: #fff;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
 }
 
 .btn-edit:hover {
-  background: #006f7b;
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  transform: translateY(-2px);
 }
 
 .btn-delete {
-  background: #dc3545;
-  color: #fff;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
 }
 
 .btn-delete:hover {
-  background: #c82333;
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  transform: translateY(-2px);
 }
 
-/* ===== MODAL DE EDIÇÃO ===== */
+/* ====== MODAL DE EDIÇÃO ====== */
 .modal-editar {
   display: none;
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
   justify-content: center;
   align-items: center;
   z-index: 9999;
-  backdrop-filter: blur(4px);
 }
 
 .modal-editar-content {
-  background: #fff;
-  padding: 30px;
+  background: white;
+  padding: 35px;
   width: 90%;
-  max-width: 450px;
-  border-radius: 16px;
+  max-width: 500px;
+  border-radius: 20px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
   animation: modalSlide 0.3s ease-out;
-}
-
-.modal-close {
-  float: right;
-  cursor: pointer;
-  font-size: 28px;
-  color: #004d7a;
-  line-height: 1;
-  transition: color 0.2s ease;
-}
-
-.modal-close:hover {
-  color: #dc3545;
-}
-
-.modal-editar-content h2 {
-  color: #004d7a;
-  margin: 0 0 20px 0;
-  font-size: 1.5rem;
-  clear: both;
-}
-
-.modal-editar-content label {
-  display: block;
-  margin-top: 15px;
-  margin-bottom: 6px;
-  font-weight: 600;
-  color: #333;
-}
-
-.modal-editar-content input,
-.modal-editar-content select {
-  width: 100%;
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid #d0d4d9;
-}
-
-.modal-editar-content button[type="submit"] {
-  width: 100%;
-  margin-top: 20px;
-  padding: 12px;
-  background: #008793;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.modal-editar-content button[type="submit"]:hover {
-  background: #006f7b;
-  transform: translateY(-2px);
-}
-
-/* ===== ANIMAÇÕES ===== */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  position: relative;
 }
 
 @keyframes modalSlide {
@@ -460,11 +616,71 @@ input::placeholder {
   }
 }
 
-/* ===== RESPONSIVIDADE ===== */
+.modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  font-size: 28px;
+  color: #6b7280;
+  line-height: 1;
+  transition: all 0.2s ease;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #f3f4f6;
+}
+
+.modal-close:hover {
+  color: #ef4444;
+  background: #fee2e2;
+  transform: rotate(90deg);
+}
+
+.modal-editar-content h2 {
+  color: #004d7a;
+  margin: 0 0 24px 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.modal-editar-content label {
+  display: block;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.modal-editar-content input,
+.modal-editar-content select {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 2px solid #e5e7eb;
+}
+
+.modal-editar-content input:focus,
+.modal-editar-content select:focus {
+  border-color: #008793;
+  box-shadow: 0 0 0 3px rgba(0, 135, 147, 0.1);
+  outline: none;
+}
+
+.modal-editar-content button[type="submit"] {
+  width: 100%;
+  margin-top: 24px;
+}
+
+/* ====== RESPONSIVIDADE ====== */
 @media (max-width: 992px) {
   .form-container {
-    margin: 80px 20px 30px;
+    width: 100%;
     padding: 30px 25px;
+    border-radius: 0;
   }
 
   .grid-2 {
@@ -474,21 +690,20 @@ input::placeholder {
 }
 
 @media (max-width: 768px) {
-  h1 {
-    font-size: 1.6rem;
+  .page-header h1 {
+    font-size: 2rem;
   }
 
   .form-container {
-    margin: 70px 15px 25px;
     padding: 25px 20px;
   }
 
   .card {
-    padding: 20px;
+    padding: 24px;
   }
 
-  .card h2 {
-    font-size: 1.1rem;
+  .card h3 {
+    font-size: 1.2rem;
   }
 
   .foto-wrapper {
@@ -497,8 +712,8 @@ input::placeholder {
   }
 
   .foto-box {
-    width: 140px;
-    height: 140px;
+    width: 160px;
+    height: 160px;
   }
 
   .foto-actions {
@@ -508,16 +723,43 @@ input::placeholder {
   .lista-motoristas {
     grid-template-columns: 1fr;
   }
+
+  .menu-btn,
+  .perfil-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 1.2rem;
+  }
+
+  .perfil-btn {
+    padding: 0;
+    border-radius: 50%;
+  }
+
+  .perfil-btn span {
+    display: none;
+  }
 }
 
 @media (max-width: 480px) {
+  .page-header {
+    padding: 70px 15px 30px 15px;
+  }
+
+  .page-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .page-header p {
+    font-size: 0.95rem;
+  }
+
   .form-container {
-    margin: 60px 10px 20px;
     padding: 20px 15px;
   }
 
-  h1 {
-    font-size: 1.4rem;
+  .titulo-container h2 {
+    font-size: 1.6rem;
   }
 
   .subtitle {
@@ -527,5 +769,9 @@ input::placeholder {
   .btn-submit {
     font-size: 1rem;
     padding: 14px;
+  }
+
+  .modal-editar-content {
+    padding: 25px 20px;
   }
 }

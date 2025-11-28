@@ -1,33 +1,54 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Avisos - ADM</title>
-  <link rel="stylesheet" href="../css/perfil.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <title>Avisos - CheckBus</title>
+
+  <!-- CSS -->
   <link rel="stylesheet" href="../css/avisos.css">
+  <link rel="stylesheet" href="../css/perfil.css">
   <link rel="stylesheet" href="../css/draw.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
-  <!-- Botão Perfil -->
-<button class="perfil-btn" id="btnPerfil">
-  <i class="fa fa-user"></i> Perfil
-</button>
+  <!-- ===== Bolas animadas no fundo ===== -->
+  <div class="background-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
+    <div class="shape shape-5"></div>
+  </div>
 
-  <!-- BOTÃO MENU -->
+  <!-- Botão do Menu -->
   <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+  <!-- Botão de Perfil -->
+  <button class="perfil-btn" id="btnPerfil">
+    <i class="fa-solid fa-user-shield"></i> Perfil
+  </button>
+
+  <!-- Overlay -->
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-  <!-- DRAWER LATERAL -->
+  <!-- Sidebar -->
   <div id="sidebar-container"></div>
 
-  <!-- CONTEÚDO PRINCIPAL -->
-  <div class="page-container">
+  <!-- ===== HEADER (IGUAL AO HOME PRINCIPAL) ===== -->
+  <div class="header-wrapper">
+    <div class="logo-top">
+      <i class="fas fa-bus"></i>
+      <span>Check Bus</span>
+    </div>
+    <h1 class="header-title">Sistema de Avisos</h1>
+    <p class="header-subtitle">Gerencie e envie avisos para os alunos</p>
+  </div>
 
-    <h1 class="titulo">Sistema de Avisos</h1>
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="page-container">
 
     <!-- GRID LADO ESQUERDO / DIREITO -->
     <div class="layout-grid">
@@ -35,8 +56,11 @@
       <!-- =============================================== -->
       <!-- BLOCO ESQUERDA – CRIAR AVISO PERSONALIZADO -->
       <!-- =============================================== -->
-      <div class="card bloco bloco-esquerda">
-        <h2>Criar Aviso Personalizado</h2>
+      <div class="card bloco-esquerda">
+        <h3>
+          <i class="fa-solid fa-edit"></i>
+          Criar Aviso Personalizado
+        </h3>
 
         <form id="formAviso" class="form-aviso">
 
@@ -62,41 +86,44 @@
           </div>
 
           <button type="submit" class="btn-submit btn-enviar-aviso">
+            <i class="fa-solid fa-paper-plane"></i>
             Enviar Aviso
           </button>
 
         </form>
       </div>
 
-
       <!-- =============================================== -->
       <!-- BLOCO DIREITA – TURNOS + AVISOS PRÉ-PROGRAMADOS -->
       <!-- =============================================== -->
-      <div class="card bloco bloco-direita">
+      <div class="card bloco-direita">
 
         <!-- TURNOS -->
-        <h2>Enviar Para</h2>
+        <h3>
+          <i class="fa-solid fa-users"></i>
+          Enviar Para
+        </h3>
 
         <div class="checkbox-container">
 
           <label>
             <input type="checkbox" class="turno-check" value="manha">
-            Manhã
+            <span>Manhã</span>
           </label>
 
           <label>
             <input type="checkbox" class="turno-check" value="tarde">
-            Tarde
+            <span>Tarde</span>
           </label>
 
           <label>
             <input type="checkbox" class="turno-check" value="noite">
-            Noite
+            <span>Noite</span>
           </label>
 
           <label>
             <input type="checkbox" class="turno-check" value="todos">
-            Todos
+            <span>Todos</span>
           </label>
 
         </div>
@@ -104,37 +131,41 @@
         <hr class="divisor">
 
         <!-- AVISOS PRÉ-PROGRAMADOS -->
-        <h2>Avisos Pré-Programados</h2>
+        <h3>
+          <i class="fa-solid fa-list-check"></i>
+          Avisos Pré-Programados
+        </h3>
 
         <div class="checkbox-container">
 
           <label>
             <input type="checkbox" class="predef-check"
                    data-msg="O ônibus está em manutenção e não funcionará hoje.">
-            🛠 Manutenção
+            <span>🛠 Manutenção</span>
           </label>
 
           <label>
             <input type="checkbox" class="predef-check"
                    data-msg="O ônibus irá atrasar cerca de 5 minutos.">
-            ⏱ Atraso de 5 min
+            <span>⏱ Atraso de 5 min</span>
           </label>
 
           <label>
             <input type="checkbox" class="predef-check"
                    data-msg="O trajeto foi alterado momentaneamente.">
-            🔄 Mudança de trajeto
+            <span>🔄 Mudança de trajeto</span>
           </label>
 
           <label>
             <input type="checkbox" class="predef-check"
                    data-msg="O ônibus chegou ao ponto inicial.">
-            🚌 Chegada ao ponto
+            <span>🚌 Chegada ao ponto</span>
           </label>
 
         </div>
 
         <button id="btnEnviarPredef" class="btn-submit">
+          <i class="fa-solid fa-check-double"></i>
           Enviar Avisos Selecionados
         </button>
 
@@ -142,77 +173,70 @@
 
     </div> <!-- fim layout grid -->
 
-
     <!-- =============================================== -->
-<!-- LISTA DE AVISOS ENVIADOS -->
-<!-- =============================================== -->
-<div class="card bloco tabela-bloco">
+    <!-- LISTA DE AVISOS ENVIADOS -->
+    <!-- =============================================== -->
+    <div class="card tabela-bloco">
 
-  <div class="table-header">
-    <h2>Avisos Enviados</h2>
+      <div class="table-header">
+        <h3>
+          <i class="fa-solid fa-list"></i>
+          Avisos Enviados
+        </h3>
 
-    <input 
-      id="pesquisarAvisos" 
-      type="text" 
-      placeholder="Pesquisar..."
-      class="input-pesquisa"
-    >
-  </div>
+        <input 
+          id="pesquisarAvisos" 
+          type="text" 
+          placeholder="🔍 Pesquisar avisos..."
+          class="input-pesquisa"
+        >
+      </div>
 
-  <div class="tabela-wrapper">
-    <table class="tabela">
-      <thead>
-        <tr>
-          <th>Título</th>
-          <th>Turno</th>
-          <th>Data</th>
-          <th>Ação</th>
-        </tr>
-      </thead>
+      <div class="tabela-wrapper">
+        <table class="tabela">
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Turno</th>
+              <th>Data</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
 
-      <tbody id="listaAvisos">
-      </tbody>
-    </table>
-  </div>
+          <tbody id="listaAvisos">
+          </tbody>
+        </table>
+      </div>
 
-</div>
+    </div>
 
+  </main> <!-- fim page container -->
 
-  </div> <!-- fim page container -->
-
-
-  <!-- SCRIPT DO DRAWER -->
+  <!-- Scripts -->
   <script>
-    window.toggleMenu = function () {
+    window.toggleMenu = function() {
       const sidebar = document.getElementById("sidebar");
       const overlay = document.getElementById("overlay");
-      const btn = document.querySelector(".menu-btn");
-
+      const menuBtn = document.querySelector(".menu-btn");
+      
       sidebar.classList.toggle("active");
       overlay.classList.toggle("active");
-      btn.classList.toggle("hidden");
+      if (menuBtn) menuBtn.classList.toggle("hidden");
     };
   </script>
 
-  <!-- SCRIPT PRINCIPAL -->
-  <script type="module" src="../js/avisos.js"></script>
-
   <script type="module">
-  import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
-  
-  carregarModalPerfil();
-  
-  const btnPerfil = document.getElementById("btnPerfil");
-  if (btnPerfil) {
-    btnPerfil.addEventListener("click", abrirPerfil);
-  }
-</script>
+    import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
+    carregarModalPerfil();
+    const btnPerfil = document.getElementById("btnPerfil");
+    if (btnPerfil) btnPerfil.addEventListener("click", abrirPerfil);
+  </script>
 
   <script type="module">
     import { inicializarSidebar } from "../js/sidebar-universal.js";
     await inicializarSidebar();
   </script>
 
+  <script type="module" src="../js/avisos.js"></script>
 </body>
-
 </html>

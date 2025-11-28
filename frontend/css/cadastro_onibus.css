@@ -1,74 +1,321 @@
-/* --- BASE DO SEU PROJETO --- */
-body {
-  font-family: "Poppins", sans-serif;
-  background-color: #f3f6f9;
+/* ===================================================
+   CADASTRO DE ÔNIBUS - CheckBus
+   Design IGUAL ao Home Principal
+   =================================================== */
+
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-.background-gradient {
+body {
+  font-family: 'Inter', Arial, sans-serif;
+  background: linear-gradient(180deg, #006b8f 0%, #004d6d 100%);
+  min-height: 100vh;
+  margin: 0;
+  padding: 20px;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* ====== BOLAS ANIMADAS (IGUAIS AO HOME PRINCIPAL) ====== */
+.background-shapes {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(120deg, #004d7a, #008793, #00bf72);
-  z-index: -1;
-  opacity: 0.25;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
 }
 
-.form-container {
-  max-width: 1100px;
-  margin: 60px auto;
-  background: rgba(255, 255, 255, 0.95);
-  padding: 40px 50px;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  animation: float 20s infinite ease-in-out;
 }
 
-h1 {
-  margin-top: -28px;
+.shape-1 {
+  width: 400px;
+  height: 400px;
+  top: -100px;
+  left: -100px;
+  animation-duration: 25s;
+  animation-delay: 0s;
+}
+
+.shape-2 {
+  width: 500px;
+  height: 500px;
+  bottom: -150px;
+  right: -150px;
+  animation-duration: 30s;
+  animation-delay: 5s;
+}
+
+.shape-3 {
+  width: 300px;
+  height: 300px;
+  top: 40%;
+  left: 30%;
+  animation-duration: 22s;
+  animation-delay: 3s;
+}
+
+.shape-4 {
+  width: 350px;
+  height: 350px;
+  bottom: 20%;
+  left: 10%;
+  animation-duration: 28s;
+  animation-delay: 7s;
+}
+
+.shape-5 {
+  width: 250px;
+  height: 250px;
+  top: 60%;
+  right: 15%;
+  animation-duration: 26s;
+  animation-delay: 2s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -30px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+}
+
+/* ====== BOTÕES (Menu e Perfil) ====== */
+.menu-btn,
+.perfil-btn {
+  position: absolute;
+  z-index: 1000;
+  border: none;
+  cursor: pointer;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.menu-btn {
+  top: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.menu-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
+}
+
+.perfil-btn {
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 25px;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+}
+
+.perfil-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.perfil-btn i {
+  font-size: 1.1rem;
+}
+
+/* ====== OVERLAY ====== */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 998;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ====== HEADER (IGUAL AO HOME PRINCIPAL) ====== */
+.header-wrapper {
   text-align: center;
+  margin-bottom: 24px;
+  color: white;
+  position: relative;
+  z-index: 10;
+}
+
+.logo-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 10px 24px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 30px;
+}
+
+.logo-top i {
+  font-size: 22px;
+  color: white;
+}
+
+.logo-top span {
+  font-size: 20px;
+  font-weight: 600;
+  color: white;
+}
+
+.header-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: white;
+}
+
+.header-subtitle {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ====== CONTAINER PRINCIPAL ====== */
+.form-container {
+  max-width: 1200px;
+  width: 95%;
+  padding: 40px 36px;
+  margin: 20px auto;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 10;
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ====== TÍTULOS ====== */
+.titulo-container {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.titulo-container h2 {
   color: #004d7a;
   font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
 }
 
 .subtitle {
-  text-align: center;
-  color: #444;
-  margin-bottom: 40px;
+  color: #6b7280;
+  font-size: 1rem;
+  font-weight: 400;
 }
 
-/* GRID FOTO À ESQUERDA E DADOS À DIREITA */
+/* ====== GRID FOTO + DADOS ====== */
 .grid-photo {
   display: grid;
-  grid-template-columns: 350px 1fr;
-  gap: 25px;
+  grid-template-columns: 380px 1fr;
+  gap: 24px;
 }
 
-/* CARDS */
+/* ====== CARDS ====== */
 .card {
-  background: #fff;
-  border-radius: 14px;
-  padding: 24px;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+  background: #f9fafb;
+  border-radius: 16px;
+  padding: 28px;
+  border: 2px solid #e5e7eb;
+  transition: all 0.3s ease;
 }
 
-/* FOTO DO ÔNIBUS */
+.card:hover {
+  border-color: #006b8f;
+  box-shadow: 0 6px 20px rgba(0, 107, 143, 0.1);
+}
+
+.card h3 {
+  color: #004d7a;
+  font-size: 1.3rem;
+  margin: 0 0 24px 0;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 14px;
+  border-bottom: 3px solid #006b8f;
+}
+
+.card h3 i {
+  color: #006b8f;
+  font-size: 1.4rem;
+}
+
+/* ====== FOTO DO ÔNIBUS ====== */
 .photo-card {
   text-align: center;
 }
 
 .photo-preview-box {
   width: 100%;
-  height: 220px;
+  height: 240px;
   border-radius: 12px;
   overflow: hidden;
-  margin-bottom: 12px;
-  background: #eee;
+  margin-bottom: 16px;
+  background: #f3f4f6;
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 3px solid #e5e7eb;
+  transition: all 0.3s ease;
+}
+
+.photo-preview-box:hover {
+  border-color: #006b8f;
+  box-shadow: 0 4px 12px rgba(0, 107, 143, 0.2);
 }
 
 .photo-preview-box img {
@@ -78,192 +325,468 @@ h1 {
 }
 
 .upload-btn {
-  display: block;
-  padding: 12px;
-  background: #004d7a;
-  color: #fff;
-  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, #006b8f, #004d6d);
+  color: white;
+  border-radius: 12px;
   cursor: pointer;
-  margin-top: 10px;
+  margin-bottom: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 107, 143, 0.3);
+}
+
+.upload-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 107, 143, 0.4);
 }
 
 .upload-btn input {
   display: none;
 }
 
-/* GRID CAMPOS */
+.remove-btn {
+  width: 100%;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  border: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.remove-btn:hover {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+}
+
+/* ====== GRID DE CAMPOS ====== */
 .grid-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 18px;
+  gap: 20px;
+}
+
+/* ====== LABELS E INPUTS ====== */
+label {
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+  display: block;
+  font-size: 0.95rem;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 2px solid #e5e7eb;
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #006b8f;
+  box-shadow: 0 0 0 3px rgba(0, 107, 143, 0.1);
+  outline: none;
+  background: #f9feff;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #9ca3af;
 }
 
 textarea {
-  width: 100%;
-  height: 120px;
-  padding: 14px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  resize: none;
+  resize: vertical;
+  min-height: 120px;
 }
 
-input, select {
-  width: 100%;
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-}
-
-/* ROW COMPLETA */
+/* ====== FULL ROW ====== */
 .full-row {
   grid-column: span 2;
 }
 
-/* BOTÃO (MANTIDO EXATAMENTE COMO ERA) */
+/* ====== BOTÃO SUBMIT ====== */
 .btn-submit {
-  padding: 18px;
-  background: #004d7a;
-  color: #fff;
+  margin-top: 10px;
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #006b8f, #004d6d);
+  color: white;
+  border: none;
   border-radius: 12px;
   cursor: pointer;
-  font-size: 1.2rem;
-  font-weight: bold;
+  font-size: 1.1rem;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 107, 143, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
 .btn-submit:hover {
-  background: #006f9c;
+  background: linear-gradient(135deg, #007a99, #005f91);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 107, 143, 0.4);
 }
 
-/* BOTÃO REMOVER FOTO (MANTIDO EXATAMENTE COMO ERA) */
-.remove-btn {
-  width: 100%;
-  margin-top: 10px;
-  padding: 12px;
-  background: #b50000;
-  color: white;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: bold;
-  border: none;
+.btn-submit:active {
+  transform: translateY(0);
 }
 
-.remove-btn:hover {
-  background: #dd0000;
-}
-
-/* =============================
-   LISTA DE ÔNIBUS (ADICIONADO)
-============================= */
+/* ====== LISTA DE ÔNIBUS ====== */
 .lista-onibus-card {
-  margin-top: 50px;
+  margin-top: 30px;
 }
 
 .input-busca {
   width: 100%;
-  padding: 12px 16px;
-  border-radius: 10px;
-  border: 1px solid #d0d4d9;
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: 2px solid #e5e7eb;
   font-size: 0.95rem;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.input-busca:focus {
+  border-color: #006b8f;
+  box-shadow: 0 0 0 3px rgba(0, 107, 143, 0.1);
+  outline: none;
 }
 
 .lista-onibus {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px,1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
 }
 
+.carregando {
+  text-align: center;
+  color: #9ca3af;
+  padding: 40px;
+  font-size: 1rem;
+  grid-column: 1 / -1;
+}
+
 .onibus-card {
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  border-left: 4px solid #008793;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  background: white;
+  padding: 24px;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-left: 4px solid #006b8f;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+  transition: all 0.3s ease;
 }
 
 .onibus-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  border-left-width: 6px;
 }
 
 .foto-lista {
   width: 100%;
-  height: 140px;
+  height: 160px;
   object-fit: cover;
   border-radius: 10px;
+  margin-bottom: 8px;
+  border: 2px solid #e5e7eb;
 }
 
 .onibus-nome {
   font-size: 1.2rem;
-  font-weight: bold;
+  font-weight: 700;
   color: #004d7a;
+  margin-bottom: 6px;
 }
 
 .onibus-info {
-  font-size: .9rem;
-  color: #444;
+  font-size: 0.9rem;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .status-ativo {
-  color: #28a745;
-  font-weight: bold;
+  color: #10b981;
+  font-weight: 700;
 }
 
 .status-inativo {
-  color: #d62828;
-  font-weight: bold;
+  color: #ef4444;
+  font-weight: 700;
 }
 
 .onibus-actions {
   display: flex;
+  margin-top: 16px;
   gap: 10px;
-  margin-top: 10px;
+}
+
+.btn-edit,
+.btn-delete {
+  flex: 1;
+  padding: 12px;
+  font-size: 0.9rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
 .btn-edit {
-  flex: 1;
-  background: #008793;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: white;
-  padding: 10px;
-  border-radius: 8px;
-  cursor: pointer;
+}
+
+.btn-edit:hover {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  transform: translateY(-2px);
 }
 
 .btn-delete {
-  flex: 1;
-  background: #d62828;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
   color: white;
-  padding: 10px;
-  border-radius: 8px;
-  cursor: pointer;
 }
 
-/* =============================
-   MODAL EDITAR (ADICIONADO)
-============================= */
+.btn-delete:hover {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  transform: translateY(-2px);
+}
+
+/* ====== MODAL DE EDIÇÃO ====== */
 .modal-editar {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
   justify-content: center;
   align-items: center;
   z-index: 9999;
 }
 
 .modal-editar-content {
-  background: #fff;
-  padding: 30px;
+  background: white;
+  padding: 35px;
   width: 90%;
-  max-width: 450px;
-  border-radius: 16px;
+  max-width: 500px;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  animation: modalSlide 0.3s ease-out;
+  position: relative;
+}
+
+@keyframes modalSlide {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 .modal-close {
-  float: right;
-  font-size: 26px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
   cursor: pointer;
+  font-size: 28px;
+  color: #6b7280;
+  line-height: 1;
+  transition: all 0.2s ease;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #f3f4f6;
+}
+
+.modal-close:hover {
+  color: #ef4444;
+  background: #fee2e2;
+  transform: rotate(90deg);
+}
+
+.modal-editar-content h2 {
+  color: #004d7a;
+  margin: 0 0 24px 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.modal-editar-content label {
+  display: block;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.modal-editar-content input,
+.modal-editar-content select,
+.modal-editar-content textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 2px solid #e5e7eb;
+}
+
+.modal-editar-content input:focus,
+.modal-editar-content select:focus,
+.modal-editar-content textarea:focus {
+  border-color: #006b8f;
+  box-shadow: 0 0 0 3px rgba(0, 107, 143, 0.1);
+  outline: none;
+}
+
+.modal-editar-content button[type="submit"] {
+  width: 100%;
+  margin-top: 24px;
+}
+
+/* ====== RESPONSIVIDADE ====== */
+@media (max-width: 992px) {
+  .grid-photo {
+    grid-template-columns: 1fr;
+  }
+
+  .form-container {
+    width: 100%;
+    padding: 30px 25px;
+    border-radius: 0;
+  }
+
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+
+  .header-wrapper {
+    margin-bottom: 16px;
+  }
+
+  .logo-top {
+    padding: 8px 20px;
+    margin-bottom: 12px;
+  }
+
+  .logo-top i {
+    font-size: 20px;
+  }
+
+  .logo-top span {
+    font-size: 18px;
+  }
+
+  .header-title {
+    font-size: 1.8rem;
+    margin-bottom: 4px;
+  }
+
+  .header-subtitle {
+    font-size: 0.85rem;
+  }
+
+  .form-container {
+    width: 100%;
+    padding: 24px 20px;
+    border-radius: 16px;
+    margin: 10px auto;
+  }
+
+  .card {
+    padding: 24px;
+  }
+
+  .card h3 {
+    font-size: 1.2rem;
+  }
+
+  .lista-onibus {
+    grid-template-columns: 1fr;
+  }
+
+  .menu-btn,
+  .perfil-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 1.2rem;
+  }
+
+  .perfil-btn {
+    padding: 0;
+    border-radius: 50%;
+  }
+
+  .perfil-btn span {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-title {
+    font-size: 1.6rem;
+  }
+
+  .form-container {
+    padding: 20px 15px;
+  }
+
+  .titulo-container h2 {
+    font-size: 1.6rem;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+  }
+
+  .btn-submit {
+    font-size: 1rem;
+    padding: 14px;
+  }
+
+  .modal-editar-content {
+    padding: 25px 20px;
+  }
 }

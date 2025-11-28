@@ -3,27 +3,49 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Respostas de Feedback</title>
+  <title>Respostas de Feedback - CheckBus</title>
 
   <!-- Estilos -->
-  <link rel="stylesheet" href="../css/draw.css">
-  <link rel="stylesheet" href="../css/perfil.css">
   <link rel="stylesheet" href="../css/respostas_feedback.css">
+  <link rel="stylesheet" href="../css/perfil.css">
+  <link rel="stylesheet" href="../css/draw.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
-  <!-- Botão/Menu/Overlay (mesmo padrão do relatorios.html) -->
+  <div class="background-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
+    <div class="shape shape-5"></div>
+  </div>
+
+  <!-- Botão do Menu -->
   <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+  <!-- Botão de Perfil -->
+  <button class="perfil-btn" id="btnPerfil">
+    <i class="fa fa-user"></i> Perfil
+  </button>
+
+  <!-- Overlay -->
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
+  <!-- Sidebar -->
   <div id="sidebar-container"></div>
+
+  <!-- ===== HEADER (Título no fundo azul) ===== -->
+  <header class="page-header">
+    <h1>Respostas de Feedback</h1>
+    <p>Visualize todos os feedbacks enviados pelos usuários</p>
+  </header>
 
   <!-- Conteúdo principal -->
   <div class="container">
     <div class="titulo-container">
-      <h1>Respostas de Feedback</h1>
-      <input type="text" id="barraPesquisa" placeholder="Pesquisar feedback..." aria-label="Pesquisar feedback">
+      <h2>Lista de Feedbacks</h2>
+      <input type="text" id="barraPesquisa" placeholder="🔍 Pesquisar feedback..." aria-label="Pesquisar feedback">
     </div>
 
     <div class="table-wrap">
@@ -45,20 +67,10 @@
           </table>
         </div>
 
-        <!-- Paginação é injetada pelo JS -->
         <div id="paginacao" aria-label="Paginação de resultados"></div>
       </div>
     </div>
   </div>
-
-  <!-- Botão Perfil -->
-  <button class="perfil-btn" id="btnPerfil">
-    <i class="fa fa-user"></i> Perfil
-  </button>
-
-  <!-- Se o backend estiver em outro host/porta, descomente e ajuste:
-  <script>window.__API_BASE__="http://localhost:3000";</script>
-  -->
 
   <!-- JS externo -->
   <script type="module" src="../js/respostas_feedback.js"></script>

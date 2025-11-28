@@ -3,34 +3,44 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Horários - Check Bus</title>
-
-  <link rel="stylesheet" href="../css/style.css" />
+  <title>Horários - CheckBus</title>
   <link rel="stylesheet" href="../css/horarios.css" />
-  <link rel="stylesheet" href="../css/perfil.css" />
+  <link rel="stylesheet" href="../css/perfil_aluno.css" />
   <link rel="stylesheet" href="../css/draw.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
-  <button class="menu-btn" onclick="toggleMenu()">☰</button>
-  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-
-  <!-- Sidebar -->
-  <div class="sidebar" id="sidebar">
-      <button onclick="location.href='home_principal.html'"><i class="fa-solid fa-house"></i> Principal</button>
-      <button onclick="location.href='horarios.html'"><i class="fa-solid fa-clock"></i> Lista de Horários</button>
-      <button onclick="location.href='gps.html'"><i class="fa-solid fa-location-dot"></i> GPS</button>
-      <button onclick="location.href='notificacoes.html'"><i class="fa-solid fa-bell"></i> Notificações</button>
-      <button onclick="location.href='faq.html'"><i class="fa-solid fa-circle-question"></i> FAQ</button>
-      <button onclick="location.href='index.html'" class="logout"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
+  <div class="background-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
+    <div class="shape shape-5"></div>
   </div>
 
-  <div class="container container--wide">
-    <header>
-      <h1>Horários</h1>
-    </header>
+  <!-- ===== Botão do menu lateral ===== -->
+  <button class="menu-btn" onclick="toggleMenu()">☰</button>
 
+  <!-- ===== Botão de Perfil ===== -->
+  <button class="perfil-btn" id="btnPerfil">
+    <i class="fa fa-user"></i> Perfil
+  </button>
+
+  <!-- Overlay escuro -->
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+  <!-- ===== Sidebar ===== -->
+  <div id="sidebar-container"></div>
+
+  <!-- ===== HEADER (Título no fundo azul) ===== -->
+  <header class="page-header">
+    <h1>🕐 Horários do Ônibus</h1>
+    <p>Gerencie seus horários e dias de embarque</p>
+  </header>
+
+  <!-- ===== CONTEÚDO PRINCIPAL ===== -->
+  <div class="container container--wide">
     <main>
 
       <!-- =============== SELEÇÃO DE HORÁRIOS =============== -->
@@ -117,7 +127,7 @@
           </div>
           <div class="stat">
             <small>Por turno</small>
-            <b id="statTurnos">–</b>
+            <b id="statTurnos">—</b>
           </div>
         </div>
 
@@ -137,10 +147,9 @@
     </main>
   </div>
 
-  <button class="perfil-btn" id="btnPerfil"><i class="fa fa-user"></i> Perfil</button>
-
   <div id="toast" class="toast"></div>
 
+  <!-- ===== Scripts ===== -->
   <script>
     window.toggleMenu = function() {
       const sidebar = document.getElementById("sidebar");
@@ -157,6 +166,11 @@
     carregarModalPerfil();
     const btnPerfil = document.getElementById("btnPerfil");
     if (btnPerfil) btnPerfil.addEventListener("click", abrirPerfil);
+  </script>
+
+  <script type="module">
+    import { inicializarSidebar } from "../js/sidebar-universal.js";
+    await inicializarSidebar();
   </script>
 
   <script type="module" src="../js/horarios.js"></script>

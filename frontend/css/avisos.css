@@ -1,140 +1,282 @@
-/* =============================
-   FUNDO CHECKBUS
-============================= */
-body {
+/* ===================================================
+   SISTEMA DE AVISOS - CheckBus
+   Design IGUAL ao Home Principal
+   =================================================== */
+
+* {
+  box-sizing: border-box;
   margin: 0;
-  font-family: "Poppins", sans-serif;
-  background: linear-gradient(to right, #004d7a, #008793);
-  background-attachment: fixed;
-  color: #fff;
+  padding: 0;
 }
 
-/* =============================
-   CONTAINER
-============================= */
-.page-container {
-  width: 95%;
-  max-width: 1300px;
-  margin: 50px auto;
+body {
+  font-family: 'Inter', Arial, sans-serif;
+  background: linear-gradient(180deg, #006b8f 0%, #004d6d 100%);
+  min-height: 100vh;
+  margin: 0;
+  padding: 20px;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
-.titulo {
-  text-align: center;
-  font-size: 2.3rem;
-  margin-bottom: 40px;
-  font-weight: 700;
+/* ====== BOLAS ANIMADAS (IGUAIS AO HOME PRINCIPAL) ====== */
+.background-shapes {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
 }
 
-/* =============================
-   LAYOUT EM DUAS COLUNAS
-============================= */
-.layout-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 25px;
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  animation: float 20s infinite ease-in-out;
 }
 
-@media (max-width: 900px) {
-  .layout-grid {
-    grid-template-columns: 1fr;
+.shape-1 {
+  width: 400px;
+  height: 400px;
+  top: -100px;
+  left: -100px;
+  animation-duration: 25s;
+  animation-delay: 0s;
+}
+
+.shape-2 {
+  width: 500px;
+  height: 500px;
+  bottom: -150px;
+  right: -150px;
+  animation-duration: 30s;
+  animation-delay: 5s;
+}
+
+.shape-3 {
+  width: 300px;
+  height: 300px;
+  top: 40%;
+  left: 30%;
+  animation-duration: 22s;
+  animation-delay: 3s;
+}
+
+.shape-4 {
+  width: 350px;
+  height: 350px;
+  bottom: 20%;
+  left: 10%;
+  animation-duration: 28s;
+  animation-delay: 7s;
+}
+
+.shape-5 {
+  width: 250px;
+  height: 250px;
+  top: 60%;
+  right: 15%;
+  animation-duration: 26s;
+  animation-delay: 2s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -30px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
   }
 }
 
-/* =============================
-   CARDS
-============================= */
-.card {
-  background: #ffffffee;
-  padding: 25px;
-  border-radius: 15px;
-  color: #004d7a;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-}
-
-/* =============================
-   CHECKBOXES
-============================= */
-.checkbox-container {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.checkbox-container label {
-  font-size: 16px;
-  font-weight: 600;
+/* ====== BOTÕES (Menu e Perfil) ====== */
+.menu-btn,
+.perfil-btn {
+  position: absolute;
+  z-index: 1000;
+  border: none;
   cursor: pointer;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.menu-btn {
+  top: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.menu-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
+}
+
+.perfil-btn {
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 25px;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+}
+
+.perfil-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.perfil-btn i {
+  font-size: 1.1rem;
+}
+
+/* ====== OVERLAY ====== */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 998;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ====== HEADER (IGUAL AO HOME PRINCIPAL) ====== */
+.header-wrapper {
+  text-align: center;
+  margin-bottom: 24px;
+  color: white;
+  position: relative;
+  z-index: 10;
+}
+
+.logo-top {
+  display: inline-flex;
+  align-items: center;
   gap: 10px;
+  margin-bottom: 16px;
+  padding: 10px 24px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 30px;
 }
 
-/* LINHA DIVISÓRIA */
-.divisor {
-  border: none;
-  border-top: 2px solid #ccc;
-  margin: 25px 0;
+.logo-top i {
+  font-size: 22px;
+  color: white;
 }
 
-/* =============================
-   BOTÃO
-============================= */
-.btn-submit {
-  margin-top: 20px;
-  padding: 13px;
-  width: 100%;
-  border: none;
-  background: #004d7a;
-  color: #fff;
+.logo-top span {
+  font-size: 20px;
+  font-weight: 600;
+  color: white;
+}
+
+.header-title {
+  font-size: 2rem;
   font-weight: 700;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: .2s;
+  margin-bottom: 6px;
+  color: white;
 }
 
-.btn-submit:hover {
-  background: #055366;
+.header-subtitle {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
 }
 
-/* =============================
-   TABELA
-============================= */
-.tabela-bloco {
-  margin-top: 40px;
+/* ====== CONTAINER PRINCIPAL ====== */
+.page-container {
+  max-width: 1300px;
+  width: 95%;
+  padding: 40px 36px;
+  margin: 20px auto;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 10;
+  animation: slideUp 0.5s ease-out;
 }
 
-.tabela {
-  width: 100%;
-  border-collapse: collapse;
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.tabela th {
-  background: #007a99;
-  color: #fff;
-  padding: 14px;
+/* ====== LAYOUT GRID (2 COLUNAS) ====== */
+.layout-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 30px;
 }
 
-.tabela td {
-  padding: 12px;
-  border-bottom: 2px solid #eee;
-  background: #ffffffd9;
+/* ====== CARDS ====== */
+.card {
+  background: #f9fafb;
+  border-radius: 16px;
+  padding: 28px;
+  border: 2px solid #e5e7eb;
+  transition: all 0.3s ease;
 }
 
-.btn-delete {
-  padding: 7px 12px;
-  background: #c33;
-  color: #fff;
-  border-radius: 8px;
-  cursor: pointer;
+.card:hover {
+  border-color: #006b8f;
+  box-shadow: 0 6px 20px rgba(0, 107, 143, 0.1);
 }
 
-.btn-delete:hover {
-  background: #a00;
+.card h3 {
+  color: #004d7a;
+  font-size: 1.3rem;
+  margin: 0 0 24px 0;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 14px;
+  border-bottom: 3px solid #006b8f;
 }
 
-/* =============================
-   FORMULÁRIO DE AVISO PERSONALIZADO
-============================= */
+.card h3 i {
+  color: #006b8f;
+  font-size: 1.4rem;
+}
 
+/* ====== FORMULÁRIO DE AVISO ====== */
 .form-aviso {
   display: flex;
   flex-direction: column;
@@ -147,93 +289,152 @@ body {
 }
 
 .form-grupo label {
-  font-size: 15px;
+  font-size: 0.95rem;
   font-weight: 600;
-  margin-bottom: 6px;
+  color: #374151;
+  margin-bottom: 8px;
 }
 
 .input-campo,
 .textarea-campo {
   width: 100%;
-  padding: 12px 14px;
+  padding: 12px 16px;
   border-radius: 10px;
-  border: 2px solid #d7d7d7;
-  background: #ffffff;
-  font-size: 15px;
-  color: #004d7a;
-  transition: all .25s ease;
+  border: 2px solid #e5e7eb;
+  background: white;
+  font-size: 0.95rem;
+  color: #374151;
+  font-family: inherit;
+  transition: all 0.2s ease;
 }
 
 .input-campo:focus,
 .textarea-campo:focus {
-  border-color: #00bf72;
-  background: #f3fffa;
+  border-color: #006b8f;
+  box-shadow: 0 0 0 3px rgba(0, 107, 143, 0.1);
+  background: #f9feff;
   outline: none;
 }
 
 .textarea-campo {
-  height: 150px;
-  resize: none;
+  min-height: 140px;
+  resize: vertical;
 }
 
-.btn-enviar-aviso {
+/* ====== CHECKBOXES ====== */
+.checkbox-container {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.checkbox-container label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: white;
+  border-radius: 10px;
+  border: 2px solid #e5e7eb;
+  transition: all 0.2s ease;
+}
+
+.checkbox-container label:hover {
+  border-color: #006b8f;
+  background: #f9feff;
+}
+
+.checkbox-container input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #006b8f;
+}
+
+.checkbox-container label span {
+  color: #374151;
+}
+
+/* ====== DIVISOR ====== */
+.divisor {
+  border: none;
+  border-top: 2px solid #e5e7eb;
+  margin: 24px 0;
+}
+
+/* ====== BOTÃO SUBMIT ====== */
+.btn-submit {
   margin-top: 10px;
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #006b8f, #004d6d);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 107, 143, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
-/* ======= CORREÇÃO DO ESTOURO DO BLOCO ======= */
-
-.card {
-  box-sizing: border-box;
+.btn-submit:hover {
+  background: linear-gradient(135deg, #007a99, #005f91);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 107, 143, 0.4);
 }
 
-.input-campo,
-.textarea-campo {
-  max-width: 100%;
-  box-sizing: border-box; /* impede estourar */
-  display: block;
+.btn-submit:active {
+  transform: translateY(0);
 }
 
-.form-aviso {
-  padding-right: 5px; /* evita que o conteúdo grude no limite do card */
+/* ====== TABELA BLOCO ====== */
+.tabela-bloco {
+  margin-top: 30px;
 }
 
-.bloco-esquerda {
-  overflow: hidden; /* garante que nada vaze do card */
-}
-
-/* ================================================
-   CABEÇALHO DA TABELA (TÍTULO + PESQUISA)
-================================================ */
 .table-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 18px;
+  margin-bottom: 24px;
+}
+
+.table-header h3 {
+  margin: 0;
+  padding: 0;
+  border: none;
 }
 
 .input-pesquisa {
-  padding: 10px 14px;
+  padding: 12px 16px;
   border-radius: 10px;
-  border: 2px solid #d0d0d0;
-  background: #fff;
-  font-size: 14px;
-  width: 240px;
-  color: #004d7a;
-  transition: 0.2s;
+  border: 2px solid #e5e7eb;
+  background: white;
+  font-size: 0.95rem;
+  width: 280px;
+  color: #374151;
+  transition: all 0.2s ease;
 }
 
 .input-pesquisa:focus {
-  border-color: #00bf72;
-  background: #f3fffa;
+  border-color: #006b8f;
+  box-shadow: 0 0 0 3px rgba(0, 107, 143, 0.1);
+  background: #f9feff;
   outline: none;
 }
 
-
-/* ================================================
-   TABELA PROFISSIONAL
-================================================ */
+/* ====== TABELA ====== */
 .tabela-wrapper {
   overflow-x: auto;
+  border-radius: 12px;
 }
 
 .tabela {
@@ -244,116 +445,256 @@ body {
 }
 
 .tabela thead {
-  background: linear-gradient(to right, #004d7a, #007a99);
+  background: linear-gradient(135deg, #006b8f, #004d6d);
 }
 
 .tabela th {
-  padding: 14px;
-  color: #fff;
+  padding: 16px;
+  color: white;
   font-weight: 600;
   text-align: left;
+  font-size: 0.95rem;
 }
 
 .tabela td {
-  padding: 14px;
-  background: #ffffffc5;
-  border-bottom: 2px solid #e8e8e8;
-  transition: 0.2s;
+  padding: 16px;
+  background: white;
+  border-bottom: 2px solid #f3f4f6;
+  transition: all 0.2s;
+  color: #374151;
+  font-size: 0.95rem;
 }
 
-/* Efeito hover profissional */
 .tabela tbody tr:hover td {
-  background: #eaf6ff;
+  background: #f0f9ff;
+  cursor: pointer;
 }
 
-/* Botão Excluir mais moderno */
+.tabela tbody tr.avisos-row:hover {
+  background: #f0f9ff;
+}
+
+/* ====== BOTÃO EXCLUIR ====== */
 .btn-delete {
-  padding: 8px 14px;
+  padding: 8px 16px;
   border: none;
-  background: #d9534f;
-  color: #fff;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
   border-radius: 8px;
-  font-size: 13px;
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: 0.2s;
+  transition: all 0.2s;
 }
 
 .btn-delete:hover {
-  background: #b52b27;
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  transform: translateY(-2px);
 }
 
-/* ============================
-   ACCORDION NA TABELA
-============================ */
-
+/* ====== ACCORDION ====== */
 .accordion-row {
   display: none;
-  background: #f8fbff;
 }
 
 .accordion-row.open {
   display: table-row;
 }
 
-.accordion-content {
-  padding: 14px;
-  background: #ffffff;
-  border-left: 4px solid #007a99;
-  border-radius: 6px;
-  box-shadow: 0 2px 4px #0001;
+.accordion-row td {
+  background: #e0f2fe !important;
+  border-bottom: none !important;
+  padding: 0 !important;
 }
 
-.accordion-content h4 {
+.accordion-content {
+  background: #e0f2fe;
+  padding: 20px;
+  border-left: 5px solid #006b8f;
+  border-radius: 0;
   margin: 0;
-  color: #004d7a;
-  font-size: 18px;
 }
 
-.accordion-content p {
-  margin: 8px 0 0;
-  font-size: 15px;
-  line-height: 1.4;
-}
-
-/* ========================================================
-   CORREÇÃO DO ACCORDION (VISÍVEL NA TABELA)
-======================================================= */
-
-.accordion-row {
-  display: none;
-}
-
-.accordion-row.open {
-  display: table-row;
-}
-
-/* Fundo visível e com contraste */
-.accordion-content {
-  background: #e9f6ff;              /* azul clarinho visível */
-  padding: 16px;
-  border-left: 5px solid #007a99;   /* barra azul profissional */
-  border-radius: 6px;
-  box-shadow: inset 0 0 8px #0002;  /* leve sombra interna */
-}
-
-/* Título do accordion */
 .accordion-content h4 {
-  margin: 0 0 8px 0;
-  font-size: 18px;
-  color: #004d7a;                    /* azul escuro */
+  margin: 0 0 12px 0;
+  font-size: 1.1rem;
+  color: #004d7a;
   font-weight: 700;
 }
 
-/* Texto da mensagem */
 .accordion-content p {
   margin: 0;
-  font-size: 15px;
-  line-height: 1.5;
-  color: #003b5c;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #374151;
 }
 
-/* Deixar a célula que contém o accordion sem bordas conflitantes */
-.accordion-row td {
-  background: #e9f6ff !important;
-  border-bottom: none !important;
+.accordion-content p strong {
+  color: #004d7a;
+  font-weight: 600;
+}
+
+/* ====== RESPONSIVIDADE ====== */
+@media (max-width: 1000px) {
+  .layout-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+
+  .header-wrapper {
+    margin-bottom: 16px;
+  }
+
+  .logo-top {
+    padding: 8px 20px;
+    margin-bottom: 12px;
+  }
+
+  .logo-top i {
+    font-size: 20px;
+  }
+
+  .logo-top span {
+    font-size: 18px;
+  }
+
+  .header-title {
+    font-size: 1.8rem;
+    margin-bottom: 4px;
+  }
+
+  .header-subtitle {
+    font-size: 0.85rem;
+  }
+
+  .page-container {
+    width: 100%;
+    padding: 24px 20px;
+    border-radius: 16px;
+    margin: 10px auto;
+  }
+
+  .card {
+    padding: 24px;
+  }
+
+  .card h3 {
+    font-size: 1.2rem;
+  }
+
+  .table-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .input-pesquisa {
+    width: 100%;
+  }
+
+  .tabela th,
+  .tabela td {
+    padding: 12px;
+    font-size: 0.9rem;
+  }
+
+  .menu-btn,
+  .perfil-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 1.2rem;
+  }
+
+  .perfil-btn {
+    padding: 0;
+    border-radius: 50%;
+  }
+
+  .perfil-btn span {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-title {
+    font-size: 1.6rem;
+  }
+
+  .page-container {
+    padding: 20px 15px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .btn-submit {
+    font-size: 0.95rem;
+    padding: 12px;
+  }
+
+  /* Tabela responsiva - modo card */
+  .tabela thead {
+    display: none;
+  }
+
+  .tabela tbody tr.avisos-row {
+    display: block;
+    margin-bottom: 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .tabela tbody tr.avisos-row td {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    padding: 12px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .tabela tbody tr.avisos-row td:last-child {
+    border-bottom: none;
+  }
+
+  .tabela tbody tr.avisos-row td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    color: #004d7a;
+  }
+
+  .tabela tbody tr.avisos-row td:nth-child(1)::before {
+    content: "Título:";
+  }
+
+  .tabela tbody tr.avisos-row td:nth-child(2)::before {
+    content: "Turno:";
+  }
+
+  .tabela tbody tr.avisos-row td:nth-child(3)::before {
+    content: "Data:";
+  }
+
+  .tabela tbody tr.avisos-row td:nth-child(4)::before {
+    content: "Ação:";
+  }
+
+  .accordion-row {
+    display: block !important;
+    margin-bottom: 16px;
+  }
+
+  .accordion-row.open {
+    display: block !important;
+  }
+
+  .accordion-row td {
+    display: block;
+    padding: 16px !important;
+  }
 }

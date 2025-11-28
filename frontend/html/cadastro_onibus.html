@@ -5,49 +5,136 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cadastro de Ônibus - CheckBus</title>
 
-  <!-- CSS PRINCIPAIS -->
-  <link rel="stylesheet" href="../css/style.css" />
-  <link rel="stylesheet" href="../css/admin.css" />
+  <!-- CSS -->
+  <link rel="stylesheet" href="../css/cadastro_onibus.css" />
   <link rel="stylesheet" href="../css/perfil.css" />
   <link rel="stylesheet" href="../css/draw.css" />
-  <link rel="stylesheet" href="../css/cadastro_onibus.css" />
+  <link rel="stylesheet" href="../css/admin.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
+  <!-- ===== Bolas animadas no fundo ===== -->
+  <div class="background-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
+    <div class="shape shape-5"></div>
+  </div>
 
+  <!-- Botão do Menu -->
   <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+  <!-- Botão de Perfil -->
+  <button class="perfil-btn" id="btnPerfil">
+    <i class="fa-solid fa-user-shield"></i> Perfil
+  </button>
+
+  <!-- Overlay -->
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
+  <!-- Sidebar -->
   <div id="sidebar-container"></div>
 
-  <div class="background-gradient"></div>
+  <!-- ===== HEADER (IGUAL AO HOME PRINCIPAL) ===== -->
+  <div class="header-wrapper">
+    <div class="logo-top">
+      <i class="fas fa-bus"></i>
+      <span>Check Bus</span>
+    </div>
+    <h1 class="header-title">Cadastro de Ônibus</h1>
+    <p class="header-subtitle">Gerencie a frota de ônibus do sistema</p>
+  </div>
 
-  <main class="form-container fade-in">
-    <h1><i class="fa-solid fa-bus"></i> Cadastro de Ônibus</h1>
-    <p class="subtitle">Preencha os dados abaixo para cadastrar um novo ônibus no sistema CheckBus.</p>
+  <!-- MODAL EDITAR -->
+  <div id="modalEditarOnibus" class="modal-editar">
+    <div class="modal-editar-content">
+      <span id="fecharEditarOnibus" class="modal-close">&times;</span>
+      <h2>Editar Ônibus</h2>
+
+      <form id="formEditarOnibus">
+        <input type="hidden" id="editId">
+
+        <label>Número</label>
+        <input type="text" id="editNumero" required>
+
+        <label>Placa</label>
+        <input type="text" id="editPlaca" required>
+
+        <label>Modelo</label>
+        <input type="text" id="editModelo" required>
+
+        <label>Ano</label>
+        <input type="number" id="editAno" required>
+
+        <label>Capacidade</label>
+        <input type="number" id="editCapacidade" required>
+
+        <label>Tipo</label>
+        <select id="editTipo">
+          <option value="Convencional">Convencional</option>
+          <option value="Executivo">Executivo</option>
+          <option value="Micro-ônibus">Micro-ônibus</option>
+        </select>
+
+        <label>Status</label>
+        <select id="editStatus">
+          <option value="Ativo">Ativo</option>
+          <option value="Em Manutenção">Em Manutenção</option>
+          <option value="Inativo">Inativo</option>
+        </select>
+
+        <label>Observações</label>
+        <textarea id="editObservacoes"></textarea>
+
+        <button type="submit" class="btn-submit">
+          <i class="fas fa-save"></i>
+          Salvar Alterações
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="form-container">
+    <div class="titulo-container">
+      <h2>Novo Ônibus</h2>
+      <p class="subtitle">Preencha os dados abaixo para cadastrar um novo ônibus</p>
+    </div>
 
     <form id="formOnibus" class="grid-photo">
 
       <!-- CARD FOTO -->
-      <section class="card photo-card slide-left">
-        <h2><i class="fa-solid fa-image"></i> Foto do Ônibus</h2>
+      <section class="card photo-card">
+        <h3>
+          <i class="fa-solid fa-image"></i>
+          Foto do Ônibus
+        </h3>
 
         <div class="photo-preview-box">
           <img id="previewFoto" src="../imagens/placeholder_bus.png" alt="Prévia da Foto">
         </div>
 
         <label class="upload-btn">
-          <input type="file" id="fotoOnibus" accept="image/*">
+          <i class="fa-solid fa-upload"></i>
           Selecionar Imagem
+          <input type="file" id="fotoOnibus" accept="image/*">
         </label>
 
-        <button type="button" id="btnRemoverFoto" class="remove-btn">Remover Imagem</button>
+        <button type="button" id="btnRemoverFoto" class="remove-btn">
+          <i class="fa-solid fa-trash"></i>
+          Remover Imagem
+        </button>
       </section>
 
       <!-- CARD DADOS -->
-      <section class="card slide-up">
-        <h2><i class="fa-solid fa-info-circle"></i> Dados do Ônibus</h2>
+      <section class="card">
+        <h3>
+          <i class="fa-solid fa-info-circle"></i>
+          Dados do Ônibus
+        </h3>
 
         <div class="grid-2">
           <div>
@@ -93,32 +180,38 @@
               <option value="Inativo">Inativo</option>
             </select>
           </div>
-
         </div>
       </section>
 
-      <!-- OBSERVAÇÕES (MANTIDO 100% IGUAL AO SEU LAYOUT ANTIGO) -->
-      <section class="card full-row slide-up">
-        <h2><i class="fa-solid fa-notes-medical"></i> Observações</h2>
+      <!-- OBSERVAÇÕES -->
+      <section class="card full-row">
+        <h3>
+          <i class="fa-solid fa-notes-medical"></i>
+          Observações
+        </h3>
         <textarea id="observacoes" placeholder="Opcional: Informações adicionais sobre o ônibus"></textarea>
       </section>
 
-      <!-- BOTÃO (MANTIDO EXACTAMENTE COMO ERA) -->
+      <!-- BOTÃO -->
       <button type="submit" class="btn-submit full-row">
-        <i class="fa-solid fa-check"></i> Cadastrar Ônibus
+        <i class="fa-solid fa-check"></i>
+        Cadastrar Ônibus
       </button>
 
     </form>
 
-    <!-- LISTA DE ÔNIBUS (LOGO ABAIXO DO FORMULÁRIO, COMO VOCÊ PEDIU) -->
-    <section class="card lista-onibus-card slide-up">
-      <h2><i class="fa-solid fa-list"></i> Ônibus Cadastrados</h2>
+    <!-- LISTA DE ÔNIBUS -->
+    <section class="card lista-onibus-card">
+      <h3>
+        <i class="fa-solid fa-list"></i>
+        Ônibus Cadastrados
+      </h3>
 
       <input 
         type="text" 
         id="buscarOnibus" 
         class="input-busca" 
-        placeholder="Buscar por número, placa ou modelo..."
+        placeholder="🔍 Buscar por número, placa ou modelo..."
       />
 
       <div id="listaOnibus" class="lista-onibus">
@@ -128,64 +221,24 @@
 
   </main>
 
-  <!-- MODAL EDITAR -->
-  <div id="modalEditarOnibus" class="modal-editar">
-    <div class="modal-editar-content">
-      <span id="fecharEditarOnibus" class="modal-close">&times;</span>
-      <h2>Editar Ônibus</h2>
-
-      <form id="formEditarOnibus">
-        <input type="hidden" id="editId">
-
-        <label>Número</label>
-        <input type="text" id="editNumero" required>
-
-        <label>Placa</label>
-        <input type="text" id="editPlaca" required>
-
-        <label>Modelo</label>
-        <input type="text" id="editModelo" required>
-
-        <label>Ano</label>
-        <input type="number" id="editAno" required>
-
-        <label>Capacidade</label>
-        <input type="number" id="editCapacidade" required>
-
-        <label>Tipo</label>
-        <select id="editTipo">
-          <option value="Convencional">Convencional</option>
-          <option value="Executivo">Executivo</option>
-          <option value="Micro-ônibus">Micro-ônibus</option>
-        </select>
-
-        <label>Status</label>
-        <select id="editStatus">
-          <option value="Ativo">Ativo</option>
-          <option value="Em Manutenção">Em Manutenção</option>
-          <option value="Inativo">Inativo</option>
-        </select>
-
-        <label>Observações</label>
-        <textarea id="editObservacoes"></textarea>
-
-        <button type="submit" class="btn-submit">Salvar Alterações</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- JS -->
-  <script type="module" src="../js/cadastro_onibus.js"></script>
-
+  <!-- Scripts -->
   <script>
-    window.toggleMenu = function () {
+    window.toggleMenu = function() {
       const sidebar = document.getElementById("sidebar");
       const overlay = document.getElementById("overlay");
       const menuBtn = document.querySelector(".menu-btn");
+      
       sidebar.classList.toggle("active");
       overlay.classList.toggle("active");
-      menuBtn.classList.toggle("hidden");
+      if (menuBtn) menuBtn.classList.toggle("hidden");
     };
+  </script>
+
+  <script type="module">
+    import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
+    carregarModalPerfil();
+    const btnPerfil = document.getElementById("btnPerfil");
+    if (btnPerfil) btnPerfil.addEventListener("click", abrirPerfil);
   </script>
 
   <script type="module">
@@ -193,5 +246,6 @@
     await inicializarSidebar();
   </script>
 
+  <script type="module" src="../js/cadastro_onibus.js"></script>
 </body>
 </html>
