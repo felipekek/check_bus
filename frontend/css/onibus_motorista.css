@@ -498,3 +498,47 @@
         font-size: 1rem;
       }
     }
+
+    .lista-config-card {
+  grid-area: resumo;
+  margin-top: 20px;
+}
+
+.lista-config {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.lista-config li {
+  padding: 14px;
+  background: #f9fafb;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.config-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.config-acoes button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: white;
+  margin-left: 6px;
+}
+
+.btn-editar {
+  background: #2563eb;
+}
+
+.btn-excluir {
+  background: #dc2626;
+}

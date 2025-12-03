@@ -6,7 +6,6 @@
   <title>Gerenciar Motoristas & Ônibus - Check Bus</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="../css/onibus_motorista.css">
@@ -15,13 +14,10 @@
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-  <style>
-    
-  </style>
 </head>
 
 <body>
+  <!-- BOTÃO MENU -->
   <button class="menu-btn" onclick="toggleMenu()">
     <i class="fas fa-bars"></i>
   </button>
@@ -35,20 +31,24 @@
     Perfil
   </button>
 
+  <!-- CABEÇALHO -->
   <div class="header-wrapper">
     <div class="logo-top">
       <i class="fas fa-bus"></i>
       <span>Check Bus</span>
     </div>
+
     <h1 class="header-title">
       <i class="fa-solid fa-route"></i>
       Gerenciar Motoristas & Ônibus
     </h1>
+
     <p class="header-subtitle">
       Defina qual motorista dirige qual ônibus, o turno, os dias da semana e as instituições da rota
     </p>
   </div>
 
+  <!-- CONTEÚDO PRINCIPAL -->
   <main class="page-container">
     <section class="grid">
 
@@ -69,6 +69,7 @@
           Turno
         </h2>
         <p class="card-help">Informe o turno em que essa rota irá acontecer</p>
+
         <select id="selectTurno" required>
           <option value="">Selecione o turno...</option>
           <option value="Manhã">Manhã</option>
@@ -84,31 +85,14 @@
           Dias da Semana
         </h2>
         <p class="card-help">Marque os dias em que essa rota estará ativa</p>
+
         <div class="dias-grid">
-          <label>
-            <input type="checkbox" value="Segunda">
-            <span>Seg</span>
-          </label>
-          <label>
-            <input type="checkbox" value="Terça">
-            <span>Ter</span>
-          </label>
-          <label>
-            <input type="checkbox" value="Quarta">
-            <span>Qua</span>
-          </label>
-          <label>
-            <input type="checkbox" value="Quinta">
-            <span>Qui</span>
-          </label>
-          <label>
-            <input type="checkbox" value="Sexta">
-            <span>Sex</span>
-          </label>
-          <label>
-            <input type="checkbox" value="Sábado">
-            <span>Sáb</span>
-          </label>
+          <label><input type="checkbox" value="Segunda"><span>Seg</span></label>
+          <label><input type="checkbox" value="Terça"><span>Ter</span></label>
+          <label><input type="checkbox" value="Quarta"><span>Qua</span></label>
+          <label><input type="checkbox" value="Quinta"><span>Qui</span></label>
+          <label><input type="checkbox" value="Sexta"><span>Sex</span></label>
+          <label><input type="checkbox" value="Sábado"><span>Sáb</span></label>
         </div>
       </section>
 
@@ -118,12 +102,8 @@
           <i class="fa-solid fa-school"></i>
           Instituições / Rota
         </h2>
-        <p class="card-help">
-          Selecione as instituições que esse ônibus irá atender nessa configuração
-        </p>
-        <div id="listaInstituicoes" class="checkbox-list">
-          <!-- Carregado via JS -->
-        </div>
+        <p class="card-help">Selecione as instituições atendidas nesta rota</p>
+        <div id="listaInstituicoes" class="checkbox-list"></div>
       </section>
 
       <!-- MOTORISTA -->
@@ -132,9 +112,9 @@
           <i class="fa-solid fa-id-card"></i>
           Motorista
         </h2>
-        <p class="card-help">Selecione o motorista responsável pela rota</p>
+        <p class="card-help">Selecione o motorista responsável</p>
         <select id="selectMotorista" required>
-          <option value="">Selecione um motorista...</option>
+          <option value="">Selecione...</option>
         </select>
       </section>
 
@@ -146,7 +126,7 @@
         </h2>
         <p class="card-help">Escolha qual ônibus será utilizado</p>
         <select id="selectOnibus" required>
-          <option value="">Selecione um ônibus...</option>
+          <option value="">Selecione...</option>
         </select>
       </section>
 
@@ -165,52 +145,60 @@
           </h2>
           <span class="resumo-badge">Visualização rápida</span>
         </div>
+
         <ul id="resumoLista" class="resumo-lista">
           <li>Nenhuma configuração selecionada ainda.</li>
+        </ul>
+      </section>
+
+      <!-- ============================== -->
+      <!-- LISTA DAS CONFIGURAÇÕES SALVAS -->
+      <!-- ============================== -->
+      <section class="card lista-config-card">
+        <h2>
+          <i class="fa-solid fa-table-list"></i>
+          Configurações Salvas
+        </h2>
+
+        <ul id="listaConfiguracoes" class="lista-config">
+          <!-- Preenchido dinamicamente pelo JS -->
         </ul>
       </section>
 
     </section>
   </main>
 
-  <!-- Scripts -->
+  <!-- SCRIPT MENU SIDEBAR -->
   <script>
-    // Toggle menu
-    window.toggleMenu = function() {
+    window.toggleMenu = function () {
       const sidebar = document.getElementById("sidebar");
       const overlay = document.getElementById("overlay");
       const menuBtn = document.querySelector(".menu-btn");
-      
-      if (sidebar) {
-        sidebar.classList.toggle("active");
-      }
-      if (overlay) {
-        overlay.classList.toggle("active");
-      }
-      if (menuBtn) {
-        menuBtn.classList.toggle("hidden");
-      }
+
+      if (sidebar) sidebar.classList.toggle("active");
+      if (overlay) overlay.classList.toggle("active");
+      if (menuBtn) menuBtn.classList.toggle("hidden");
     };
 
-    // Fechar sidebar ao clicar no overlay
-    document.getElementById('overlay')?.addEventListener('click', () => {
-      document.getElementById('sidebar')?.classList.remove('active');
-      document.getElementById('overlay')?.classList.remove('active');
-      document.querySelector('.menu-btn')?.classList.remove('hidden');
+    document.getElementById("overlay")?.addEventListener("click", () => {
+      document.getElementById("sidebar")?.classList.remove("active");
+      document.getElementById("overlay")?.classList.remove("active");
+      document.querySelector(".menu-btn")?.classList.remove("hidden");
     });
   </script>
 
+  <!-- PERFIL E SIDEBAR UNIVERSAL -->
   <script type="module">
     import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
     import { inicializarSidebar } from "../js/sidebar-universal.js";
 
-    // Inicializar sidebar e perfil
     await inicializarSidebar();
     await carregarModalPerfil();
-    
+
     document.getElementById("btnPerfil")?.addEventListener("click", abrirPerfil);
   </script>
 
+  <!-- SCRIPT PRINCIPAL DA PÁGINA -->
   <script type="module" src="../js/onibus_motorista.js"></script>
 </body>
 </html>
