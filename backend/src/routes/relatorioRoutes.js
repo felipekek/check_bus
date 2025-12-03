@@ -6,16 +6,16 @@ import { requireAdmin } from "../middlewares/requireAdmin.js";
 
 const router = express.Router();
 
-// Lista registros (coleção "acessos") juntando com "alunos" (somente admin)
+// Listar registros
 router.get("/", requireAdmin, listarRelatorios);
 
-// Exclui um registro de acesso (somente admin)
+// Excluir registro
 router.delete("/:id", requireAdmin, excluirRelatorio);
 
-// Geração de PDF (completo por querystring) (somente admin)
+// Gerar PDF completo
 router.get("/pdf", requireAdmin, gerarPDF);
 
-// Geração de PDF a partir da tabela filtrada no front (POST) (somente admin)
+// Gerar PDF filtrado
 router.post("/pdf-filtrado", requireAdmin, gerarPDFFiltrado);
 
 export default router;
