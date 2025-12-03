@@ -1,6 +1,11 @@
-/* ======================================
+/* ===========================================================
+   IMPORTA FIREBASE AUTH
+=========================================================== */
+import { auth } from "./firebase-config.js";
+
+/* ===========================================================
    ELEMENTOS DA PÁGINA
-====================================== */
+=========================================================== */
 const selectMotorista = document.getElementById("selectMotorista");
 const selectOnibus = document.getElementById("selectOnibus");
 const selectTurno = document.getElementById("selectTurno");
@@ -9,41 +14,85 @@ const btnSalvar = document.getElementById("btnSalvar");
 const resumoLista = document.getElementById("resumoLista");
 
 /* ======================================
-   DADOS FICTÍCIOS (depois virão do Firestore)
+   URL BASE DA API
 ====================================== */
-const motoristasFake = [
-  { id: "1", nome: "Carlos Alberto" },
-  { id: "2", nome: "João Batista" },
-  { id: "3", nome: "Mariana Souza" },
-];
+const API = "http://localhost:3000";
 
-const onibusFake = [
-  { id: "A1", numero: "01" },
-  { id: "A2", numero: "02" },
-  { id: "A3", numero: "03" },
-];
+/* ===========================================================
+   FUNÇÃO PARA OBTER TOKEN DO USUÁRIO LOGADO
+=========================================================== */
+async function getIdToken() {
+  const user = auth.currentUser;
 
-const instituicoesFake = [
+  if (!user) {
+    console.warn("Sem usuário ainda (Firebase carregando)...");
+    return null;
+  }
+
+  return await user.getIdToken();
+}
+
+/* ===========================================================
+   CARREGAR MOTORISTAS DO BACKEND
+=========================================================== */
+async function carregarMotoristas() {
+  const token = await getIdToken();
+  if (!token) return;
+
+  const res = await fetch(`${API}/motoristas/listar`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  const lista = await res.json();
+
+  selectMotorista.innerHTML = `<option value="">Selecione um motorista...</option>`;
+
+  lista.forEach((m) => {
+    selectMotorista.innerHTML += `
+      <option value="${m.id}">${m.nome}</option>
+    `;
+  });
+
+  return lista;
+}
+
+/* ===========================================================
+   CARREGAR ÔNIBUS DO BACKEND
+=========================================================== */
+async function carregarOnibus() {
+  const token = await getIdToken();
+  if (!token) return;
+
+  const res = await fetch(`${API}/onibus/listar`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  const lista = await res.json();
+
+  selectOnibus.innerHTML = `<option value="">Selecione um ônibus...</option>`;
+
+  lista.forEach((o) => {
+    selectOnibus.innerHTML += `
+      <option value="${o.id}">Ônibus ${o.numero}</option>
+    `;
+  });
+
+  return lista;
+}
+
+/* ===========================================================
+   INSTITUIÇÕES FIXAS
+=========================================================== */
+const instituicoes = [
   "UEFS",
   "FTC",
   "UNEF",
   "Anhanguera",
   "Estácio",
-  "SENAI Feira"
+  "SENAI Feira",
 ];
 
-/* ======================================
-   POPULAR SELECTS E LISTAS
-====================================== */
-motoristasFake.forEach(m => {
-  selectMotorista.innerHTML += `<option value="${m.id}">${m.nome}</option>`;
-});
-
-onibusFake.forEach(o => {
-  selectOnibus.innerHTML += `<option value="${o.id}">Ônibus ${o.numero}</option>`;
-});
-
-instituicoesFake.forEach(i => {
+instituicoes.forEach((i) => {
   listaInstituicoes.innerHTML += `
     <label>
       <input type="checkbox" value="${i}">
@@ -52,39 +101,50 @@ instituicoesFake.forEach(i => {
   `;
 });
 
-/* ======================================
-   MAPA (Leaflet) – visão geral
-====================================== */
-const mapa = L.map('mapa').setView([-12.2664, -38.9663], 13);
+/* ===========================================================
+   MAPA (Leaflet)
+=========================================================== */
+const mapa = L.map("mapa").setView([-12.2664, -38.9663], 13);
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19,
 }).addTo(mapa);
 
-// Pontos exemplo (você pode ajustar depois)
 const pontosRota = [
   { nome: "UEFS", coords: [-12.2068, -38.9577] },
-  { nome: "FTC", coords: [-12.2480, -38.9518] },
-  { nome: "UNEF", coords: [-12.2555, -38.9622] }
+  { nome: "FTC", coords: [-12.248, -38.9518] },
+  { nome: "UNEF", coords: [-12.2555, -38.9622] },
 ];
 
-pontosRota.forEach(p => {
+pontosRota.forEach((p) => {
   L.marker(p.coords).addTo(mapa).bindPopup(`<b>${p.nome}</b>`);
 });
 
-/* ======================================
-   FUNÇÃO PARA LER FORMULÁRIO
-====================================== */
+/* ===========================================================
+   ARMAZENA DADOS EM CACHE
+=========================================================== */
+let motoristasCache = [];
+let onibusCache = [];
+
+/* ===========================================================
+   COLETA CONFIGURAÇÃO DO FORMULÁRIO
+=========================================================== */
 function coletarConfiguracao() {
   const motoristaId = selectMotorista.value;
+  const motoristaNome =
+    motoristasCache.find((m) => m.id === motoristaId)?.nome || "";
+
   const onibusId = selectOnibus.value;
+  const onibusNumero =
+    onibusCache.find((o) => o.id === onibusId)?.numero || "";
+
   const turno = selectTurno.value;
-
-  const dias = [...document.querySelectorAll(".dias-grid input:checked")].map(el => el.value);
-  const rota = [...document.querySelectorAll(".checkbox-list input:checked")].map(el => el.value);
-
-  const motoristaNome = motoristasFake.find(m => m.id === motoristaId)?.nome || "";
-  const onibusNumero = onibusFake.find(o => o.id === onibusId)?.numero || "";
+  const dias = [...document.querySelectorAll(".dias-grid input:checked")].map(
+    (el) => el.value
+  );
+  const rota = [...document.querySelectorAll(".checkbox-list input:checked")].map(
+    (el) => el.value
+  );
 
   return {
     motoristaId,
@@ -97,95 +157,73 @@ function coletarConfiguracao() {
   };
 }
 
-/* ======================================
-   ATUALIZAR RESUMO NA TELA
-====================================== */
-function atualizarResumo(config) {
-  if (!config.motoristaId && !config.onibusId && !config.turno && config.dias.length === 0 && config.rota.length === 0) {
-    resumoLista.innerHTML = `<li>Nenhuma configuração selecionada ainda.</li>`;
-    return;
-  }
-
+/* ===========================================================
+   ATUALIZA O RESUMO
+=========================================================== */
+function atualizarResumo(cfg) {
   resumoLista.innerHTML = `
-    <li><strong>Motorista:</strong> ${config.motoristaNome || "Não selecionado"}</li>
-    <li><strong>Ônibus:</strong> ${config.onibusNumero ? "Ônibus " + config.onibusNumero : "Não selecionado"}</li>
-    <li><strong>Turno:</strong> ${config.turno || "Não selecionado"}</li>
-    <li><strong>Dias da semana:</strong> ${config.dias.length ? config.dias.join(", ") : "Nenhum dia selecionado"}</li>
-    <li><strong>Instituições / Rota:</strong> ${config.rota.length ? config.rota.join(" → ") : "Nenhuma instituição marcada"}</li>
+    <li><strong>Motorista:</strong> ${cfg.motoristaNome || "-"}</li>
+    <li><strong>Ônibus:</strong> ${cfg.onibusNumero || "-"}</li>
+    <li><strong>Turno:</strong> ${cfg.turno || "-"}</li>
+    <li><strong>Dias:</strong> ${cfg.dias.join(", ") || "-"}</li>
+    <li><strong>Instituições:</strong> ${cfg.rota.join(" → ") || "-"}</li>
   `;
 }
 
-/* Atualiza resumo sempre que mudar algo (mais intuitivo pro ADM) */
-["change", "input"].forEach(evt => {
+["change", "input"].forEach((evt) => {
   document.addEventListener(evt, () => {
-    const cfg = coletarConfiguracao();
-    atualizarResumo(cfg);
+    atualizarResumo(coletarConfiguracao());
   });
 });
 
-/* ======================================
-   CLIQUE EM SALVAR CONFIGURAÇÃO
-====================================== */
-btnSalvar.addEventListener("click", () => {
-  const config = coletarConfiguracao();
+/* ===========================================================
+   SALVAR CONFIGURAÇÃO
+=========================================================== */
+btnSalvar.addEventListener("click", async () => {
+  const cfg = coletarConfiguracao();
 
-  if (!config.motoristaId || !config.onibusId || !config.turno || config.dias.length === 0 || config.rota.length === 0) {
-    alert("⚠️ Preencha motorista, ônibus, turno, pelo menos um dia e pelo menos uma instituição.");
+  if (
+    !cfg.motoristaId ||
+    !cfg.onibusId ||
+    !cfg.turno ||
+    cfg.dias.length === 0 ||
+    cfg.rota.length === 0
+  ) {
+    alert("⚠️ Preencha todos os dados!");
     return;
   }
 
-  atualizarResumo(config);
+  const token = await getIdToken();
 
-  console.log("Configuração pronta para enviar ao backend:", config);
-  alert("✅ Configuração salva (placeholder). Depois enviaremos isso para o backend/Firestore.");
+  const res = await fetch(`${API}/configuracoesRotas`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(cfg),
+  });
+
+  if (!res.ok) {
+    alert("❌ Erro ao salvar configuração!");
+    return;
+  }
+
+  alert("✅ Configuração salva com sucesso!");
 });
 
-/* ======================================
-   PERFIL ADM – abrir / fechar modais
-====================================== */
-const btnPerfil = document.getElementById("btnPerfil");
-const modalPerfil = document.getElementById("modalPerfil");
-const btnFecharPerfil = document.getElementById("btnFecharPerfil");
+/* ===========================================================
+   INICIALIZAÇÃO — ESPERA LOGIN PARA INICIAR
+=========================================================== */
+auth.onAuthStateChanged(async (user) => {
+  if (!user) {
+    alert("Você precisa fazer login novamente!");
+    window.location.href = "novo_login.html";
+    return;
+  }
 
-const modalAlterarSenha = document.getElementById("modalAlterarSenha");
-const btnAlterarSenha = document.getElementById("btnAlterarSenha");
-const btnFecharSenha = document.getElementById("btnFecharSenha");
+  console.log("Autenticado como:", user.email);
 
-const modalAtualizarEmail = document.getElementById("modalAtualizarEmail");
-const btnAtualizarEmail = document.getElementById("btnAtualizarEmail");
-const btnFecharEmail = document.getElementById("btnFecharEmail");
-
-// Abrir modal perfil
-btnPerfil?.addEventListener("click", () => {
-  modalPerfil.style.display = "block";
-});
-
-// Fechar modal perfil
-btnFecharPerfil?.addEventListener("click", () => {
-  modalPerfil.style.display = "none";
-});
-
-// Abrir/fechar alterar senha
-btnAlterarSenha?.addEventListener("click", () => {
-  modalAlterarSenha.style.display = "block";
-});
-
-btnFecharSenha?.addEventListener("click", () => {
-  modalAlterarSenha.style.display = "none";
-});
-
-// Abrir/fechar atualizar e-mail
-btnAtualizarEmail?.addEventListener("click", () => {
-  modalAtualizarEmail.style.display = "block";
-});
-
-btnFecharEmail?.addEventListener("click", () => {
-  modalAtualizarEmail.style.display = "none";
-});
-
-// Fechar modais ao clicar fora
-window.addEventListener("click", (e) => {
-  if (e.target === modalPerfil) modalPerfil.style.display = "none";
-  if (e.target === modalAlterarSenha) modalAlterarSenha.style.display = "none";
-  if (e.target === modalAtualizarEmail) modalAtualizarEmail.style.display = "none";
+  motoristasCache = await carregarMotoristas();
+  onibusCache = await carregarOnibus();
 });
