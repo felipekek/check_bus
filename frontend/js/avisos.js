@@ -8,38 +8,52 @@ import {
   serverTimestamp,
   onSnapshot,
   deleteDoc,
-  doc
+  doc,
+  query,
+  orderBy
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 
 /* ===========================================================
-   PEGAR TURNOS MARCADOS
+   ORDEM FIXA DOS TURNOS
+=========================================================== */
+const ORDEM_TURNOS = {
+  manha: 1,
+  tarde: 2,
+  noite: 3,
+  todos: 4
+};
+
+
+/* ===========================================================
+   PEGAR TURNOS MARCADOS (ORDENADOS)
 =========================================================== */
 function getTurnos() {
   const checks = document.querySelectorAll(".turno-check:checked");
   const values = Array.from(checks).map(c => c.value);
-  return values.length ? values : ["todos"];
+  const turnos = values.length ? values : ["todos"];
+
+  return turnos.sort((a, b) => ORDEM_TURNOS[a] - ORDEM_TURNOS[b]);
 }
 
 
 function normalizeTurno(s) {
-  return String(s || '')
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
+  return String(s || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase();
 }
 
 
 /* ===========================================================
-   ENVIAR AVISO (UM PARA CADA TURNO)
+   ENVIAR AVISO
 =========================================================== */
 async function enviarAviso(titulo, mensagem, turnos) {
   for (let t of turnos) {
-    const turnoNorm = normalizeTurno(t);
     await addDoc(collection(db, "avisos"), {
       titulo,
       mensagem,
-      turno: turnoNorm,
+      turno: normalizeTurno(t),
       tipo: "personalizado",
       dataEnvio: serverTimestamp()
     });
@@ -68,7 +82,7 @@ document.getElementById("formAviso").addEventListener("submit", e => {
 
 
 /* ===========================================================
-   ENVIAR AVISOS PRÉ-PROGRAMADOS
+   AVISOS PRÉ-PROGRAMADOS
 =========================================================== */
 document.getElementById("btnEnviarPredef").addEventListener("click", () => {
   const checks = document.querySelectorAll(".predef-check:checked");
@@ -80,7 +94,7 @@ document.getElementById("btnEnviarPredef").addEventListener("click", () => {
   }
 
   checks.forEach(c => {
-    const titulo = c.nextSibling.textContent.trim();
+    const titulo = c.closest("label").querySelector("span").textContent.trim();
     const mensagem = c.dataset.msg;
     enviarAviso(titulo, mensagem, turnos);
   });
@@ -90,7 +104,7 @@ document.getElementById("btnEnviarPredef").addEventListener("click", () => {
 
 
 /* ===========================================================
-   GERAR HTML DO AVISO COM ACCORDION
+   GERAR HTML DO AVISO
 =========================================================== */
 function gerarLinhaHTML(aviso, id) {
   const dataFormatada = aviso.dataEnvio?.toDate()
@@ -98,7 +112,6 @@ function gerarLinhaHTML(aviso, id) {
     : "—";
 
   return `
-    <!-- Linha visível -->
     <tr class="avisos-row">
       <td>${aviso.titulo}</td>
       <td>${aviso.turno.toUpperCase()}</td>
@@ -108,7 +121,6 @@ function gerarLinhaHTML(aviso, id) {
       </td>
     </tr>
 
-    <!-- Accordion oculto -->
     <tr class="accordion-row">
       <td colspan="4">
         <div class="accordion-content">
@@ -122,21 +134,24 @@ function gerarLinhaHTML(aviso, id) {
 
 
 /* ===========================================================
-   LISTAR AVISOS EM TEMPO REAL
+   LISTAR AVISOS (MAIS RECENTE NO TOPO)
 =========================================================== */
 const tbody = document.getElementById("listaAvisos");
 
-onSnapshot(collection(db, "avisos"), snap => {
+const avisosQuery = query(
+  collection(db, "avisos"),
+  orderBy("dataEnvio", "desc")
+);
+
+onSnapshot(avisosQuery, snap => {
   tbody.innerHTML = "";
 
   snap.forEach(docSnap => {
     const aviso = docSnap.data();
     const id = docSnap.id;
-
     tbody.innerHTML += gerarLinhaHTML(aviso, id);
   });
 
-  /* --- Excluir Aviso --- */
   document.querySelectorAll(".btn-delete").forEach(botao => {
     botao.addEventListener("click", async () => {
       if (confirm("Tem certeza que deseja excluir este aviso?")) {
@@ -148,36 +163,27 @@ onSnapshot(collection(db, "avisos"), snap => {
 
 
 /* ===========================================================
-   ABRIR / FECHAR ACCORDION
+   ACCORDION
 =========================================================== */
-document.addEventListener("click", (e) => {
-  const linha = e.target.closest(".avisos-row");
-  if (!linha) return;
-
-  const accordion = linha.nextElementSibling;
-  if (accordion.classList.contains("accordion-row")) {
-    accordion.classList.toggle("open");
-  }
+document.addEventListener("click", e => {
+  const row = e.target.closest(".avisos-row");
+  if (!row) return;
+  row.nextElementSibling?.classList.toggle("open");
 });
 
 
 /* ===========================================================
-   PESQUISA NA TABELA
+   PESQUISA
 =========================================================== */
 const campoPesquisa = document.getElementById("pesquisarAvisos");
 
 if (campoPesquisa) {
   campoPesquisa.addEventListener("input", () => {
     const termo = campoPesquisa.value.toLowerCase();
-    const linhas = document.querySelectorAll("#listaAvisos tr.avisos-row");
-
-    linhas.forEach(linha => {
-      const texto = linha.innerText.toLowerCase();
-      const accordion = linha.nextElementSibling;
-
-      const mostrar = texto.includes(termo);
-      linha.style.display = mostrar ? "" : "none";
-      accordion.style.display = mostrar ? "" : "none";
+    document.querySelectorAll(".avisos-row").forEach(row => {
+      const mostrar = row.innerText.toLowerCase().includes(termo);
+      row.style.display = mostrar ? "" : "none";
+      row.nextElementSibling.style.display = mostrar ? "" : "none";
     });
   });
 }
