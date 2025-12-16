@@ -1,135 +1,14 @@
-/* Fundo escuro semi-transparente */
-.modal-feedback {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7); /* mais escuro e elegante */
-  justify-content: center;
-  align-items: center;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  transition: background 0.3s ease;
-}
-
-/* Caixa central do modal */
-.modal-content {
-  background: #fefefe;
-  padding: 30px 25px;
-  border-radius: 15px;
-  width: 450px;
-  max-width: 90%;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  animation: slideDown 0.4s ease forwards;
-}
-
-/* Animação elegante */
-@keyframes slideDown {
-  0% {
-    opacity: 0;
-    transform: translateY(-30px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Título */
-.modal-content h2 {
-  margin-bottom: 15px;
-  color: #333;
-  font-size: 24px;
-  text-align: center;
-  font-weight: 600;
-}
-
-/* Textarea estilizado */
-.modal-content textarea {
-  resize: none;
-  padding: 12px;
-  font-size: 16px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  outline: none;
-  height: 120px;
-  margin-bottom: 20px;
-  transition: border 0.3s ease;
-}
-
-.modal-content textarea:focus {
-  border: 2px solid #4a90e2; /* cor de destaque */
-}
-
-/* Botão enviar */
-.modal-content button {
-  background: #4a90e2;
-  color: #fff;
-  font-size: 16px;
-  padding: 12px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
-}
-
-.modal-content button:hover {
-  background: #357ab7;
-  transform: scale(1.03);
-}
-
-/* Botão fechar */
-.close-feedback {
-  position: absolute;
-  top: 12px;
-  right: 15px;
-  font-size: 28px;
-  color: #999;
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-
-.close-feedback:hover {
-  color: #333;
-}
-
-/* Botão Feedback estilizado */
-.feedback-btn {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  background: #4a90e2;
-  color: #fff;
-  border: none;
-  border-radius: 50px; /* botão arredondado estilo "pill" */
-  padding: 15px 25px;
-  font-size: 16px;
-  cursor: pointer;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  z-index: 1001; /* acima do modal */
-}
-
-.feedback-btn i {
-  font-size: 18px;
-}
-
-/* Hover e efeito de clique */
-.feedback-btn:hover {
-  background: #357ab7;
-  transform: translateY(-2px) scale(1.05);
-}
-
-.feedback-btn:active {
-  transform: translateY(0) scale(0.98);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
+.modal-feedback { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); justify-content: center; align-items: center; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: background 0.3s ease; }
+.modal-content { background: #fefefe; padding: 30px 25px; border-radius: 15px; width: 450px; max-width: 90%; box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35); position: relative; display: flex; flex-direction: column; align-items: stretch; animation: slideDown 0.4s ease forwards; }
+@keyframes slideDown { 0% { opacity: 0; transform: translateY(-30px); } 100% { opacity: 1; transform: translateY(0); } }
+.modal-content h2 { margin-bottom: 15px; color: #333; font-size: 24px; text-align: center; font-weight: 600; }
+.modal-content textarea { resize: none; padding: 12px; font-size: 16px; border-radius: 10px; border: 1px solid #ccc; outline: none; height: 120px; margin-bottom: 20px; transition: border 0.3s ease; }
+.modal-content textarea:focus { border: 2px solid #4a90e2; }
+.modal-content button { background: #4a90e2; color: #fff; font-size: 16px; padding: 12px; border: none; border-radius: 10px; cursor: pointer; transition: background 0.3s ease, transform 0.2s ease; }
+.modal-content button:hover { background: #357ab7; transform: scale(1.03); }
+.close-feedback { position: absolute; top: 12px; right: 15px; font-size: 28px; color: #999; cursor: pointer; transition: color 0.3s ease; }
+.close-feedback:hover { color: #333; }
+.feedback-btn { position: fixed; bottom: 25px; right: 25px; background: #4a90e2; color: #fff; border: none; border-radius: 50px; padding: 15px 25px; font-size: 16px; cursor: pointer; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25); transition: all 0.3s ease; display: flex; align-items: center; gap: 10px; z-index: 1001; }
+.feedback-btn i { font-size: 18px; }
+.feedback-btn:hover { background: #357ab7; transform: translateY(-2px) scale(1.05); }
+.feedback-btn:active { transform: translateY(0) scale(0.98); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); }

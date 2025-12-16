@@ -1,7 +1,33 @@
-// admin.js
-// Página de administração: lista, exibe e exclui alunos e seus horários. Só acessível para staff.
+// admin.js - CORRIGIDO
+// Página de administração com validação de token no servidor
 
-// ---------- CONTROLE DE ACESSO ----------
+// ========================================
+// ⚠️ SEGURANÇA: VALIDAÇÃO DE TOKEN
+// ========================================
+// IMPORTANTE: A validação client-side SOZINHA não é segura!
+// O backend DEVE validar o token em TODAS as rotas /admin/*
+// 
+// Exemplo de middleware no backend (Express):
+// 
+// function verificarAdmin(req, res, next) {
+//   const token = req.headers.authorization?.split(' ')[1];
+//   if (!token) return res.status(401).json({ erro: "Token não fornecido" });
+//   
+//   try {
+//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//     if (decoded.tipoUsuario !== "admin") {
+//       return res.status(403).json({ erro: "Acesso negado" });
+//     }
+//     req.userId = decoded.userId;
+//     next();
+//   } catch (err) {
+//     return res.status(401).json({ erro: "Token inválido" });
+//   }
+// }
+// 
+// app.get('/admin', verificarAdmin, async (req, res) => { ... });
+// ========================================
+
 const token = localStorage.getItem("token");
 const tipoUsuario = localStorage.getItem("tipoUsuario");
 
@@ -10,10 +36,10 @@ if (!token || tipoUsuario !== "admin") {
   window.location.href = "index.html";
 }
 
-let listaAlunos = []; // guarda todos os alunos carregados
-let chartInstituicoes = null; // gráfico de pizza
-let instituicaoSelecionada = null; // controla filtro ativo
-let coresOriginais = []; // guarda cores originais
+let listaAlunos = [];
+let chartInstituicoes = null;
+let instituicaoSelecionada = null;
+let coresOriginais = [];
 
 // === Helpers para destaque de busca ===
 function escapeRegExp(str = "") {
@@ -25,6 +51,14 @@ function highlight(text = "", termo = "") {
   return (text ?? "").toString().replace(re, '<mark class="hl">$1</mark>');
 }
 
+// === Sanitização HTML (previne XSS) ===
+function escapeHtml(text) {
+  if (text === null || text === undefined) return "";
+  const div = document.createElement("div");
+  div.textContent = String(text);
+  return div.innerHTML;
+}
+
 // ---------- CARREGA ALUNOS ----------
 async function carregarAlunos() {
   const container = document.getElementById("accordionContainer");
@@ -34,20 +68,28 @@ async function carregarAlunos() {
     const res = await fetch("/admin", {
       headers: { Authorization: `Bearer ${token}` },
     });
+    
+    if (res.status === 401 || res.status === 403) {
+      alert("Sessão expirada ou acesso negado. Faça login novamente.");
+      localStorage.clear();
+      window.location.href = "index.html";
+      return;
+    }
+    
     if (!res.ok) throw new Error("Erro ao buscar alunos");
 
     listaAlunos = await res.json();
 
     if (listaAlunos.length === 0) {
       container.innerHTML = `<p class="no-data">Nenhum aluno cadastrado.</p>`;
-      atualizarGrafico([]); // limpa gráfico
-      atualizarMiniDashboard([]); // limpa dashboard
+      atualizarGrafico([]);
+      atualizarMiniDashboard([]);
       return;
     }
 
     renderizarAlunos(listaAlunos);
-    atualizarGrafico(listaAlunos); // atualiza gráfico
-    atualizarMiniDashboard(listaAlunos); // atualiza mini dashboard com os dados carregados
+    atualizarGrafico(listaAlunos);
+    atualizarMiniDashboard(listaAlunos);
   } catch (err) {
     console.error("Erro ao carregar alunos:", err);
     container.innerHTML = `<p class="no-data">Erro ao carregar alunos. Verifique o console.</p>`;
@@ -72,7 +114,7 @@ function renderizarAlunos(alunos, termoBusca = "") {
     const horariosFormatados =
       Array.isArray(aluno.horarios) && aluno.horarios.length > 0
         ? aluno.horarios
-            .map((h) => `<tr><td>${h.dia}</td><td>${h.horario}</td></tr>`)
+            .map((h) => `<tr><td>${escapeHtml(h.dia)}</td><td>${escapeHtml(h.horario)}</td></tr>`)
             .join("")
         : '<tr><td colspan="2" class="no-data">Nenhum horário registrado.</td></tr>';
 
@@ -81,16 +123,16 @@ function renderizarAlunos(alunos, termoBusca = "") {
         <div class="toggle-btn">&gt;</div>
         <div class="header-flex">
           <div class="aluno-nome">${highlight(
-            aluno.nome || "Nome não informado",
+            escapeHtml(aluno.nome) || "Nome não informado",
             termoBusca
           )}</div>
           <div class="summary-info">
-            <span>${highlight(aluno.instituicao || "N/A", termoBusca)}</span>
-            <span>${highlight(aluno.curso || "N/A", termoBusca)}</span>
-            <span>${highlight(aluno.turno || "N/A", termoBusca)}</span>
+            <span>${highlight(escapeHtml(aluno.instituicao) || "N/A", termoBusca)}</span>
+            <span>${highlight(escapeHtml(aluno.curso) || "N/A", termoBusca)}</span>
+            <span>${highlight(escapeHtml(aluno.turno) || "N/A", termoBusca)}</span>
           </div>
         </div>
-          <button class="delete-btn" title="Excluir" data-id="${aluno.id}">
+          <button class="delete-btn" title="Excluir" data-id="${escapeHtml(aluno.id)}">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0,0,256,256">
                   <g fill="#ffffff" fill-rule="nonzero" stroke="none">
                       <g transform="scale(9.84615,9.84615)">
@@ -103,35 +145,35 @@ function renderizarAlunos(alunos, termoBusca = "") {
       <div class="accordion-content">
         <div class="info-grid">
           <div class="info-item"><strong>Nome:</strong> ${highlight(
-            aluno.nome || "-",
+            escapeHtml(aluno.nome) || "-",
             termoBusca
           )}</div>
           <div class="info-item"><strong>Email:</strong> ${highlight(
-            aluno.email || "-",
+            escapeHtml(aluno.email) || "-",
             termoBusca
           )}</div>
           <div class="info-item"><strong>Instituição:</strong> ${highlight(
-            aluno.instituicao || "-",
+            escapeHtml(aluno.instituicao) || "-",
             termoBusca
           )}</div>
           <div class="info-item"><strong>Curso:</strong> ${highlight(
-            aluno.curso || "-",
+            escapeHtml(aluno.curso) || "-",
             termoBusca
           )}</div>
           <div class="info-item"><strong>Período:</strong> ${highlight(
-            aluno.periodo ? aluno.periodo + "º" : "-",
+            aluno.periodo ? escapeHtml(aluno.periodo) + "º" : "-",
             termoBusca
           )}</div>
           <div class="info-item"><strong>Turno:</strong> ${highlight(
-            aluno.turno || "-",
+            escapeHtml(aluno.turno) || "-",
             termoBusca
           )}</div>
           <div class="info-item"><strong>CPF:</strong> ${highlight(
-            aluno.cpf || "-",
+            escapeHtml(aluno.cpf) || "-",
             termoBusca
           )}</div>
           <div class="info-item"><strong>Telefone:</strong> ${highlight(
-            aluno.telefone || "-",
+            escapeHtml(aluno.telefone) || "-",
             termoBusca
           )}</div>
         </div>
@@ -170,7 +212,6 @@ async function excluirAluno(alunoId) {
       if (itemParaRemover) itemParaRemover.remove();
       listaAlunos = listaAlunos.filter((a) => a.id !== alunoId);
 
-      // atualiza gráfico e mini dashboard após remoção
       atualizarGrafico(listaAlunos);
       atualizarMiniDashboard(listaAlunos);
     } catch (error) {
@@ -181,7 +222,7 @@ async function excluirAluno(alunoId) {
 }
 
 // ---------- FILTRO DE PESQUISA ----------
-document.getElementById("barraPesquisa").addEventListener("keyup", (e) => {
+document.getElementById("barraPesquisa")?.addEventListener("keyup", (e) => {
   const termo = (e.target.value || "").toLowerCase();
   let alunosParaFiltrar = listaAlunos;
 
@@ -209,6 +250,12 @@ document.getElementById("barraPesquisa").addEventListener("keyup", (e) => {
 function atualizarGrafico(alunos) {
   const canvas = document.getElementById("instituicoesChart");
   if (!canvas) return;
+  
+  if (typeof Chart === "undefined") {
+    console.error("Chart.js não foi carregado");
+    return;
+  }
+  
   const ctx = canvas.getContext("2d");
 
   const instituicoes = {};
@@ -354,7 +401,7 @@ carregarAlunos();
 // Delegação de eventos: accordion e exclusão
 document
   .getElementById("accordionContainer")
-  .addEventListener("click", (e) => {
+  ?.addEventListener("click", (e) => {
     const deleteButton = e.target.closest(".delete-btn");
     if (deleteButton) {
       e.stopPropagation();

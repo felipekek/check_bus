@@ -1,3 +1,23 @@
+// cadast_motorista.js - CORRIGIDO
+// URLs dinâmicas + sanitização de HTML
+
+// =====================================
+// CONFIGURAÇÃO DINÂMICA DA API
+// =====================================
+const API = window.location.hostname === "localhost"
+  ? "http://localhost:3000"
+  : window.location.origin;
+
+// =====================================
+// SANITIZAÇÃO DE HTML (previne XSS)
+// =====================================
+function escapeHtml(text) {
+  if (text === null || text === undefined) return "";
+  const div = document.createElement("div");
+  div.textContent = String(text);
+  return div.innerHTML;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("formMotorista");
 
@@ -15,9 +35,16 @@ document.addEventListener("DOMContentLoaded", () => {
   fotoInput.addEventListener("change", () => {
     const file = fotoInput.files[0];
     if (file) {
+      // Validar tamanho (máx 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert("⚠️ A imagem deve ter no máximo 5MB.");
+        fotoInput.value = "";
+        return;
+      }
+      
       const reader = new FileReader();
       reader.onload = () => {
-        fotoBase64 = reader.result; // Base64 enviada ao backend
+        fotoBase64 = reader.result;
         previewFoto.src = fotoBase64;
       };
       reader.readAsDataURL(file);
@@ -109,7 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     try {
-      const response = await fetch("http://localhost:3000/motoristas/cadastrar", {
+      const response = await fetch(`${API}/motoristas/cadastrar`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dados)
@@ -140,7 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ============================
   async function carregarMotoristas() {
     try {
-      const response = await fetch("http://localhost:3000/motoristas/listar");
+      const response = await fetch(`${API}/motoristas/listar`);
       const dados = await response.json();
 
       const lista = document.getElementById("listaMotoristas");
@@ -150,20 +177,31 @@ document.addEventListener("DOMContentLoaded", () => {
         const card = document.createElement("div");
         card.className = "motorista-card";
 
+        // Usando escapeHtml para prevenir XSS
         card.innerHTML = `
-          <img src="${m.fotoUrl || '../imagens/placeholder_user.png'}" class="foto-lista">
-          <div class="motorista-nome">${m.nome}</div>
-          <div class="motorista-info">📧 ${m.email}</div>
-          <div class="motorista-info">📞 ${m.telefone}</div>
-          <div class="motorista-info">🪪 CNH: ${m.cnh} (${m.categoria})</div>
-          <div class="motorista-info">🕒 Turno: ${m.turno}</div>
-          <div class="motorista-info ${m.status === "Ativo" ? "status-ativo" : "status-inativo"}">● ${m.status}</div>
+          <img src="${escapeHtml(m.fotoUrl) || '../imagens/placeholder_user.png'}" class="foto-lista" onerror="this.src='../imagens/placeholder_user.png'">
+          <div class="motorista-nome">${escapeHtml(m.nome)}</div>
+          <div class="motorista-info">📧 ${escapeHtml(m.email)}</div>
+          <div class="motorista-info">📞 ${escapeHtml(m.telefone)}</div>
+          <div class="motorista-info">🪪 CNH: ${escapeHtml(m.cnh)} (${escapeHtml(m.categoria)})</div>
+          <div class="motorista-info">🕒 Turno: ${escapeHtml(m.turno)}</div>
+          <div class="motorista-info ${m.status === "Ativo" ? "status-ativo" : "status-inativo"}">● ${escapeHtml(m.status)}</div>
 
           <div class="motorista-actions">
-            <button class="btn-edit" onclick="abrirEditar('${m.id}', '${m.nome}', '${m.telefone}', '${m.turno}', '${m.status}')">Editar</button>
-            <button class="btn-delete" onclick="excluirMotorista('${m.id}')">Excluir</button>
+            <button class="btn-edit" data-id="${escapeHtml(m.id)}" data-nome="${escapeHtml(m.nome)}" data-telefone="${escapeHtml(m.telefone)}" data-turno="${escapeHtml(m.turno)}" data-status="${escapeHtml(m.status)}">Editar</button>
+            <button class="btn-delete" data-id="${escapeHtml(m.id)}">Excluir</button>
           </div>
         `;
+
+        // Event listeners via delegação
+        card.querySelector(".btn-edit").addEventListener("click", (e) => {
+          const btn = e.target;
+          abrirEditar(btn.dataset.id, btn.dataset.nome, btn.dataset.telefone, btn.dataset.turno, btn.dataset.status);
+        });
+
+        card.querySelector(".btn-delete").addEventListener("click", (e) => {
+          excluirMotorista(e.target.dataset.id);
+        });
 
         lista.appendChild(card);
       });
@@ -176,7 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ============================
   // EDITAR
   // ============================
-  window.abrirEditar = (id, nome, telefone, turno, status) => {
+  function abrirEditar(id, nome, telefone, turno, status) {
     document.getElementById("editId").value = id;
     document.getElementById("editNome").value = nome;
     document.getElementById("editTelefone").value = telefone;
@@ -184,7 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("editStatus").value = status;
 
     document.getElementById("modalEditar").style.display = "flex";
-  };
+  }
 
   document.getElementById("fecharEditar").onclick = () => {
     document.getElementById("modalEditar").style.display = "none";
@@ -202,7 +240,7 @@ document.addEventListener("DOMContentLoaded", () => {
       status: document.getElementById("editStatus").value,
     };
 
-    const resp = await fetch(`http://localhost:3000/motoristas/editar/${id}`, {
+    const resp = await fetch(`${API}/motoristas/editar/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(dados),
@@ -220,10 +258,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // ============================
   // EXCLUIR
   // ============================
-  window.excluirMotorista = async (id) => {
+  async function excluirMotorista(id) {
     if (!confirm("Deseja realmente excluir este motorista?")) return;
 
-    const resp = await fetch(`http://localhost:3000/motoristas/excluir/${id}`, {
+    const resp = await fetch(`${API}/motoristas/excluir/${id}`, {
       method: "DELETE",
     });
 
@@ -233,7 +271,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       alert("Erro ao excluir motorista.");
     }
-  };
+  }
 
   // Busca dinâmica
   document.getElementById("buscarMotorista").addEventListener("input", (e) => {

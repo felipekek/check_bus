@@ -1,4 +1,5 @@
-// frontend/js/cadastro_onibus.js
+// frontend/js/cadastro_onibus.js - CORRIGIDO
+// URLs dinâmicas + sanitização XSS
 
 // =====================================
 // CONFIGURAÇÃO DINÂMICA DA API
@@ -6,6 +7,16 @@
 const API = window.location.hostname === "localhost"
   ? "http://localhost:3000"
   : window.location.origin;
+
+// =====================================
+// SANITIZAÇÃO HTML (previne XSS)
+// =====================================
+function escapeHtml(text) {
+  if (text === null || text === undefined) return "";
+  const div = document.createElement("div");
+  div.textContent = String(text);
+  return div.innerHTML;
+}
 
 // =====================================
 // ELEMENTOS DO FORMULÁRIO
@@ -23,6 +34,12 @@ document.addEventListener("DOMContentLoaded", () => {
   fotoInput.addEventListener("change", () => {
     const file = fotoInput.files[0];
     if (file) {
+      // Validar tamanho (máx 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert("⚠️ A imagem deve ter no máximo 5MB.");
+        fotoInput.value = "";
+        return;
+      }
       preview.src = URL.createObjectURL(file);
       fotoRemovida = false;
     }
@@ -91,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // =====================================
-  // LISTAR ÔNIBUS
+  // LISTAR ÔNIBUS (COM PROTEÇÃO XSS)
   // =====================================
   async function carregarOnibus() {
     try {
@@ -105,20 +122,32 @@ document.addEventListener("DOMContentLoaded", () => {
         const div = document.createElement("div");
         div.className = "onibus-card";
 
+        // ✅ USANDO escapeHtml PARA PREVENIR XSS
         div.innerHTML = `
-          <img src="${o.fotoUrl || '../imagens/placeholder_bus.png'}" class="foto-lista">
+          <img src="${escapeHtml(o.fotoUrl) || '../imagens/placeholder_bus.png'}" class="foto-lista" onerror="this.src='../imagens/placeholder_bus.png'">
 
-          <div class="onibus-nome">Ônibus ${o.numero}</div>
-          <div class="onibus-info">Modelo: ${o.modelo}</div>
-          <div class="onibus-info">Ano: ${o.ano}</div>
-          <div class="onibus-info">Capacidade: ${o.capacidade}</div>
+          <div class="onibus-nome">Ônibus ${escapeHtml(o.numero)}</div>
+          <div class="onibus-info">Modelo: ${escapeHtml(o.modelo)}</div>
+          <div class="onibus-info">Ano: ${escapeHtml(o.ano)}</div>
+          <div class="onibus-info">Capacidade: ${escapeHtml(o.capacidade)}</div>
 
           <div class="onibus-actions">
-            <button class="btn-edit" onclick="abrirEditar('${o.id}', '${o.numero}', '${o.placa}', '${o.modelo}', '${o.ano}', '${o.capacidade}', '${o.tipo}', '${o.status}', \`${o.observacoes || ""}\`)">Editar</button>
-
-            <button class="btn-delete" onclick="excluirOnibus('${o.id}')">Excluir</button>
+            <button class="btn-edit" data-id="${escapeHtml(o.id)}">Editar</button>
+            <button class="btn-delete" data-id="${escapeHtml(o.id)}">Excluir</button>
           </div>
         `;
+
+        // Event listeners seguros
+        const btnEdit = div.querySelector(".btn-edit");
+        const btnDelete = div.querySelector(".btn-delete");
+
+        btnEdit.addEventListener("click", () => {
+          abrirEditar(o.id, o.numero, o.placa, o.modelo, o.ano, o.capacidade, o.tipo, o.status, o.observacoes || "");
+        });
+
+        btnDelete.addEventListener("click", () => {
+          excluirOnibus(o.id);
+        });
 
         lista.appendChild(div);
       });

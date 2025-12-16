@@ -8,11 +8,7 @@
     /* ========================================
        OVERRIDE: Garantir position absolute
        ======================================== */
-    .perfil-btn {
-      position: absolute !important;
-      top: 30px;
-      right: 30px;
-    }
+    /* perfil-btn styles moved to perfil.css for consistency */
 
     .menu-btn {
       position: absolute !important;
@@ -175,7 +171,7 @@
       display: grid;
       grid-template-columns: 2fr 1fr;
       gap: 20px;
-      align-items: start; /* ✅ Evita que cards estendam verticalmente */
+      align-items: start;
     }
 
     .card {
@@ -184,7 +180,7 @@
       padding: 30px;
       box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
       animation: slideUp 0.5s ease-out;
-      height: fit-content; /* ✅ Altura ajustada ao conteúdo */
+      height: fit-content;
     }
 
     @keyframes slideUp {
@@ -523,29 +519,13 @@
     }
 
     /* ========================================
-       BOTÃO PERFIL (ABSOLUTE)
-       ======================================== */
-    /* Estilos do botão perfil agora vêm do style.css */
-
-    /* ========================================
-       MODAL
-       ======================================== */
-    /* Estilos do modal agora vêm do style.css */
-
-    /* ========================================
        RESPONSIVO
        ======================================== */
     @media (max-width: 900px) {
       main {
         grid-template-columns: 1fr;
       }
-
-      .perfil-btn {
-        top: 20px;
-        right: 20px;
-        padding: 10px 20px;
-        font-size: 0.9rem;
-      }
+      /* perfil-btn responsive styles in perfil.css */
     }
 
     @media (max-width: 600px) {
@@ -590,13 +570,6 @@
       .day {
         padding: 10px 0;
         min-height: 40px;
-        font-size: 0.85rem;
-      }
-
-      .perfil-btn {
-        top: 15px;
-        right: 15px;
-        padding: 8px 16px;
         font-size: 0.85rem;
       }
 

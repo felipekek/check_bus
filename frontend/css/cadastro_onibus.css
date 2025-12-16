@@ -97,8 +97,8 @@ body {
 }
 
 /* ====== BOTÕES (Menu e Perfil) ====== */
-.menu-btn,
-.perfil-btn {
+/* perfil-btn styles moved to perfil.css for consistency */
+.menu-btn {
   position: absolute;
   z-index: 1000;
   border: none;
@@ -107,9 +107,6 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
   font-weight: 500;
-}
-
-.menu-btn {
   top: 20px;
   left: 20px;
   background: rgba(255, 255, 255, 0.15);
@@ -126,28 +123,6 @@ body {
 .menu-btn:hover {
   background: rgba(255, 255, 255, 0.25);
   transform: scale(1.05);
-}
-
-.perfil-btn {
-  top: 20px;
-  right: 20px;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
-  border-radius: 25px;
-  padding: 10px 20px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.95rem;
-}
-
-.perfil-btn:hover {
-  background: rgba(255, 255, 255, 0.25);
-  transform: translateY(-2px);
-}
-
-.perfil-btn i {
-  font-size: 1.1rem;
 }
 
 /* ====== OVERLAY ====== */
@@ -747,21 +722,12 @@ textarea {
     grid-template-columns: 1fr;
   }
 
-  .menu-btn,
-  .perfil-btn {
+  .menu-btn {
     width: 44px;
     height: 44px;
     font-size: 1.2rem;
   }
-
-  .perfil-btn {
-    padding: 0;
-    border-radius: 50%;
-  }
-
-  .perfil-btn span {
-    display: none;
-  }
+  /* perfil-btn responsive styles in perfil.css */
 }
 
 @media (max-width: 480px) {

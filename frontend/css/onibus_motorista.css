@@ -6,11 +6,7 @@
     }
 
     /* Override: Garantir position absolute */
-    .perfil-btn {
-      position: absolute !important;
-      top: 30px;
-      right: 30px;
-    }
+    /* perfil-btn styles moved to perfil.css for consistency */
 
     .menu-btn {
       position: absolute !important;

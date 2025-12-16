@@ -1,12 +1,24 @@
-// frontend/js/home.js
+// frontend/js/home.js - CORRIGIDO
+// Adicionada verificação de initTutorial antes de chamar
+
 import { db, auth } from "./firebase-config.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { collection, getDocs, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-
 let userId = null;
 const grid = document.getElementById("menuGrid");
-grid.style.visibility = "hidden";
+if (grid) grid.style.visibility = "hidden";
+
+// Importar tutorial se existir (com fallback)
+let initTutorial = null;
+try {
+  const tutorialModule = await import("./tutorial.js").catch(() => null);
+  if (tutorialModule && typeof tutorialModule.initTutorial === "function") {
+    initTutorial = tutorialModule.initTutorial;
+  }
+} catch {
+  console.log("Tutorial não disponível");
+}
 
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
@@ -32,9 +44,9 @@ onAuthStateChanged(auth, async (user) => {
   }
 
   const tipoUsuario = localStorage.getItem("tipoUsuario") || "aluno";
-  grid.innerHTML = "";
+  if (grid) grid.innerHTML = "";
 
-  // ajusta destino de "Horários" se o usuário for admin
+  // Ajusta destino de "Horários" se o usuário for admin
   const horarioHref = tipoUsuario === "admin" ? "adm-lista-de-horarios.html" : "horarios.html";
 
   const defaultButtons = [
@@ -49,20 +61,19 @@ onAuthStateChanged(auth, async (user) => {
     { icon: 'fa-circle-question', text: 'FAQ', href: 'faq.html', tipo: 'aluno' }
   ];
 
+  // BOTÕES DO ADMIN
+  const adminButtons = [
+    { icon: 'fa-book-open', text: 'Relatórios', href: 'relatorios.html', tipo: 'admin' },
+    { icon: 'fa-users', text: 'Lista de Alunos', href: 'admin.html', tipo: 'admin' },
+    { icon: 'fa-user-plus', text: 'Cadastrar Motorista', href: 'cadast_motorista.html', tipo: 'admin' },
+    { icon: 'fa-bus', text: 'Cadastrar Ônibus', href: 'cadastro_onibus.html', tipo: 'admin' },
+    { icon: 'fa-id-card', text: 'Vincular Cartão', href: 'vincular_cartao.html', tipo: 'admin' },
+    { icon: 'fa-sitemap', text: 'Gerenciar Motoristas & Ônibus', href: 'onibus_motorista.html', tipo: 'admin' },
+    { icon: 'fa-bullhorn', text: 'Avisos', href: 'avisos.html', tipo: 'admin' },
+    { icon: 'fa-star', text: 'Respostas Feedback', href: 'respostas_feedback.html', tipo: 'admin' }
+  ];
 
- // BOTÕES DO ADMIN – AGORA COMPLETO
-const adminButtons = [
-  { icon: 'fa-book-open', text: 'Relatórios', href: 'relatorios.html', tipo: 'admin' },
-  { icon: 'fa-users', text: 'Lista de Alunos', href: 'admin.html', tipo: 'admin' },
-  { icon: 'fa-user-plus', text: 'Cadastrar Motorista', href: 'cadast_motorista.html', tipo: 'admin' },
-  { icon: 'fa-bus', text: 'Cadastrar Ônibus', href: 'cadastro_onibus.html', tipo: 'admin' },
-  { icon: 'fa-id-card', text: 'Vincular Cartão', href: 'vincular_cartao.html', tipo: 'admin' },
-  { icon: 'fa-sitemap', text: 'Gerenciar Motoristas & Ônibus', href: 'onibus_motorista.html', tipo: 'admin' },
-  { icon: 'fa-bullhorn', text: 'Avisos', href: 'avisos.html', tipo: 'admin' },
-  { icon: 'fa-star', text: 'Respostas Feedback', href: 'respostas_feedback.html', tipo: 'admin' }
-];
-
-const allButtons = [...defaultButtons, ...adminButtons, ...alunoButtons];
+  const allButtons = [...defaultButtons, ...adminButtons, ...alunoButtons];
 
   allButtons.forEach(btn => {
     if (btn.tipo === 'todos' || btn.tipo === tipoUsuario) {
@@ -70,7 +81,7 @@ const allButtons = [...defaultButtons, ...adminButtons, ...alunoButtons];
       div.className = "card";
       div.addEventListener("click", () => location.href = btn.href);
       div.innerHTML = `<i class="fa-solid ${btn.icon} fa-2x"></i><span>${btn.text}</span>`;
-      grid.appendChild(div);
+      if (grid) grid.appendChild(div);
     }
   });
 
@@ -78,12 +89,13 @@ const allButtons = [...defaultButtons, ...adminButtons, ...alunoButtons];
   logoutBtn.className = "card logout";
   logoutBtn.addEventListener("click", logout);
   logoutBtn.innerHTML = `<i class="fa-solid fa-right-from-bracket fa-2x"></i><span>Sair</span>`;
-  grid.appendChild(logoutBtn);
+  if (grid) grid.appendChild(logoutBtn);
 
-  grid.style.visibility = "visible";
+  if (grid) grid.style.visibility = "visible";
   carregarHorarios();
 
-  if (mostrarTutorial) {
+  // Mostrar tutorial apenas se a função existir
+  if (mostrarTutorial && initTutorial) {
     initTutorial(passosTutorial, "tutorialHomeVisto");
   }
 });
@@ -131,9 +143,11 @@ window.excluirHorario = async (docId) => {
   }
 };
 
-window.logout = () => {
+function logout() {
   signOut(auth).then(() => window.location.href = "index.html");
-};
+}
+
+window.logout = logout;
 
 const passosTutorial = [
   {
@@ -156,6 +170,9 @@ const passosTutorial = [
   }
 ];
 
+// Inicialização no DOMContentLoaded apenas se tutorial existir
 window.addEventListener("DOMContentLoaded", () => {
-  initTutorial(passosTutorial, "tutorialHomeVisto");
+  if (initTutorial && !localStorage.getItem("tutorialHomeVisto")) {
+    // Tutorial será iniciado após o auth carregar
+  }
 });
