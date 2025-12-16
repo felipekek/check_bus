@@ -49,7 +49,8 @@ export async function carregarModalPerfil() {
           document.getElementById("turnoAtualizar").value = document.getElementById("turnoUsuario").textContent;
           document.getElementById("periodoAtualizar").value = document.getElementById("periodoUsuario").textContent;
         }
-        modalAtualizar.style.display = "block";
+        // ✅ CORRIGIDO: Usar display: flex para centralizar
+        modalAtualizar.style.display = "flex";
       });
       initAtualizarPerfil();
     }
@@ -80,7 +81,8 @@ export async function abrirPerfil() {
   }
 
   const modal = document.getElementById("modalPerfil");
-  modal.style.display = "block";
+  // ✅ CORRIGIDO: Usar display: flex para centralizar corretamente
+  modal.style.display = "flex";
   carregarDadosUsuario();
 }
 
@@ -142,7 +144,8 @@ function initAlterarSenha() {
   const btnFecharSenha = document.getElementById("btnFecharSenha");
   const formSenha = document.getElementById("formAlterarSenha");
 
-  document.getElementById("btnAlterarSenha").addEventListener("click", () => (modalSenha.style.display = "block"));
+  // ✅ CORRIGIDO: Usar display: flex
+  document.getElementById("btnAlterarSenha").addEventListener("click", () => (modalSenha.style.display = "flex"));
   btnFecharSenha.addEventListener("click", () => (modalSenha.style.display = "none"));
   window.addEventListener("click", (e) => {
     if (e.target === modalSenha) modalSenha.style.display = "none";
@@ -221,12 +224,12 @@ function initAtualizarEmail() {
 
   if (!modalEmail || !btnFecharEmail || !formEmail || !btnAbrirEmail) return;
 
-  // Abrir modal
+  // Abrir modal - ✅ CORRIGIDO: Usar display: flex
   btnAbrirEmail.addEventListener("click", () => {
     const user = auth.currentUser;
     if (!user) return alert("Usuário não autenticado.");
     document.getElementById("emailAtual").value = user.email || "";
-    modalEmail.style.display = "block";
+    modalEmail.style.display = "flex";
   });
 
   // Fechar modal

@@ -1,18 +1,16 @@
 /* ===================================================
    PERFIL.CSS - CheckBus
-   Estilos unificados para botão Perfil e Modal
-   Design moderno e consistente em todas as páginas
+   USANDO SELETORES POR ID PARA MÁXIMA PRIORIDADE
    =================================================== */
 
 /* ===================================================
-   BOTÃO PERFIL - CheckBus
-   Botão fixo no canto superior direito
+   BOTÃO PERFIL
    =================================================== */
 
 .perfil-btn {
-  position: fixed !important;
-  top: 30px;
-  right: 30px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
   background: linear-gradient(135deg, #006b8f, #004d6d);
   color: white;
   border: none;
@@ -35,82 +33,88 @@
   box-shadow: 0 6px 20px rgba(0, 107, 143, 0.4);
 }
 
-.perfil-btn:active {
-  transform: translateY(0);
-}
-
-.perfil-btn i {
-  font-size: 1.1rem;
-}
-
 /* ===================================================
-   MODAL BASE
+   MODAIS - SELETORES POR ID (PRIORIDADE MÁXIMA)
    =================================================== */
 
-.modal {
+#modalPerfil,
+#modalAlterarSenha,
+#modalAtualizarEmail,
+#modalAtualizarPerfil {
   display: none;
-  position: fixed;
-  z-index: 2000;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.7);
+  position: fixed !important;
+  z-index: 2000 !important;
+  inset: 0 !important;
+  background: rgba(0, 0, 0, 0.7) !important;
   backdrop-filter: blur(4px);
-  align-items: center;
-  justify-content: center;
-  overflow-y: auto;
-  padding: 20px;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow-y: auto !important;
+  padding: 10px !important;
 }
 
-.modal-content {
-  background: white;
-  margin: auto;
-  padding: 0;
-  border-radius: 20px;
-  width: 90%;
-  max-width: 600px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+#modalPerfil > .modal-content {
+  background: white !important;
+  margin: auto !important;
+  padding: 0 !important;
+  border-radius: 16px !important;
+  width: 98% !important;
+  max-width: 750px !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
   animation: modalSlideIn 0.4s ease-out;
-  position: relative;
-  overflow: hidden;
+  position: relative !important;
+  overflow: hidden !important;
 }
 
-.modal-form {
-  max-width: 500px;
+#modalAlterarSenha > .modal-content,
+#modalAtualizarEmail > .modal-content,
+#modalAtualizarPerfil > .modal-content {
+  background: white !important;
+  margin: auto !important;
+  padding: 0 !important;
+  border-radius: 16px !important;
+  width: 98% !important;
+  max-width: 500px !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+  animation: modalSlideIn 0.4s ease-out;
+  position: relative !important;
+  overflow: hidden !important;
 }
 
 @keyframes modalSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-30px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  from { opacity: 0; transform: translateY(-30px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 /* Botão fechar */
-.close {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  font-size: 28px;
-  font-weight: bold;
-  color: rgba(255, 255, 255, 0.8);
-  cursor: pointer;
+#modalPerfil .close,
+#modalAlterarSenha .close,
+#modalAtualizarEmail .close,
+#modalAtualizarPerfil .close {
+  position: absolute !important;
+  top: 20px !important;
+  right: 20px !important;
+  font-size: 28px !important;
+  font-weight: bold !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  cursor: pointer !important;
+  z-index: 10 !important;
+  width: 36px !important;
+  height: 36px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.2) !important;
   transition: all 0.2s ease;
-  z-index: 10;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
 }
 
-.close:hover {
-  background: rgba(255, 255, 255, 0.3);
-  color: white;
+#modalPerfil .close:hover,
+#modalAlterarSenha .close:hover,
+#modalAtualizarEmail .close:hover,
+#modalAtualizarPerfil .close:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+  color: white !important;
   transform: rotate(90deg);
 }
 
@@ -118,371 +122,197 @@
    HEADER DO MODAL
    =================================================== */
 
-.modal-header {
-  text-align: center;
-  padding: 40px 30px 30px;
-  background: linear-gradient(135deg, #006b8f, #004d6d);
-  color: white;
-  position: relative;
+#modalPerfil .modal-header,
+#modalAlterarSenha .modal-header,
+#modalAtualizarEmail .modal-header,
+#modalAtualizarPerfil .modal-header {
+  text-align: center !important;
+  padding: 40px 30px 30px !important;
+  background: linear-gradient(135deg, #006b8f, #004d6d) !important;
+  color: white !important;
+  position: relative !important;
 }
 
 .modal-icon {
-  width: 80px;
-  height: 80px;
-  margin: 0 auto 20px;
-  background: rgba(16, 185, 129, 0.3);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 36px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  width: 80px !important;
+  height: 80px !important;
+  margin: 0 auto 20px !important;
+  background: rgba(16, 185, 129, 0.3) !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 36px !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
 }
 
-.modal-icon-admin {
-  background: rgba(16, 185, 129, 0.3);
-}
+.modal-icon-orange { background: rgba(245, 158, 11, 0.3) !important; }
+.modal-icon-blue { background: rgba(59, 130, 246, 0.3) !important; }
 
-.modal-icon-green {
-  background: rgba(16, 185, 129, 0.3);
-}
-
-.modal-icon-orange {
-  background: rgba(245, 158, 11, 0.3);
-}
-
-.modal-icon-blue {
-  background: rgba(59, 130, 246, 0.3);
-}
-
-.modal-header h2 {
-  margin: 0 0 8px 0;
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: white;
+#modalPerfil .modal-header h2,
+#modalAlterarSenha .modal-header h2,
+#modalAtualizarEmail .modal-header h2,
+#modalAtualizarPerfil .modal-header h2 {
+  margin: 0 0 8px 0 !important;
+  font-size: 1.8rem !important;
+  font-weight: 700 !important;
+  color: white !important;
 }
 
 .modal-subtitle {
-  margin: 0;
-  font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.9);
-  font-weight: 400;
+  margin: 0 !important;
+  font-size: 0.95rem !important;
+  color: rgba(255, 255, 255, 0.9) !important;
 }
 
 /* ===================================================
-   PERFIL CARD (Lista de informações)
+   PERFIL CARD
    =================================================== */
 
 .perfil-card {
-  padding: 30px;
+  padding: 30px !important;
 }
 
 .perfil-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 0;
-  border-bottom: 1px solid #e5e7eb;
-  transition: all 0.2s ease;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 16px 0 !important;
+  border-bottom: 1px solid #e5e7eb !important;
 }
 
-.perfil-item:last-child {
-  border-bottom: none;
-}
-
-.perfil-item:hover {
-  background: #f9fafb;
-  border-radius: 8px;
-  padding-left: 12px;
-  padding-right: 12px;
-  margin-left: -12px;
-  margin-right: -12px;
-}
+.perfil-item:last-child { border-bottom: none !important; }
 
 .perfil-label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #374151;
-  font-weight: 600;
-  font-size: 0.95rem;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  color: #374151 !important;
+  font-weight: 600 !important;
 }
 
-.perfil-label i {
-  color: #006b8f;
-  font-size: 1.1rem;
-}
+.perfil-label i { color: #006b8f !important; }
 
 .perfil-value {
-  color: #6b7280;
-  font-size: 0.95rem;
-  text-align: right;
-  max-width: 60%;
-  word-break: break-word;
-}
-
-/* Compatibilidade com estrutura antiga usando <p> */
-.perfil-card p {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 0;
-  border-bottom: 1px solid #e5e7eb;
-  margin: 0;
-  color: #374151;
-  font-size: 0.95rem;
-  transition: all 0.2s ease;
-}
-
-.perfil-card p:last-child {
-  border-bottom: none;
-}
-
-.perfil-card p:hover {
-  background: #f9fafb;
-  border-radius: 8px;
-  padding-left: 12px;
-  padding-right: 12px;
-  margin-left: -12px;
-  margin-right: -12px;
-}
-
-.perfil-card p strong {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #374151;
-  font-weight: 600;
-}
-
-.perfil-card p strong i {
-  color: #006b8f;
-  font-size: 1.1rem;
+  color: #6b7280 !important;
+  text-align: right !important;
+  max-width: 60% !important;
+  word-break: break-word !important;
 }
 
 /* ===================================================
-   BOTÕES DE AÇÃO DO MODAL
+   BOTÕES DE AÇÃO
    =================================================== */
 
 .perfil-modal-buttons {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 12px;
-  padding: 0 30px 30px;
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
+  gap: 12px !important;
+  padding: 0 30px 30px !important;
 }
 
 .perfil-modal-buttons button {
-  padding: 14px 20px;
-  border: none;
-  border-radius: 10px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
+  padding: 14px 20px !important;
+  border: none !important;
+  border-radius: 10px !important;
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
   transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.perfil-modal-buttons button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+#btnAtualizarEmail, .btn-secondary {
+  background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+  color: white !important;
 }
 
-.perfil-modal-buttons button:active {
-  transform: translateY(0);
+#btnAlterarSenha, .btn-tertiary {
+  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+  color: white !important;
 }
 
-/* Botão Atualizar E-mail - Azul */
-#btnAtualizarEmail,
-.btn-secondary {
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
-  color: white;
-}
-
-#btnAtualizarEmail:hover,
-.btn-secondary:hover {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-}
-
-/* Botão Alterar Senha - Laranja */
-#btnAlterarSenha,
-.btn-tertiary {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  color: white;
-}
-
-#btnAlterarSenha:hover,
-.btn-tertiary:hover {
-  background: linear-gradient(135deg, #d97706, #b45309);
-}
-
-/* Botão Atualizar Perfil - Verde */
-#btnAtualizarPerfil,
-.btn-primary {
-  background: linear-gradient(135deg, #10b981, #059669);
-  color: white;
-}
-
-#btnAtualizarPerfil:hover,
-.btn-primary:hover {
-  background: linear-gradient(135deg, #059669, #047857);
+#btnAtualizarPerfil, .btn-primary {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+  color: white !important;
 }
 
 /* ===================================================
-   FORMULÁRIOS DOS MODAIS
+   FORMULÁRIOS
    =================================================== */
 
 .modal-form-content,
-.senha-form,
-.perfil-form,
-#formAtualizarEmail {
-  padding: 30px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+#formAtualizarEmail,
+#formAlterarSenha,
+#formAtualizarPerfil {
+  padding: 30px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 20px !important;
 }
 
 .form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
 }
 
-.form-group label,
-.senha-form label,
-.perfil-form label,
-#formAtualizarEmail label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #374151;
-  font-weight: 600;
-  font-size: 0.9rem;
+.form-group label {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  color: #374151 !important;
+  font-weight: 600 !important;
 }
 
-.form-group label i,
-.senha-form label i,
-.perfil-form label i,
-#formAtualizarEmail label i {
-  color: #006b8f;
-  font-size: 0.95rem;
+.form-group label i { color: #006b8f !important; }
+
+.form-group input {
+  padding: 12px 16px !important;
+  border: 2px solid #e5e7eb !important;
+  border-radius: 10px !important;
+  font-size: 0.95rem !important;
+  background: #f9fafb !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
-.form-group input,
-.senha-form input,
-.perfil-form input,
-#formAtualizarEmail input {
-  padding: 12px 16px;
-  border: 2px solid #e5e7eb;
-  border-radius: 10px;
-  font-size: 0.95rem;
-  background: #f9fafb;
-  transition: all 0.2s ease;
-  font-family: 'Inter', Arial, sans-serif;
-  width: 100%;
-  box-sizing: border-box;
+.form-group input:focus {
+  outline: none !important;
+  border-color: #006b8f !important;
+  background: white !important;
 }
 
-.form-group input:focus,
-.senha-form input:focus,
-.perfil-form input:focus,
-#formAtualizarEmail input:focus {
-  outline: none;
-  border-color: #006b8f;
-  background: white;
-  box-shadow: 0 0 0 3px rgba(0, 107, 143, 0.1);
+.btn-submit {
+  width: 100% !important;
+  padding: 14px !important;
+  background: linear-gradient(135deg, #006b8f, #004d6d) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
 }
-
-.form-group input:readonly,
-.senha-form input:readonly,
-.perfil-form input:readonly,
-#formAtualizarEmail input:readonly {
-  background: #f3f4f6;
-  cursor: not-allowed;
-}
-
-.form-group input::placeholder,
-.senha-form input::placeholder,
-.perfil-form input::placeholder,
-#formAtualizarEmail input::placeholder {
-  color: #9ca3af;
-}
-
-/* Grid 2 colunas para campos lado a lado */
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-/* Botão submit dos formulários */
-.btn-submit,
-.senha-form button,
-.perfil-form button,
-#formAtualizarEmail button {
-  width: 100%;
-  padding: 14px;
-  background: linear-gradient(135deg, #006b8f, #004d6d);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  box-shadow: 0 4px 12px rgba(0, 107, 143, 0.3);
-  margin-top: 10px;
-}
-
-.btn-submit:hover,
-.senha-form button:hover,
-.perfil-form button:hover,
-#formAtualizarEmail button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 107, 143, 0.4);
-}
-
-.btn-submit:active,
-.senha-form button:active,
-.perfil-form button:active,
-#formAtualizarEmail button:active {
-  transform: translateY(0);
-}
-
-/* ===================================================
-   ALERT DE INFORMAÇÃO
-   =================================================== */
 
 .info-alert {
-  background: #eff6ff;
-  border: 1px solid #bfdbfe;
-  border-radius: 10px;
-  padding: 14px 16px;
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
+  background: #eff6ff !important;
+  border: 1px solid #bfdbfe !important;
+  border-radius: 10px !important;
+  padding: 14px 16px !important;
+  display: flex !important;
+  gap: 12px !important;
 }
 
-.info-alert i {
-  color: #3b82f6;
-  font-size: 1.2rem;
-  margin-top: 2px;
-  flex-shrink: 0;
-}
-
-.info-alert p {
-  color: #1e40af;
-  font-size: 0.9rem;
-  line-height: 1.5;
-  margin: 0;
-}
+.info-alert i { color: #3b82f6 !important; }
+.info-alert p { color: #1e40af !important; margin: 0 !important; }
 
 /* ===================================================
    RESPONSIVO
@@ -490,131 +320,54 @@
 
 @media (max-width: 768px) {
   .perfil-btn {
-    padding: 10px 20px;
-    font-size: 0.9rem;
-    top: 20px;
-    right: 20px;
+    padding: 10px 20px !important;
+    top: 15px !important;
+    right: 15px !important;
   }
 
-  .modal-content {
-    width: 95%;
-    border-radius: 16px;
+  #modalPerfil, #modalAlterarSenha, #modalAtualizarEmail, #modalAtualizarPerfil {
+    padding: 8px !important;
   }
 
-  .modal-header {
-    padding: 32px 24px 24px;
-  }
-
-  .modal-icon {
-    width: 70px;
-    height: 70px;
-    font-size: 32px;
-  }
-
-  .modal-header h2 {
-    font-size: 1.5rem;
-  }
-
-  .perfil-card {
-    padding: 24px;
+  #modalPerfil > .modal-content,
+  #modalAlterarSenha > .modal-content,
+  #modalAtualizarEmail > .modal-content,
+  #modalAtualizarPerfil > .modal-content {
+    width: 98% !important;
   }
 
   .perfil-modal-buttons {
-    grid-template-columns: 1fr;
-    padding: 0 24px 24px;
-    flex-direction: column;
-  }
-
-  .modal-form-content,
-  .senha-form,
-  .perfil-form,
-  #formAtualizarEmail {
-    padding: 24px;
-  }
-
-  .form-row {
-    grid-template-columns: 1fr;
-  }
-
-  .perfil-label {
-    font-size: 0.85rem;
-  }
-
-  .perfil-value {
-    font-size: 0.85rem;
-    max-width: 55%;
+    grid-template-columns: 1fr !important;
   }
 }
 
 @media (max-width: 480px) {
   .perfil-btn {
-    padding: 8px 16px;
-    font-size: 0.85rem;
-    gap: 6px;
-    top: 15px;
-    right: 15px;
+    padding: 8px 16px !important;
+    top: 10px !important;
+    right: 10px !important;
   }
 
-  .perfil-btn i {
-    font-size: 1rem;
+  #modalPerfil, #modalAlterarSenha, #modalAtualizarEmail, #modalAtualizarPerfil {
+    padding: 5px !important;
   }
 
-  .close {
-    width: 32px;
-    height: 32px;
-    font-size: 24px;
-    top: 16px;
-    right: 16px;
-  }
-
-  .modal-header {
-    padding: 28px 20px 20px;
-  }
-
-  .modal-icon {
-    width: 60px;
-    height: 60px;
-    font-size: 28px;
-  }
-
-  .modal-header h2 {
-    font-size: 1.3rem;
-  }
-
-  .modal-subtitle {
-    font-size: 0.85rem;
-  }
-
-  .perfil-card {
-    padding: 20px;
+  #modalPerfil > .modal-content,
+  #modalAlterarSenha > .modal-content,
+  #modalAtualizarEmail > .modal-content,
+  #modalAtualizarPerfil > .modal-content {
+    width: 99% !important;
+    border-radius: 12px !important;
   }
 
   .perfil-item {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-    padding: 12px 0;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
   }
 
   .perfil-value {
-    max-width: 100%;
-    text-align: left;
-  }
-
-  .modal-form-content,
-  .senha-form,
-  .perfil-form,
-  #formAtualizarEmail {
-    padding: 20px;
-    gap: 16px;
-  }
-
-  .perfil-modal-buttons {
-    padding: 0 20px 20px;
-  }
-
-  .perfil-modal-buttons button {
-    padding: 12px 16px;
-    font-size: 0.85rem;
+    max-width: 100% !important;
+    text-align: left !important;
   }
 }

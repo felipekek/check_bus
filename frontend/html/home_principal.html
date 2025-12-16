@@ -11,12 +11,12 @@
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- CSS FILES - ORDEM IMPORTANTE -->
+  <!-- CSS FILES - ORDEM CORRIGIDA: perfil.css por ÚLTIMO -->
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/horarios.css">
-  <link rel="stylesheet" href="../css/perfil.css">
   <link rel="stylesheet" href="../css/feedback.css">
   <link rel="stylesheet" href="../css/home_principal.css">
+  <link rel="stylesheet" href="../css/perfil.css">
   
 </head>
 <body>
@@ -32,6 +32,12 @@
   </div>
 
   <div class="container container--wide">
+    <!-- Botão Perfil (dentro do container, acompanha o scroll) -->
+    <button class="perfil-btn" id="btnPerfil">
+      <i class="fa fa-user"></i>
+      Perfil
+    </button>
+
     <main>
       <!-- Grid de menu (preenchido pelo home.js) -->
       <div class="grid" id="menuGrid"></div>
@@ -69,19 +75,13 @@
         <div class="calendar" id="calendar"></div>
       </section>
     </main>
+
+    <!-- Botão Feedback (dentro do container, acompanha o scroll) -->
+    <button class="feedback-btn" id="btnFeedback">
+      <i class="fa fa-comment"></i>
+      Feedback
+    </button>
   </div>
-
-  <!-- Botão Perfil (fixed) -->
-  <button class="perfil-btn" id="btnPerfil">
-    <i class="fa fa-user"></i>
-    Perfil
-  </button>
-
-  <!-- Botão Feedback (fixed) -->
-  <button class="feedback-btn" id="btnFeedback">
-    <i class="fa fa-comment"></i>
-    Feedback
-  </button>
 
   <!-- Modal de Feedback (mantém estrutura original) -->
   <div class="modal-feedback" id="modalFeedback">
