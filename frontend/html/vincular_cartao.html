@@ -8,12 +8,15 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   
-  <link rel="stylesheet" href="../css/vincular_cartao.css">
-
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
 
+  <!-- CSS FILES - ORDEM IMPORTANTE -->
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/draw.css">
+  <link rel="stylesheet" href="../css/vincular_cartao.css">
+  <!-- PERFIL.CSS POR ÚLTIMO para ter prioridade -->
+  <link rel="stylesheet" href="../css/perfil.css">
 </head>
 <body>
 
@@ -21,6 +24,23 @@
   <div class="shape shape-1"></div>
   <div class="shape shape-2"></div>
   <div class="shape shape-3"></div>
+
+  <!-- BOTÃO DO MENU (drawer) -->
+  <button class="menu-btn" id="menuBtn">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <!-- OVERLAY -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <i class="fas fa-bus"></i>
+      <h3>Check Bus</h3>
+    </div>
+    <div id="sidebar-buttons"></div>
+  </nav>
 
   <!-- HEADER (FORA DO CARD) -->
   <div class="header-wrapper">
@@ -30,6 +50,12 @@
     </div>
     <h1 class="header-title">Vincular Cartão RFID</h1>
     <p class="header-subtitle">Associe um cartão RFID ao aluno</p>
+    
+    <!-- BOTÃO PERFIL -->
+    <button class="perfil-btn" id="btnPerfil">
+      <i class="fa fa-user"></i>
+      Perfil
+    </button>
   </div>
 
   <!-- CARD BRANCO -->
@@ -115,7 +141,67 @@
     <p>© 2024 Check Bus. Todos os direitos reservados.</p>
   </div>
 
-  <!-- Script -->
+  <!-- Scripts - ORDEM IMPORTANTE -->
+  <script type="module">
+    import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
+
+    // Inicializar Perfil
+    carregarModalPerfil();
+    document.getElementById("btnPerfil").addEventListener("click", abrirPerfil);
+
+    // ========== SIDEBAR (igual às outras páginas) ==========
+    const menuBtn = document.getElementById("menuBtn");
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+    const sidebarButtons = document.getElementById("sidebar-buttons");
+
+    // Configuração dos botões do admin
+    const adminPages = [
+      { icon: 'fa-solid fa-house', label: 'Principal', url: 'home_principal.html' },
+      { icon: 'fa-solid fa-users', label: 'Lista de Alunos', url: 'admin.html' },
+      { icon: 'fa-solid fa-user-plus', label: 'Cadastrar Motorista', url: 'cadast_motorista.html' },
+      { icon: 'fa-solid fa-id-card', label: 'Vincular Cartão', url: 'vincular_cartao.html' },
+      { icon: 'fa-solid fa-bus', label: 'Cadastrar Ônibus', url: 'cadastro_onibus.html' },
+      { icon: 'fa-solid fa-list', label: 'Gerenciar Motoristas & Ônibus', url: 'onibus_motorista.html' },
+      { icon: 'fa-solid fa-calendar-days', label: 'Horários', url: 'adm-lista-de-horarios.html' },
+      { icon: 'fa-solid fa-chart-line', label: 'Relatórios', url: 'relatorios.html' },
+      { icon: 'fa-solid fa-bullhorn', label: 'Avisos', url: 'avisos.html' },
+      { icon: 'fa-solid fa-comments', label: 'Feedbacks', url: 'respostas_feedback.html' }
+    ];
+
+    // Gerar botões da sidebar
+    const currentPage = window.location.pathname.split('/').pop();
+    
+    adminPages.forEach(page => {
+      const btn = document.createElement('button');
+      const isActive = currentPage === page.url ? 'active' : '';
+      btn.className = isActive;
+      btn.innerHTML = `<i class="${page.icon}"></i> ${page.label}`;
+      btn.onclick = () => location.href = page.url;
+      sidebarButtons.appendChild(btn);
+    });
+
+    // Botão Sair
+    const logoutBtn = document.createElement('button');
+    logoutBtn.className = 'logout';
+    logoutBtn.innerHTML = '<i class="fa-solid fa-right-from-bracket"></i> Sair';
+    logoutBtn.onclick = () => location.href = 'index.html';
+    sidebarButtons.appendChild(logoutBtn);
+
+    // Toggle sidebar
+    menuBtn.addEventListener("click", () => {
+      sidebar.classList.add("active");
+      overlay.classList.add("active");
+      menuBtn.classList.add("hidden");
+    });
+
+    overlay.addEventListener("click", () => {
+      sidebar.classList.remove("active");
+      overlay.classList.remove("active");
+      menuBtn.classList.remove("hidden");
+    });
+  </script>
+
   <script type="module" src="../js/vincular_cartao.js"></script>
 
 </body>

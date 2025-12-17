@@ -1,6 +1,7 @@
 /* ===================================================
-   SIDEBAR UNIVERSAL - CHECK BUS (Versão Adaptada)
+   SIDEBAR UNIVERSAL - CHECK BUS
    Funciona com as coleções: alunos, staff, motoristas
+   Inclui header com logo automaticamente
    =================================================== */
 
 import { auth, db } from './firebase-config.js';
@@ -34,7 +35,7 @@ const SIDEBAR_CONFIG = {
 };
 
 /**
- * Gera a sidebar dinamicamente
+ * Gera a sidebar dinamicamente COM HEADER
  */
 function gerarSidebar(userProfile) {
     console.log('🎨 [SIDEBAR] Gerando para perfil:', userProfile);
@@ -47,7 +48,14 @@ function gerarSidebar(userProfile) {
     const pages = SIDEBAR_CONFIG[userProfile];
     const currentPage = window.location.pathname.split('/').pop();
     
-    let sidebarHTML = '<div class="sidebar" id="sidebar">';
+    // NOVO: Inclui header com logo do Check Bus
+    let sidebarHTML = `
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-bus"></i>
+                <h3>Check Bus</h3>
+            </div>
+    `;
     
     pages.forEach(page => {
         const isActive = currentPage === page.url ? 'active' : '';
@@ -59,12 +67,33 @@ function gerarSidebar(userProfile) {
     });
     
     sidebarHTML += `
-        <button onclick="location.href='index.html'" class="logout">
-            <i class="fa-solid fa-right-from-bracket"></i> Sair
-        </button>
-    </div>`;
+            <button onclick="location.href='index.html'" class="logout">
+                <i class="fa-solid fa-right-from-bracket"></i> Sair
+            </button>
+        </div>
+    `;
     
     return sidebarHTML;
+}
+
+/**
+ * Gera o HTML completo da sidebar (botão + overlay + sidebar)
+ */
+function gerarSidebarCompleta(userProfile) {
+    const sidebarContent = gerarSidebar(userProfile);
+    
+    return `
+        <!-- Botão do Menu -->
+        <button class="menu-btn" id="menuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <!-- Overlay -->
+        <div class="overlay" id="overlay"></div>
+        
+        <!-- Sidebar -->
+        ${sidebarContent}
+    `;
 }
 
 /**
@@ -148,13 +177,17 @@ async function inicializarSidebar() {
             return;
         }
         
-        // Gerar sidebar
-        const sidebarHTML = gerarSidebar(userProfile);
+        // Gerar sidebar completa (botão + overlay + sidebar)
+        const sidebarHTML = gerarSidebarCompleta(userProfile);
         
         // Inserir no DOM
         const sidebarContainer = document.getElementById('sidebar-container');
         if (sidebarContainer) {
             sidebarContainer.innerHTML = sidebarHTML;
+            
+            // Configurar eventos de toggle
+            configurarEventosSidebar();
+            
             console.log('✅ [SIDEBAR] Inicializada com sucesso para perfil:', userProfile);
         } else {
             console.error('❌ [SIDEBAR] Container #sidebar-container não encontrado');
@@ -166,16 +199,51 @@ async function inicializarSidebar() {
 }
 
 /**
+ * Configura os eventos de abrir/fechar a sidebar
+ */
+function configurarEventosSidebar() {
+    const menuBtn = document.getElementById('menuBtn');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    
+    if (menuBtn && sidebar && overlay) {
+        // Abrir sidebar
+        menuBtn.addEventListener('click', () => {
+            sidebar.classList.add('active');
+            overlay.classList.add('active');
+            menuBtn.classList.add('hidden');
+        });
+        
+        // Fechar sidebar ao clicar no overlay
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+            menuBtn.classList.remove('hidden');
+        });
+        
+        // Fechar sidebar com tecla ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                menuBtn.classList.remove('hidden');
+            }
+        });
+    }
+}
+
+/**
  * Inicializa com perfil manual
  */
 function inicializarSidebarManual(profile) {
     console.log('🚀 [SIDEBAR] Inicializando manualmente com perfil:', profile);
     
-    const sidebarHTML = gerarSidebar(profile);
+    const sidebarHTML = gerarSidebarCompleta(profile);
     const sidebarContainer = document.getElementById('sidebar-container');
     
     if (sidebarContainer) {
         sidebarContainer.innerHTML = sidebarHTML;
+        configurarEventosSidebar();
         console.log('✅ [SIDEBAR] Inicializada manualmente');
     } else {
         console.error('❌ [SIDEBAR] Container não encontrado');
@@ -185,8 +253,10 @@ function inicializarSidebarManual(profile) {
 // Exportar
 export {
     gerarSidebar,
+    gerarSidebarCompleta,
     detectarPerfilUsuario,
     inicializarSidebar,
     inicializarSidebarManual,
+    configurarEventosSidebar,
     SIDEBAR_CONFIG
 };

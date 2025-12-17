@@ -78,28 +78,31 @@
   transform: translateX(0);
 }
 
-/* Header da sidebar */
+/* ===== Header da Sidebar (NOVO - PADRÃO) ===== */
 .sidebar-header {
   text-align: center;
-  padding-bottom: 20px;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 24px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.15);
   margin-bottom: 20px;
 }
 
 .sidebar-header i {
-  font-size: 48px;
+  font-size: 52px;
   color: white;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  display: block;
+  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .sidebar-header h3 {
   margin: 0;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   font-weight: 700;
   color: white;
+  letter-spacing: 0.5px;
 }
 
-/* Botões da sidebar */
+/* ===== Botões da sidebar ===== */
 .sidebar button {
   display: flex;
   align-items: center;
@@ -145,7 +148,7 @@
   transform: translateX(5px);
 }
 
-/* Scrollbar customizada */
+/* ===== Scrollbar customizada ===== */
 .sidebar::-webkit-scrollbar {
   width: 6px;
 }
@@ -181,6 +184,14 @@
   .sidebar {
     width: 260px;
   }
+
+  .sidebar-header i {
+    font-size: 46px;
+  }
+
+  .sidebar-header h3 {
+    font-size: 1.3rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -194,6 +205,19 @@
   .sidebar {
     width: 240px;
     padding: 24px 16px;
+  }
+
+  .sidebar-header {
+    padding-bottom: 20px;
+    margin-bottom: 16px;
+  }
+
+  .sidebar-header i {
+    font-size: 40px;
+  }
+
+  .sidebar-header h3 {
+    font-size: 1.2rem;
   }
 
   .sidebar button {
