@@ -3,59 +3,84 @@ import { db } from "../config/firebase-admin.js";
 
 /**
  * Histórico de embarque do aluno logado
+ * Lê a coleção "acessos" filtrando pelo idCartao do aluno
  */
 export async function listarHistoricoAluno(req, res) {
   try {
-    // UID do aluno autenticado
     const uidAluno = req.user?.uid;
 
     if (!uidAluno) {
-      return res.status(400).json({ error: "UID do aluno não encontrado no token." });
+      return res.status(400).json({
+        semCartao: false,
+        historico: [],
+        error: "UID do aluno não encontrado no token."
+      });
     }
 
     // ================================
-    // 1. Buscar documento do aluno
+    // 1. Buscar aluno
     // ================================
     const alunoSnap = await db.collection("alunos").doc(uidAluno).get();
 
     if (!alunoSnap.exists) {
-      return res.status(404).json({ error: "Aluno não encontrado no banco." });
+      return res.status(404).json({
+        semCartao: false,
+        historico: [],
+        error: "Aluno não encontrado."
+      });
     }
 
     const aluno = alunoSnap.data();
 
+    // ================================
+    // 2. Aluno SEM cartão
+    // ================================
     if (!aluno.idCartao) {
-      return res.status(400).json({ error: "Aluno não possui id do cartão vinculado." });
+      return res.json({
+        semCartao: true,
+        historico: []
+      });
     }
 
     const idCartao = aluno.idCartao;
 
     // ================================
-    // 2. Buscar acessos usando o ID do cartão
+    // 3. Buscar acessos do cartão
     // ================================
-    const acessosRef = db
+    const snapshot = await db
       .collection("acessos")
-      .where("uid", "==", idCartao) // <-- IMPORTANTE: UID salva no Arduino É o ID do cartão
-      .orderBy("data", "desc");
+      .where("uid", "==", idCartao) // uid = idCartao gravado pelo ESP32
+      .orderBy("data", "desc")
+      .get();
 
-    const snapshot = await acessosRef.get();
+    if (snapshot.empty) {
+      return res.json({
+        semCartao: false,
+        historico: []
+      });
+    }
 
-    if (snapshot.empty) return res.json([]);
-
-    const lista = snapshot.docs.map((doc) => {
+    const historico = snapshot.docs.map(doc => {
       const dados = doc.data();
-
       return {
         id: doc.id,
-        idCartao: idCartao, // cartão do aluno
+        idCartao,
         data: dados.data || "-",
-        horario: dados.horario || "-",
+        horario: dados.horario || "-"
       };
     });
 
-    return res.json(lista);
+    return res.json({
+      semCartao: false,
+      historico
+    });
+
   } catch (error) {
     console.error("Erro ao listar histórico:", error);
-    return res.status(500).json({ error: "Erro ao carregar histórico do aluno." });
+    return res.status(500).json({
+      semCartao: false,
+      historico: [],
+      error: "Erro ao carregar histórico do aluno."
+    });
   }
 }
