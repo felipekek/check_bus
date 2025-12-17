@@ -13,6 +13,8 @@
 </head>
 
 <body>
+
+  <!-- Fundo animado -->
   <div class="background-shapes">
     <div class="shape shape-1"></div>
     <div class="shape shape-2"></div>
@@ -21,37 +23,39 @@
     <div class="shape shape-5"></div>
   </div>
 
-  <!-- Botão do Menu -->
+  <!-- Menu -->
   <button class="menu-btn" onclick="toggleMenu()">☰</button>
 
-  <!-- Botão de Perfil -->
+  <!-- Perfil -->
   <button class="perfil-btn" id="btnPerfil">
     <i class="fa fa-user"></i> Perfil
   </button>
 
   <!-- Overlay -->
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-
-  <!-- Sidebar -->
   <div id="sidebar-container"></div>
 
-  <!-- ===== HEADER (Título no fundo azul) ===== -->
+  <!-- Header -->
   <header class="page-header">
     <h1>Respostas de Feedback</h1>
-    <p>Visualize todos os feedbacks enviados pelos usuários</p>
+    <p>Visualize e responda os feedbacks enviados pelos usuários</p>
   </header>
 
-  <!-- Conteúdo principal -->
+  <!-- Conteúdo -->
   <div class="container">
     <div class="titulo-container">
       <h2>Lista de Feedbacks</h2>
-      <input type="text" id="barraPesquisa" placeholder="🔍 Pesquisar feedback..." aria-label="Pesquisar feedback">
+      <input
+        type="text"
+        id="barraPesquisa"
+        placeholder="🔍 Pesquisar feedback..."
+      >
     </div>
 
     <div class="table-wrap">
       <div class="table-card">
         <div class="table-scroller">
-          <table id="tabela-feedbacks">
+          <table>
             <thead>
               <tr>
                 <th>Nome</th>
@@ -59,20 +63,41 @@
                 <th>CPF</th>
                 <th>Comentário</th>
                 <th>Data</th>
+                <th>Ações</th>
               </tr>
             </thead>
             <tbody id="corpoTabela">
-              <tr><td colspan="5" class="no-feedback">Carregando feedbacks...</td></tr>
+              <tr>
+                <td colspan="6" class="no-feedback">Carregando feedbacks...</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
-        <div id="paginacao" aria-label="Paginação de resultados"></div>
+        <div id="paginacao"></div>
       </div>
     </div>
   </div>
 
-  <!-- JS externo -->
+  <!-- MODAL RESPONDER -->
+  <div class="modal-overlay" id="modalResposta">
+  <div class="modal">
+    <h3>Responder feedback</h3>
+
+    <textarea
+      id="textoResposta"
+      placeholder="Digite a resposta que será enviada ao aluno..."
+    ></textarea>
+
+    <div class="modal-actions">
+      <button class="btn-cancelar" id="cancelarResposta">Cancelar</button>
+      <button class="btn-enviar" id="enviarResposta">Enviar</button>
+    </div>
+  </div>
+</div>
+
+
+  <!-- JS -->
   <script type="module" src="../js/respostas_feedback.js"></script>
 
   <script type="module">

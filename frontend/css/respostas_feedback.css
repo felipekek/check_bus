@@ -269,15 +269,51 @@ body {
 }
 
 .table-scroller {
-  overflow-x: auto;
   max-height: 65vh;
+  overflow-y: auto;   /* mantém scroll vertical */
+  overflow-x: hidden; /* REMOVE scroll horizontal */
 }
+
 
 table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 720px;
+  min-width: 100%;     /* NÃO força largura extra */
+  table-layout: fixed; /* evita estouro de colunas */
   font-size: 0.95rem;
+}
+
+/* ====== LARGURA CONTROLADA DAS COLUNAS ====== */
+thead th:nth-child(1),
+tbody td:nth-child(1) { /* Nome */
+  width: 16%;
+}
+
+thead th:nth-child(2),
+tbody td:nth-child(2) { /* Email */
+  width: 24%;
+}
+
+thead th:nth-child(3),
+tbody td:nth-child(3) { /* CPF */
+  width: 14%;
+}
+
+thead th:nth-child(4),
+tbody td:nth-child(4) { /* Comentário */
+  width: 26%;
+}
+
+thead th:nth-child(5),
+tbody td:nth-child(5) { /* Data */
+  width: 14%;
+  white-space: nowrap;
+}
+
+thead th:nth-child(6),
+tbody td:nth-child(6) { /* Ações */
+  width: 6%;
+  text-align: center;
 }
 
 thead th {
@@ -409,9 +445,6 @@ td:last-child {
 
 /* ====== RESPONSIVIDADE ====== */
 @media (max-width: 768px) {
-  .page-header h1 {
-    font-size: 2rem;
-  }
 
   .container {
     width: 100%;
@@ -433,7 +466,7 @@ td:last-child {
   }
 
   table {
-    min-width: 640px;
+    min-width: 100%;
   }
 
   .menu-btn,
@@ -472,7 +505,63 @@ td:last-child {
   }
 }
 
-@media (max-width: 480px) {
+
+  .container {
+    width: 100%;
+    padding: 25px 20px;
+    border-radius: 0;
+  }
+
+  .titulo-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .titulo-container h2 {
+    font-size: 1.5rem;
+  }
+
+  #barraPesquisa {
+    width: 100%;
+  }
+
+  .menu-btn,
+  .perfil-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 1.2rem;
+  }
+
+  .perfil-btn {
+    padding: 0;
+    border-radius: 50%;
+  }
+
+  .perfil-btn span {
+    display: none;
+  }
+
+  /* Paginação em mobile */
+  #paginacao {
+    gap: 6px;
+    padding: 16px 12px;
+  }
+
+  .pager-btn {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+    min-width: 36px;
+  }
+
+  .pager-info {
+    width: 100%;
+    text-align: center;
+    margin: 8px 0 0 0;
+    font-size: 0.85rem;
+  }
+
+
+@media(max-width: 480px) {
   .page-header {
     padding: 70px 15px 30px 15px;
   }
@@ -543,4 +632,58 @@ td:last-child {
   tbody tr td:nth-child(3)::before { content: "CPF:"; }
   tbody tr td:nth-child(4)::before { content: "Comentário:"; }
   tbody tr td:nth-child(5)::before { content: "Data:"; }
+}
+
+
+/* Email nunca invade outra coluna */
+td:nth-child(2) {
+  word-break: break-all;
+  overflow-wrap: anywhere;
+  line-height: 1.4;
+}
+
+/* ================= MODAL RESPONDER FEEDBACK ================= */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  transition: opacity 0.3s ease;
+  z-index: 30000; /* acima de overlay, sidebar e tabela */
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.modal {
+  background: #ffffff;
+  width: 100%;
+  max-width: 520px;
+  border-radius: 16px;
+  padding: 24px 26px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+  z-index: 30001;
+}
+/* ====== CORREÇÃO CRÍTICA DE CLIQUES ====== */
+
+/* Overlay NÃO bloqueia cliques quando invisível */
+.overlay {
+  pointer-events: none;
+}
+
+/* Overlay SÓ bloqueia quando ativo */
+.overlay.active {
+  pointer-events: auto;
 }

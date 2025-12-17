@@ -1,229 +1,273 @@
-// frontend/js/respostas_feedback.js
-// Mantém: ordenação por data (mais recentes primeiro), paginação, busca e verificação de admin.
-// Padrão do drawer igual ao relatorios (toggleMenu global).
-
-// (Opcional) Integração com o modal de perfil, se existir no seu projeto.
 import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
 
-/* ================= Config/Helpers ================= */
-const API_BASE = window.__API_BASE__ ?? ""; // relativo ao mesmo host por padrão
+/* ================= CONFIG ================= */
+const API_BASE = window.__API_BASE__ ?? "";
 const getToken = () => localStorage.getItem("token") || "";
-const isAdmin = () => (localStorage.getItem("tipoUsuario") || "").toLowerCase() === "admin";
+const isAdmin = () =>
+  (localStorage.getItem("tipoUsuario") || "").toLowerCase() === "admin";
 
-const sanitize = (s) =>
-  String(s ?? "").replace(/[<>&"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c]));
-
-const fmtData = (iso) => {
-  if (!iso) return "-";
-  const d = new Date(iso);
-  return isNaN(d)
-    ? "-"
-    : d.toLocaleString("pt-BR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" });
-};
-
-/* ================= Estado ================= */
-let feedbacks = [];  // todos
-let filtrados = [];  // após busca
+/* ================= ESTADO ================= */
+let feedbacks = [];
+let filtrados = [];
 let paginaAtual = 1;
-let porPagina = 10;
+const porPagina = 10;
+let feedbackSelecionado = null;
 
-/* ================= Elementos ================= */
+/* ================= ELEMENTOS ================= */
 const tbody = document.getElementById("corpoTabela");
 const barraPesquisa = document.getElementById("barraPesquisa");
 const paginacaoEl = document.getElementById("paginacao");
 
-/* ================= Drawer (mesmo padrão do relatorios) ================= */
+const modal = document.getElementById("modalResposta");
+const textarea = document.getElementById("textoResposta");
+const btnCancelar = document.getElementById("cancelarResposta");
+const btnEnviar = document.getElementById("enviarResposta");
+
+/* ================= UTIL ================= */
+const sanitize = (s) =>
+  String(s ?? "").replace(/[<>&"]/g, (c) =>
+    ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c])
+  );
+
+const fmtData = (iso) =>
+  iso
+    ? new Date(iso).toLocaleString("pt-BR", {
+        dateStyle: "short",
+        timeStyle: "short",
+      })
+    : "-";
+
+/* ================= MENU (DRAWER) - SEM MEXER NO draw.css ================= */
+function getSidebarEl() {
+  // compatível com sidebar injetado por sidebar-universal.js
+  return (
+    document.getElementById("sidebar") ||
+    document.querySelector(".sidebar") ||
+    document.querySelector("#sidebar-container .sidebar")
+  );
+}
+
+function getOverlayEl() {
+  return document.getElementById("overlay") || document.querySelector(".overlay");
+}
+
+function fecharMenu() {
+  const sidebar = getSidebarEl();
+  const overlay = getOverlayEl();
+
+  sidebar?.classList.remove("active");
+  overlay?.classList.remove("active");
+}
+
 window.toggleMenu = () => {
-  const sidebar = document.getElementById("sidebar");
-  const overlay = document.getElementById("overlay");
-  const menuBtn = document.querySelector(".menu-btn");
+  const sidebar = getSidebarEl();
+  const overlay = getOverlayEl();
 
-  sidebar.classList.toggle("active");
-  overlay.classList.toggle("active");
-  menuBtn.classList.toggle("hidden");
+  // se sidebar não existir ainda (carregamento async), não faz nada pra não travar
+  if (!sidebar || !overlay) return;
+
+  const vaiAbrir = !sidebar.classList.contains("active");
+
+  if (vaiAbrir) {
+    sidebar.classList.add("active");
+    overlay.classList.add("active");
+  } else {
+    fecharMenu();
+  }
 };
-// O CSS de draw.css já estiliza .menu-btn, .overlay e .sidebar com as mesmas transições. :contentReference[oaicite:1]{index=1}
 
-/* ================= Perfil (opcional) ================= */
-async function initPerfilLocal() {
+/* Fecha menu clicando no overlay (garante que o overlay não fique fantasma) */
+document.addEventListener("click", (e) => {
+  const overlay = getOverlayEl();
+  if (!overlay) return;
+
+  if (e.target === overlay && overlay.classList.contains("active")) {
+    fecharMenu();
+  }
+});
+
+/* ================= PERFIL ================= */
+async function initPerfil() {
   try {
     await carregarModalPerfil?.();
-    const btnPerfil = document.getElementById("btnPerfil");
-    if (btnPerfil) btnPerfil.addEventListener("click", () => abrirPerfil?.());
-  } catch (e) {
-    console.warn("Perfil opcional não inicializado:", e);
+    document
+      .getElementById("btnPerfil")
+      ?.addEventListener("click", () => abrirPerfil?.());
+  } catch (err) {
+    console.warn("Perfil não carregado:", err);
   }
 }
 
-/* ================= Fetch + Render ================= */
+/* ================= FETCH ================= */
 async function carregarFeedbacks() {
-  if (!tbody) return;
-
-  // Mensagem de loading
-  tbody.innerHTML = `<tr><td colspan="5" class="no-feedback">Carregando feedbacks...</td></tr>`;
-
-  // Proteção: painel só para admin (rota GET /feedback exige requireAdmin)
   if (!isAdmin()) {
-    tbody.innerHTML = `<tr><td colspan="5" class="no-feedback">Acesso restrito a administradores.</td></tr>`;
-    renderPaginacao(0);
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="6" class="no-feedback">
+          Acesso restrito a administradores.
+        </td>
+      </tr>`;
     return;
   }
 
   try {
     const res = await fetch(`${API_BASE}/feedback`, {
-      headers: {
-        "Content-Type": "application/json",
-        ...(getToken() ? { Authorization: `Bearer ${getToken()}` } : {}),
-      },
-      credentials: "include",
+      headers: { Authorization: `Bearer ${getToken()}` },
     });
 
-    if (!res.ok) {
-      tbody.innerHTML = `<tr><td colspan="5" class="no-feedback">Erro ${res.status} ao carregar feedbacks.</td></tr>`;
-      renderPaginacao(0);
-      return;
-    }
-
-    const lista = await res.json();
-
-    // Ordena por data desc (mais recentes primeiro)
-    feedbacks = Array.isArray(lista)
-      ? lista.slice().sort((a, b) => (new Date(b?.data || 0)) - (new Date(a?.data || 0)))
-      : [];
-
-    aplicarBusca(); // inicializa filtrados e renderiza
-  } catch (err) {
-    console.error("Erro ao carregar feedbacks:", err);
-    tbody.innerHTML = `<tr><td colspan="5" class="no-feedback">Erro ao carregar feedbacks.</td></tr>`;
-    renderPaginacao(0);
+    feedbacks = res.ok ? await res.json() : [];
+    aplicarBusca();
+  } catch {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="6" class="no-feedback">
+          Erro ao carregar feedbacks.
+        </td>
+      </tr>`;
   }
 }
 
-/* ================= Busca + Paginação ================= */
+/* ================= BUSCA ================= */
 function aplicarBusca() {
-  const termo = (barraPesquisa?.value || "").trim().toLowerCase();
+  const termo = barraPesquisa.value.toLowerCase();
 
   filtrados = !termo
     ? feedbacks
-    : feedbacks.filter((f) => {
-        const texto = `${f?.nome ?? ""} ${f?.email ?? ""} ${f?.cpf ?? ""} ${f?.comentario ?? ""}`.toLowerCase();
-        return texto.includes(termo);
-      });
+    : feedbacks.filter((f) =>
+        `${f.nome} ${f.email} ${f.cpf} ${f.comentario}`
+          .toLowerCase()
+          .includes(termo)
+      );
 
-  paginaAtual = 1; // volta para a primeira página sempre que buscar
+  paginaAtual = 1;
   renderTabela();
-  renderPaginacao(Math.ceil(filtrados.length / porPagina));
+  renderPaginacao();
 }
 
-function obterPagina(lista, pagina, tamanho) {
-  const start = (pagina - 1) * tamanho;
-  return lista.slice(start, start + tamanho);
-}
-
+/* ================= RENDER ================= */
 function renderTabela() {
-  if (!tbody) return;
-
-  if (!Array.isArray(filtrados) || filtrados.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="5" class="no-feedback">Nenhum feedback encontrado.</td></tr>`;
+  if (!filtrados.length) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="6" class="no-feedback">
+          Nenhum feedback encontrado.
+        </td>
+      </tr>`;
     return;
   }
 
-  const pageItems = obterPagina(filtrados, paginaAtual, porPagina);
+  const inicio = (paginaAtual - 1) * porPagina;
+  const pagina = filtrados.slice(inicio, inicio + porPagina);
 
-  tbody.innerHTML = pageItems
-    .map((f) => {
-      const nome = f.nome || "-";
-      const email = f.email || "-";
-      const cpf = f.cpf || "-";
-      const comentario = f.comentario || "-";
-      const data = fmtData(f.data);
-
-      return `
-        <tr data-row>
-          <td>${sanitize(nome)}</td>
-          <td>${sanitize(email)}</td>
-          <td>${sanitize(cpf)}</td>
-          <td>${sanitize(comentario)}</td>
-          <td>${sanitize(data)}</td>
-        </tr>
-      `;
-    })
+  tbody.innerHTML = pagina
+    .map(
+      (f) => `
+      <tr>
+        <td>${sanitize(f.nome)}</td>
+        <td>${sanitize(f.email)}</td>
+        <td>${sanitize(f.cpf)}</td>
+        <td>${sanitize(f.comentario)}</td>
+        <td>${fmtData(f.data)}</td>
+        <td>
+          <button class="btn-responder" data-id="${f.id}" title="Responder">✉️</button>
+          <button class="btn-excluir" data-id="${f.id}" title="Excluir">🗑️</button>
+        </td>
+      </tr>
+    `
+    )
     .join("");
 }
 
-function botao(label, onClick, disabled = false, aria = "") {
-  const b = document.createElement("button");
-  b.textContent = label;
-  b.type = "button";
-  b.className = "pager-btn";
-  if (aria) b.setAttribute("aria-label", aria);
-  b.disabled = !!disabled;
-  b.addEventListener("click", onClick);
-  return b;
+function renderPaginacao() {
+  paginacaoEl.innerHTML = "";
+  const total = Math.ceil(filtrados.length / porPagina);
+  if (total <= 1) return;
+
+  for (let i = 1; i <= total; i++) {
+    const btn = document.createElement("button");
+    btn.textContent = i;
+    btn.className = `pager-btn ${i === paginaAtual ? "ativo" : ""}`;
+    btn.onclick = () => {
+      paginaAtual = i;
+      renderTabela();
+      renderPaginacao();
+    };
+    paginacaoEl.appendChild(btn);
+  }
 }
 
-function renderPaginacao(totalPaginas) {
-  if (!paginacaoEl) return;
+/* ================= AÇÕES ================= */
+tbody.addEventListener("click", async (e) => {
+  const btnExcluir = e.target.closest(".btn-excluir");
+  const btnResponder = e.target.closest(".btn-responder");
 
-  if (!totalPaginas) totalPaginas = Math.ceil((filtrados?.length || 0) / porPagina);
+  /* ===== EXCLUIR ===== */
+  if (btnExcluir) {
+    const id = btnExcluir.dataset.id;
+    if (!confirm("Deseja realmente excluir este feedback?")) return;
 
-  paginacaoEl.innerHTML = "";
+    try {
+      const res = await fetch(`${API_BASE}/feedback/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${getToken()}` },
+      });
 
-  if (totalPaginas <= 1) return;
+      if (!res.ok) return alert("Erro ao excluir feedback.");
 
-  const primeira = botao("«", () => { paginaAtual = 1; renderTabela(); renderPaginacao(totalPaginas); }, paginaAtual === 1, "Primeira página");
-  const anterior  = botao("‹", () => { paginaAtual = Math.max(1, paginaAtual - 1); renderTabela(); renderPaginacao(totalPaginas); }, paginaAtual === 1, "Página anterior");
-  paginacaoEl.appendChild(primeira);
-  paginacaoEl.appendChild(anterior);
-
-  const MAX = 7;
-  let ini = Math.max(1, paginaAtual - 3);
-  let fim = Math.min(totalPaginas, ini + MAX - 1);
-  if (fim - ini + 1 < MAX) ini = Math.max(1, fim - MAX + 1);
-
-  for (let p = ini; p <= fim; p++) {
-    const b = botao(String(p), () => {
-      paginaAtual = p;
-      renderTabela();
-      renderPaginacao(totalPaginas);
-    }, false, `Ir para a página ${p}`);
-
-    if (p === paginaAtual) b.classList.add("ativo");
-    paginacaoEl.appendChild(b);
+      feedbacks = feedbacks.filter((f) => f.id !== id);
+      aplicarBusca();
+    } catch {
+      alert("Erro inesperado ao excluir feedback.");
+    }
   }
 
-  const proxima = botao("›", () => { paginaAtual = Math.min(totalPaginas, paginaAtual + 1); renderTabela(); renderPaginacao(totalPaginas); }, paginaAtual === totalPaginas, "Próxima página");
-  const ultima  = botao("»", () => { paginaAtual = totalPaginas; renderTabela(); renderPaginacao(totalPaginas); }, paginaAtual === totalPaginas, "Última página");
-  paginacaoEl.appendChild(proxima);
-  paginacaoEl.appendChild(ultima);
+  /* ===== RESPONDER ===== */
+  if (btnResponder) {
+    feedbackSelecionado = btnResponder.dataset.id;
+    textarea.value = "";
 
-  const info = document.createElement("span");
-  info.className = "pager-info";
-  const total = filtrados.length;
-  const iniIdx = (paginaAtual - 1) * porPagina + 1;
-  const fimIdx = Math.min(paginaAtual * porPagina, total);
-  info.textContent = `Exibindo ${total ? iniIdx : 0}–${total ? fimIdx : 0} de ${total}`;
-  paginacaoEl.appendChild(info);
-}
+    // Fecha menu/overlay corretamente (sem depender de #sidebar)
+    fecharMenu();
 
-/* ================= Eventos ================= */
-if (barraPesquisa && !barraPesquisa._bound) {
-  barraPesquisa._bound = true;
-  barraPesquisa.addEventListener("input", aplicarBusca);
-}
-
-/* ================= Boot ================= */
-document.addEventListener("DOMContentLoaded", async () => {
-  await initPerfilLocal();
-  await carregarFeedbacks();
+    modal.classList.add("active");
+  }
 });
 
-/* ================= Logout global ================= */
-function logout() {
-  localStorage.clear();
-  window.location.href = "index.html";
-}
-window.logout = logout;
+/* ================= MODAL ================= */
+btnCancelar.onclick = () => {
+  modal.classList.remove("active");
+  feedbackSelecionado = null;
+};
 
-// export opcional
-export { carregarFeedbacks };
+btnEnviar.onclick = async () => {
+  const mensagem = textarea.value.trim();
+  if (!mensagem) return alert("Digite a resposta.");
+
+  try {
+    const res = await fetch(
+      `${API_BASE}/feedback/${feedbackSelecionado}/responder`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`,
+        },
+        body: JSON.stringify({ mensagem }),
+      }
+    );
+
+    if (!res.ok) return alert("Erro ao enviar resposta.");
+
+    alert("Resposta enviada com sucesso!");
+    modal.classList.remove("active");
+  } catch {
+    alert("Erro inesperado ao enviar resposta.");
+  }
+};
+
+/* ================= BOOT ================= */
+document.addEventListener("DOMContentLoaded", async () => {
+  await initPerfil();
+  await carregarFeedbacks();
+  barraPesquisa.addEventListener("input", aplicarBusca);
+});
