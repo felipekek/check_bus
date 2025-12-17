@@ -1,3 +1,69 @@
+<!-- 
+  MODAL PERFIL ADMIN - CheckBus
+  Estilos inline para garantir centralização
+-->
+
+<style>
+  /* FORÇAR CENTRALIZAÇÃO DOS MODAIS DE PERFIL */
+  #modalPerfil,
+  #modalAlterarSenha,
+  #modalAtualizarEmail {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(0, 0, 0, 0.7) !important;
+    backdrop-filter: blur(4px);
+    z-index: 99999 !important;
+    overflow-y: auto !important;
+    padding: 20px !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* Quando visível - FLEXBOX CENTRALIZADO */
+  #modalPerfil.modal-aberto,
+  #modalAlterarSenha.modal-aberto,
+  #modalAtualizarEmail.modal-aberto {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  
+  /* Modal content centralizado */
+  #modalPerfil > .modal-content,
+  #modalAlterarSenha > .modal-content,
+  #modalAtualizarEmail > .modal-content {
+    background: white !important;
+    border-radius: 16px !important;
+    width: 100% !important;
+    max-width: 500px !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4) !important;
+    animation: modalEntrar 0.3s ease-out;
+    margin: 0 !important;
+    position: relative !important;
+  }
+  
+  #modalPerfil > .modal-content {
+    max-width: 700px !important;
+  }
+  
+  @keyframes modalEntrar {
+    from {
+      opacity: 0;
+      transform: scale(0.9) translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+</style>
+
+<!-- MODAL PERFIL PRINCIPAL -->
 <div id="modalPerfil" class="modal">
   <div class="modal-content">
     <span id="btnFecharPerfil" class="close">&times;</span>
@@ -60,7 +126,7 @@
   </div>
 </div>
 
-<!-- Modal Alterar Senha -->
+<!-- MODAL ALTERAR SENHA -->
 <div id="modalAlterarSenha" class="modal">
   <div class="modal-content modal-form">
     <span class="close" id="btnFecharSenha">&times;</span>
@@ -106,7 +172,7 @@
   </div>
 </div>
 
-<!-- Modal Atualizar Email -->
+<!-- MODAL ATUALIZAR EMAIL -->
 <div id="modalAtualizarEmail" class="modal">
   <div class="modal-content modal-form">
     <span id="btnFecharEmail" class="close">&times;</span>

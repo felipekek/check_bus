@@ -1,16 +1,20 @@
 /* ===================================================
    PERFIL.CSS - CheckBus
-   USANDO SELETORES POR ID PARA MÁXIMA PRIORIDADE
+   BOTÃO FIXO + MODAIS CENTRALIZADOS
    =================================================== */
 
 /* ===================================================
-   BOTÃO PERFIL
+   BOTÃO PERFIL - POSITION FIXED
    =================================================== */
 
 .perfil-btn {
-  position: absolute;
-  top: 20px;
-  right: 20px;
+  position: fixed !important;
+  top: 20px !important;
+  right: 20px !important;
+  left: auto !important;
+  bottom: auto !important;
+  margin: 0 !important;
+  transform: none !important;
   background: linear-gradient(135deg, #006b8f, #004d6d);
   color: white;
   border: none;
@@ -23,47 +27,86 @@
   align-items: center;
   gap: 10px;
   box-shadow: 0 4px 15px rgba(0, 107, 143, 0.3);
-  transition: all 0.3s ease;
-  z-index: 1200;
+  transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  z-index: 1200 !important;
   font-family: 'Inter', Arial, sans-serif;
 }
 
 .perfil-btn:hover {
-  transform: translateY(-2px);
+  transform: translateY(-2px) !important;
   box-shadow: 0 6px 20px rgba(0, 107, 143, 0.4);
+  background: linear-gradient(135deg, #007a9e, #005a7d);
+}
+
+.perfil-btn:active {
+  transform: translateY(0) !important;
+}
+
+.perfil-btn i {
+  font-size: 1.1rem;
 }
 
 /* ===================================================
-   MODAIS - SELETORES POR ID (PRIORIDADE MÁXIMA)
+   MODAIS - CENTRALIZADOS COM FLEXBOX
    =================================================== */
 
 #modalPerfil,
 #modalAlterarSenha,
 #modalAtualizarEmail,
 #modalAtualizarPerfil {
+  /* Estado inicial: escondido */
   display: none;
+  
+  /* Posicionamento fixo cobrindo toda a tela */
   position: fixed !important;
-  z-index: 2000 !important;
-  inset: 0 !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  
+  /* Fundo escuro com blur */
   background: rgba(0, 0, 0, 0.7) !important;
   backdrop-filter: blur(4px);
+  
+  /* Flexbox para centralizar o conteúdo */
   align-items: center !important;
   justify-content: center !important;
+  
+  /* Scroll se necessário */
   overflow-y: auto !important;
-  padding: 10px !important;
+  padding: 20px !important;
+  
+  /* Acima de tudo */
+  z-index: 9999 !important;
 }
+
+/* Quando o modal está aberto (display: flex via JS) */
+#modalPerfil[style*="flex"],
+#modalAlterarSenha[style*="flex"],
+#modalAtualizarEmail[style*="flex"],
+#modalAtualizarPerfil[style*="flex"] {
+  display: flex !important;
+}
+
+/* ===================================================
+   MODAL CONTENT - CAIXA BRANCA CENTRALIZADA
+   =================================================== */
 
 #modalPerfil > .modal-content {
   background: white !important;
   margin: auto !important;
   padding: 0 !important;
   border-radius: 16px !important;
-  width: 98% !important;
+  width: 100% !important;
   max-width: 750px !important;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
   animation: modalSlideIn 0.4s ease-out;
   position: relative !important;
   overflow: hidden !important;
+  max-height: 90vh !important;
+  overflow-y: auto !important;
 }
 
 #modalAlterarSenha > .modal-content,
@@ -73,20 +116,31 @@
   margin: auto !important;
   padding: 0 !important;
   border-radius: 16px !important;
-  width: 98% !important;
+  width: 100% !important;
   max-width: 500px !important;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
   animation: modalSlideIn 0.4s ease-out;
   position: relative !important;
   overflow: hidden !important;
+  max-height: 90vh !important;
+  overflow-y: auto !important;
 }
 
 @keyframes modalSlideIn {
-  from { opacity: 0; transform: translateY(-30px) scale(0.95); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from { 
+    opacity: 0; 
+    transform: translateY(-30px) scale(0.95); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0) scale(1); 
+  }
 }
 
-/* Botão fechar */
+/* ===================================================
+   BOTÃO FECHAR (X)
+   =================================================== */
+
 #modalPerfil .close,
 #modalAlterarSenha .close,
 #modalAtualizarEmail .close,
@@ -107,6 +161,7 @@
   border-radius: 50% !important;
   background: rgba(255, 255, 255, 0.2) !important;
   transition: all 0.2s ease;
+  line-height: 1 !important;
 }
 
 #modalPerfil .close:hover,
@@ -146,8 +201,17 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
 }
 
-.modal-icon-orange { background: rgba(245, 158, 11, 0.3) !important; }
-.modal-icon-blue { background: rgba(59, 130, 246, 0.3) !important; }
+.modal-icon-admin {
+  background: rgba(16, 185, 129, 0.3) !important;
+}
+
+.modal-icon-orange { 
+  background: rgba(245, 158, 11, 0.3) !important; 
+}
+
+.modal-icon-blue { 
+  background: rgba(59, 130, 246, 0.3) !important; 
+}
 
 #modalPerfil .modal-header h2,
 #modalAlterarSenha .modal-header h2,
@@ -166,7 +230,7 @@
 }
 
 /* ===================================================
-   PERFIL CARD
+   PERFIL CARD (Lista de informações)
    =================================================== */
 
 .perfil-card {
@@ -181,7 +245,9 @@
   border-bottom: 1px solid #e5e7eb !important;
 }
 
-.perfil-item:last-child { border-bottom: none !important; }
+.perfil-item:last-child { 
+  border-bottom: none !important; 
+}
 
 .perfil-label {
   display: flex !important;
@@ -191,7 +257,9 @@
   font-weight: 600 !important;
 }
 
-.perfil-label i { color: #006b8f !important; }
+.perfil-label i { 
+  color: #006b8f !important; 
+}
 
 .perfil-value {
   color: #6b7280 !important;
@@ -201,7 +269,7 @@
 }
 
 /* ===================================================
-   BOTÕES DE AÇÃO
+   BOTÕES DE AÇÃO DO MODAL
    =================================================== */
 
 .perfil-modal-buttons {
@@ -226,23 +294,31 @@
   transition: all 0.3s ease;
 }
 
-#btnAtualizarEmail, .btn-secondary {
+.perfil-modal-buttons button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+#btnAtualizarEmail, 
+.btn-secondary {
   background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
   color: white !important;
 }
 
-#btnAlterarSenha, .btn-tertiary {
+#btnAlterarSenha, 
+.btn-tertiary {
   background: linear-gradient(135deg, #f59e0b, #d97706) !important;
   color: white !important;
 }
 
-#btnAtualizarPerfil, .btn-primary {
+#btnAtualizarPerfil, 
+.btn-primary {
   background: linear-gradient(135deg, #10b981, #059669) !important;
   color: white !important;
 }
 
 /* ===================================================
-   FORMULÁRIOS
+   FORMULÁRIOS DOS MODAIS
    =================================================== */
 
 .modal-form-content,
@@ -269,7 +345,9 @@
   font-weight: 600 !important;
 }
 
-.form-group label i { color: #006b8f !important; }
+.form-group label i { 
+  color: #006b8f !important; 
+}
 
 .form-group input {
   padding: 12px 16px !important;
@@ -279,12 +357,19 @@
   background: #f9fafb !important;
   width: 100% !important;
   box-sizing: border-box !important;
+  transition: all 0.2s ease;
 }
 
 .form-group input:focus {
   outline: none !important;
   border-color: #006b8f !important;
   background: white !important;
+  box-shadow: 0 0 0 3px rgba(0, 107, 143, 0.1);
+}
+
+.form-group input:readonly {
+  background: #f3f4f6 !important;
+  cursor: not-allowed;
 }
 
 .btn-submit {
@@ -295,12 +380,24 @@
   border: none !important;
   border-radius: 10px !important;
   font-weight: 600 !important;
+  font-size: 1rem !important;
   cursor: pointer !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   gap: 10px !important;
+  transition: all 0.3s ease;
+  margin-top: 10px !important;
 }
+
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 107, 143, 0.4);
+}
+
+/* ===================================================
+   ALERTA DE INFORMAÇÃO
+   =================================================== */
 
 .info-alert {
   background: #eff6ff !important;
@@ -309,10 +406,22 @@
   padding: 14px 16px !important;
   display: flex !important;
   gap: 12px !important;
+  align-items: flex-start !important;
 }
 
-.info-alert i { color: #3b82f6 !important; }
-.info-alert p { color: #1e40af !important; margin: 0 !important; }
+.info-alert i { 
+  color: #3b82f6 !important; 
+  font-size: 1.2rem !important;
+  margin-top: 2px !important;
+  flex-shrink: 0 !important;
+}
+
+.info-alert p { 
+  color: #1e40af !important; 
+  margin: 0 !important; 
+  font-size: 0.9rem !important;
+  line-height: 1.5 !important;
+}
 
 /* ===================================================
    RESPONSIVO
@@ -323,21 +432,56 @@
     padding: 10px 20px !important;
     top: 15px !important;
     right: 15px !important;
+    font-size: 0.9rem !important;
   }
 
-  #modalPerfil, #modalAlterarSenha, #modalAtualizarEmail, #modalAtualizarPerfil {
-    padding: 8px !important;
+  #modalPerfil, 
+  #modalAlterarSenha, 
+  #modalAtualizarEmail, 
+  #modalAtualizarPerfil {
+    padding: 15px !important;
   }
 
   #modalPerfil > .modal-content,
   #modalAlterarSenha > .modal-content,
   #modalAtualizarEmail > .modal-content,
   #modalAtualizarPerfil > .modal-content {
-    width: 98% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 12px !important;
+  }
+
+  .modal-header {
+    padding: 30px 20px 24px !important;
+  }
+
+  .modal-icon {
+    width: 70px !important;
+    height: 70px !important;
+    font-size: 32px !important;
+  }
+
+  #modalPerfil .modal-header h2,
+  #modalAlterarSenha .modal-header h2,
+  #modalAtualizarEmail .modal-header h2,
+  #modalAtualizarPerfil .modal-header h2 {
+    font-size: 1.5rem !important;
+  }
+
+  .perfil-card {
+    padding: 24px !important;
   }
 
   .perfil-modal-buttons {
     grid-template-columns: 1fr !important;
+    padding: 0 24px 24px !important;
+  }
+
+  .modal-form-content,
+  #formAtualizarEmail,
+  #formAlterarSenha,
+  #formAtualizarPerfil {
+    padding: 24px !important;
   }
 }
 
@@ -346,28 +490,87 @@
     padding: 8px 16px !important;
     top: 10px !important;
     right: 10px !important;
+    font-size: 0.85rem !important;
+    gap: 6px !important;
   }
 
-  #modalPerfil, #modalAlterarSenha, #modalAtualizarEmail, #modalAtualizarPerfil {
-    padding: 5px !important;
+  .perfil-btn i {
+    font-size: 1rem !important;
+  }
+
+  #modalPerfil, 
+  #modalAlterarSenha, 
+  #modalAtualizarEmail, 
+  #modalAtualizarPerfil {
+    padding: 10px !important;
   }
 
   #modalPerfil > .modal-content,
   #modalAlterarSenha > .modal-content,
   #modalAtualizarEmail > .modal-content,
   #modalAtualizarPerfil > .modal-content {
-    width: 99% !important;
     border-radius: 12px !important;
+  }
+
+  .close {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 24px !important;
+    top: 16px !important;
+    right: 16px !important;
+  }
+
+  .modal-header {
+    padding: 28px 20px 20px !important;
+  }
+
+  .modal-icon {
+    width: 60px !important;
+    height: 60px !important;
+    font-size: 28px !important;
+  }
+
+  #modalPerfil .modal-header h2,
+  #modalAlterarSenha .modal-header h2,
+  #modalAtualizarEmail .modal-header h2,
+  #modalAtualizarPerfil .modal-header h2 {
+    font-size: 1.3rem !important;
+  }
+
+  .modal-subtitle {
+    font-size: 0.85rem !important;
+  }
+
+  .perfil-card {
+    padding: 20px !important;
   }
 
   .perfil-item {
     flex-direction: column !important;
     align-items: flex-start !important;
     gap: 8px !important;
+    padding: 12px 0 !important;
   }
 
   .perfil-value {
     max-width: 100% !important;
     text-align: left !important;
+  }
+
+  .perfil-modal-buttons {
+    padding: 0 20px 20px !important;
+  }
+
+  .perfil-modal-buttons button {
+    padding: 12px 16px !important;
+    font-size: 0.85rem !important;
+  }
+
+  .modal-form-content,
+  #formAtualizarEmail,
+  #formAlterarSenha,
+  #formAtualizarPerfil {
+    padding: 20px !important;
+    gap: 16px !important;
   }
 }

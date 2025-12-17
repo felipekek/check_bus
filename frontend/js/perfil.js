@@ -16,6 +16,19 @@ let perfilIniciado = false;
 let atualizarPerfilIniciado = false;
 let atualizarEmailIniciado = false;
 
+// ===== FUNÇÕES AUXILIARES PARA MODAIS =====
+function abrirModal(modal) {
+  if (modal) {
+    modal.classList.add('modal-aberto');
+  }
+}
+
+function fecharModal(modal) {
+  if (modal) {
+    modal.classList.remove('modal-aberto');
+  }
+}
+
 // Carrega modal de perfil
 export async function carregarModalPerfil() {
   if (modalCarregado) return;
@@ -29,9 +42,11 @@ export async function carregarModalPerfil() {
     const modal = document.getElementById("modalPerfil");
     const btnFechar = document.getElementById("btnFecharPerfil");
 
-    if (btnFechar) btnFechar.addEventListener("click", () => (modal.style.display = "none"));
+    if (btnFechar) btnFechar.addEventListener("click", () => fecharModal(modal));
+    
+    // Fechar ao clicar fora do modal-content
     window.addEventListener("click", (e) => {
-      if (e.target === modal) modal.style.display = "none";
+      if (e.target === modal) fecharModal(modal);
     });
 
     const btnAtualizarPerfil = document.getElementById("btnAtualizarPerfil");
@@ -49,8 +64,7 @@ export async function carregarModalPerfil() {
           document.getElementById("turnoAtualizar").value = document.getElementById("turnoUsuario").textContent;
           document.getElementById("periodoAtualizar").value = document.getElementById("periodoUsuario").textContent;
         }
-        // ✅ CORRIGIDO: Usar display: flex para centralizar
-        modalAtualizar.style.display = "flex";
+        abrirModal(modalAtualizar);
       });
       initAtualizarPerfil();
     }
@@ -81,8 +95,7 @@ export async function abrirPerfil() {
   }
 
   const modal = document.getElementById("modalPerfil");
-  // ✅ CORRIGIDO: Usar display: flex para centralizar corretamente
-  modal.style.display = "flex";
+  abrirModal(modal);
   carregarDadosUsuario();
 }
 
@@ -144,11 +157,11 @@ function initAlterarSenha() {
   const btnFecharSenha = document.getElementById("btnFecharSenha");
   const formSenha = document.getElementById("formAlterarSenha");
 
-  // ✅ CORRIGIDO: Usar display: flex
-  document.getElementById("btnAlterarSenha").addEventListener("click", () => (modalSenha.style.display = "flex"));
-  btnFecharSenha.addEventListener("click", () => (modalSenha.style.display = "none"));
+  document.getElementById("btnAlterarSenha").addEventListener("click", () => abrirModal(modalSenha));
+  btnFecharSenha.addEventListener("click", () => fecharModal(modalSenha));
+  
   window.addEventListener("click", (e) => {
-    if (e.target === modalSenha) modalSenha.style.display = "none";
+    if (e.target === modalSenha) fecharModal(modalSenha);
   });
 
   formSenha.addEventListener("submit", async (e) => {
@@ -165,7 +178,7 @@ function initAlterarSenha() {
       await reauthenticateWithCredential(user, cred);
       await updatePassword(user, novaSenha);
       alert("Senha alterada com sucesso!");
-      modalSenha.style.display = "none";
+      fecharModal(modalSenha);
       formSenha.reset();
     } catch (err) {
       alert("Erro ao alterar senha: " + err.message);
@@ -183,9 +196,9 @@ function initAtualizarPerfil() {
   const btnFechar = document.getElementById("btnFecharAtualizarPerfil");
   const form = document.getElementById("formAtualizarPerfil");
 
-  btnFechar.addEventListener("click", () => (modal.style.display = "none"));
+  btnFechar.addEventListener("click", () => fecharModal(modal));
   window.addEventListener("click", (e) => {
-    if (e.target === modal) modal.style.display = "none";
+    if (e.target === modal) fecharModal(modal);
   });
 
   form.addEventListener("submit", async (e) => {
@@ -203,7 +216,7 @@ function initAtualizarPerfil() {
     try {
       await updateDoc(doc(db, "alunos", user.uid), dados);
       alert("Perfil atualizado com sucesso!");
-      modal.style.display = "none";
+      fecharModal(modal);
       Object.entries(dados).forEach(([k, v]) => {
         const id = k + "Usuario";
         const el = document.getElementById(id);
@@ -224,18 +237,18 @@ function initAtualizarEmail() {
 
   if (!modalEmail || !btnFecharEmail || !formEmail || !btnAbrirEmail) return;
 
-  // Abrir modal - ✅ CORRIGIDO: Usar display: flex
+  // Abrir modal
   btnAbrirEmail.addEventListener("click", () => {
     const user = auth.currentUser;
     if (!user) return alert("Usuário não autenticado.");
     document.getElementById("emailAtual").value = user.email || "";
-    modalEmail.style.display = "flex";
+    abrirModal(modalEmail);
   });
 
   // Fechar modal
-  btnFecharEmail.addEventListener("click", () => (modalEmail.style.display = "none"));
+  btnFecharEmail.addEventListener("click", () => fecharModal(modalEmail));
   window.addEventListener("click", (e) => {
-    if (e.target === modalEmail) modalEmail.style.display = "none";
+    if (e.target === modalEmail) fecharModal(modalEmail);
   });
 
   // Submeter formulário
@@ -265,7 +278,7 @@ function initAtualizarEmail() {
       await verifyBeforeUpdateEmail(user, novoEmail);
 
       alert("Um link de verificação foi enviado para o novo e-mail. Confirme para concluir a atualização.");
-      modalEmail.style.display = "none";
+      fecharModal(modalEmail);
       formEmail.reset();
     } catch (err) {
       console.error("Erro ao atualizar e-mail:", err);

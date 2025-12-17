@@ -5,11 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Respostas de Feedback - CheckBus</title>
 
-  <!-- Estilos -->
-  <link rel="stylesheet" href="../css/respostas_feedback.css">
-  <link rel="stylesheet" href="../css/perfil.css">
-  <link rel="stylesheet" href="../css/draw.css">
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS FILES - ORDEM IMPORTANTE -->
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/draw.css">
+  <link rel="stylesheet" href="../css/respostas_feedback.css">
+  <!-- PERFIL.CSS POR ÚLTIMO para ter prioridade -->
+  <link rel="stylesheet" href="../css/perfil.css">
 </head>
 
 <body>
@@ -23,17 +30,14 @@
     <div class="shape shape-5"></div>
   </div>
 
-  <!-- Menu -->
-  <button class="menu-btn" onclick="toggleMenu()">☰</button>
-
-  <!-- Perfil -->
-  <button class="perfil-btn" id="btnPerfil">
-    <i class="fa fa-user"></i> Perfil
-  </button>
-
-  <!-- Overlay -->
-  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+  <!-- SIDEBAR CONTAINER (preenchido pelo JS) -->
   <div id="sidebar-container"></div>
+
+  <!-- BOTÃO PERFIL -->
+  <button class="perfil-btn" id="btnPerfil">
+    <i class="fa fa-user"></i>
+    Perfil
+  </button>
 
   <!-- Header -->
   <header class="page-header">
@@ -51,22 +55,21 @@
         placeholder="🔍 Pesquisar feedback..."
       >
     </div>
-<div class="legenda-status">
-  <div class="item-status">
-    <span class="dot vermelho"></span>
-    <span>Não lido</span>
-  </div>
 
-  <div class="item-status">
-    <span class="dot amarelo"></span>
-    <span>Lido</span>
-  </div>
-
-  <div class="item-status">
-    <span class="dot verde"></span>
-    <span>Respondido</span>
-  </div>
-</div>
+    <div class="legenda-status">
+      <div class="item-status">
+        <span class="dot vermelho"></span>
+        <span>Não lido</span>
+      </div>
+      <div class="item-status">
+        <span class="dot amarelo"></span>
+        <span>Lido</span>
+      </div>
+      <div class="item-status">
+        <span class="dot verde"></span>
+        <span>Respondido</span>
+      </div>
+    </div>
 
     <div class="table-wrap">
       <div class="table-card">
@@ -81,12 +84,11 @@
                 <th>Comentário</th>
                 <th>Data</th>
                 <th>Ações</th>
-
               </tr>
             </thead>
             <tbody id="corpoTabela">
               <tr>
-                <td colspan="6" class="no-feedback">Carregando feedbacks...</td>
+                <td colspan="7" class="no-feedback">Carregando feedbacks...</td>
               </tr>
             </tbody>
           </table>
@@ -99,29 +101,33 @@
 
   <!-- MODAL RESPONDER -->
   <div class="modal-overlay" id="modalResposta">
-  <div class="modal">
-    <h3>Responder feedback</h3>
-
-    <textarea
-      id="textoResposta"
-      placeholder="Digite a resposta que será enviada ao aluno..."
-    ></textarea>
-
-    <div class="modal-actions">
-      <button class="btn-cancelar" id="cancelarResposta">Cancelar</button>
-      <button class="btn-enviar" id="enviarResposta">Enviar</button>
+    <div class="modal">
+      <h3>Responder feedback</h3>
+      <textarea
+        id="textoResposta"
+        placeholder="Digite a resposta que será enviada ao aluno..."
+      ></textarea>
+      <div class="modal-actions">
+        <button class="btn-cancelar" id="cancelarResposta">Cancelar</button>
+        <button class="btn-enviar" id="enviarResposta">Enviar</button>
+      </div>
     </div>
   </div>
-</div>
 
-
-  <!-- JS -->
-  <script type="module" src="../js/respostas_feedback.js"></script>
-
+  <!-- Scripts -->
   <script type="module">
+    import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
     import { inicializarSidebar } from "../js/sidebar-universal.js";
-    await inicializarSidebar();
+
+    // Inicializar Perfil
+    carregarModalPerfil();
+    document.getElementById("btnPerfil").addEventListener("click", abrirPerfil);
+
+    // Inicializar Sidebar
+    inicializarSidebar();
   </script>
+
+  <script type="module" src="../js/respostas_feedback.js"></script>
 
 </body>
 </html>
