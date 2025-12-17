@@ -284,34 +284,55 @@ table {
 }
 
 /* ====== LARGURA CONTROLADA DAS COLUNAS ====== */
+/* ====== LARGURA CONTROLADA DAS COLUNAS (COM STATUS) ====== */
+
+/* Status */
 thead th:nth-child(1),
-tbody td:nth-child(1) { /* Nome */
-  width: 16%;
+tbody td:nth-child(1) {
+  width: 7%;
+  min-width: 90px; /* garante que "Status" apareça inteiro */
+  text-align: center;
 }
 
+
+/* Nome */
 thead th:nth-child(2),
-tbody td:nth-child(2) { /* Email */
-  width: 24%;
+tbody td:nth-child(2) {
+  width: 15%;
 }
 
+/* Email */
 thead th:nth-child(3),
-tbody td:nth-child(3) { /* CPF */
-  width: 14%;
+tbody td:nth-child(3) {
+  width: 22%;
+  word-break: break-all;
 }
 
+/* CPF */
 thead th:nth-child(4),
-tbody td:nth-child(4) { /* Comentário */
-  width: 26%;
-}
-
-thead th:nth-child(5),
-tbody td:nth-child(5) { /* Data */
-  width: 14%;
+tbody td:nth-child(4) {
+  width: 13%;
   white-space: nowrap;
 }
 
+/* Comentário */
+thead th:nth-child(5),
+tbody td:nth-child(5) {
+  width: 27%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Data */
 thead th:nth-child(6),
-tbody td:nth-child(6) { /* Ações */
+tbody td:nth-child(6) {
+  width: 12%;
+  white-space: nowrap;
+}
+
+/* Ações */
+thead th:nth-child(7),
+tbody td:nth-child(7) {
   width: 6%;
   text-align: center;
 }
@@ -686,4 +707,53 @@ td:nth-child(2) {
 /* Overlay SÓ bloqueia quando ativo */
 .overlay.active {
   pointer-events: auto;
+}
+/* ====== AJUSTE FINO DOS TÍTULOS ====== */
+thead th {
+  text-align: left;
+  vertical-align: middle;
+}
+
+/* Centraliza Status e Ações */
+thead th:nth-child(1),
+thead th:nth-child(7),
+tbody td:nth-child(1),
+tbody td:nth-child(7) {
+  text-align: center;
+}
+
+/* ====== LEGENDA DE STATUS ====== */
+.legenda-status {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin: 10px 0 20px 0;
+  font-size: 0.9rem;
+  color: #374151;
+}
+
+.item-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Bolinhas */
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot.vermelho {
+  background: #ef4444;
+}
+
+.dot.amarelo {
+  background: #facc15;
+}
+
+.dot.verde {
+  background: #22c55e;
 }

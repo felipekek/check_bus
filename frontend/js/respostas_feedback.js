@@ -37,9 +37,8 @@ const fmtData = (iso) =>
       })
     : "-";
 
-/* ================= MENU (DRAWER) - SEM MEXER NO draw.css ================= */
+/* ================= MENU / DRAWER ================= */
 function getSidebarEl() {
-  // compatível com sidebar injetado por sidebar-universal.js
   return (
     document.getElementById("sidebar") ||
     document.querySelector(".sidebar") ||
@@ -52,35 +51,21 @@ function getOverlayEl() {
 }
 
 function fecharMenu() {
-  const sidebar = getSidebarEl();
-  const overlay = getOverlayEl();
-
-  sidebar?.classList.remove("active");
-  overlay?.classList.remove("active");
+  getSidebarEl()?.classList.remove("active");
+  getOverlayEl()?.classList.remove("active");
 }
 
 window.toggleMenu = () => {
   const sidebar = getSidebarEl();
   const overlay = getOverlayEl();
-
-  // se sidebar não existir ainda (carregamento async), não faz nada pra não travar
   if (!sidebar || !overlay) return;
 
-  const vaiAbrir = !sidebar.classList.contains("active");
-
-  if (vaiAbrir) {
-    sidebar.classList.add("active");
-    overlay.classList.add("active");
-  } else {
-    fecharMenu();
-  }
+  sidebar.classList.toggle("active");
+  overlay.classList.toggle("active");
 };
 
-/* Fecha menu clicando no overlay (garante que o overlay não fique fantasma) */
 document.addEventListener("click", (e) => {
   const overlay = getOverlayEl();
-  if (!overlay) return;
-
   if (e.target === overlay && overlay.classList.contains("active")) {
     fecharMenu();
   }
@@ -103,7 +88,7 @@ async function carregarFeedbacks() {
   if (!isAdmin()) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="6" class="no-feedback">
+        <td colspan="7" class="no-feedback">
           Acesso restrito a administradores.
         </td>
       </tr>`;
@@ -120,7 +105,7 @@ async function carregarFeedbacks() {
   } catch {
     tbody.innerHTML = `
       <tr>
-        <td colspan="6" class="no-feedback">
+        <td colspan="7" class="no-feedback">
           Erro ao carregar feedbacks.
         </td>
       </tr>`;
@@ -145,11 +130,17 @@ function aplicarBusca() {
 }
 
 /* ================= RENDER ================= */
+function statusIcon(f) {
+  if (f.respondido) return "🟢";
+  if (f.lido) return "🟡";
+  return "🔴";
+}
+
 function renderTabela() {
   if (!filtrados.length) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="6" class="no-feedback">
+        <td colspan="7" class="no-feedback">
           Nenhum feedback encontrado.
         </td>
       </tr>`;
@@ -163,6 +154,7 @@ function renderTabela() {
     .map(
       (f) => `
       <tr>
+        <td>${statusIcon(f)}</td>
         <td>${sanitize(f.nome)}</td>
         <td>${sanitize(f.email)}</td>
         <td>${sanitize(f.cpf)}</td>
@@ -226,10 +218,18 @@ tbody.addEventListener("click", async (e) => {
     feedbackSelecionado = btnResponder.dataset.id;
     textarea.value = "";
 
-    // Fecha menu/overlay corretamente (sem depender de #sidebar)
-    fecharMenu();
+    // 🔵 Marca como lido
+    await fetch(`${API_BASE}/feedback/${feedbackSelecionado}/lido`, {
+      method: "PATCH",
+      headers: { Authorization: `Bearer ${getToken()}` },
+    });
 
+    const fb = feedbacks.find((f) => f.id === feedbackSelecionado);
+    if (fb) fb.lido = true;
+
+    fecharMenu();
     modal.classList.add("active");
+    renderTabela();
   }
 });
 
@@ -258,8 +258,15 @@ btnEnviar.onclick = async () => {
 
     if (!res.ok) return alert("Erro ao enviar resposta.");
 
+    const fb = feedbacks.find((f) => f.id === feedbackSelecionado);
+    if (fb) {
+      fb.respondido = true;
+      fb.lido = true;
+    }
+
     alert("Resposta enviada com sucesso!");
     modal.classList.remove("active");
+    renderTabela();
   } catch {
     alert("Erro inesperado ao enviar resposta.");
   }

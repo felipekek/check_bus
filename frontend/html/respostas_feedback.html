@@ -51,6 +51,22 @@
         placeholder="🔍 Pesquisar feedback..."
       >
     </div>
+<div class="legenda-status">
+  <div class="item-status">
+    <span class="dot vermelho"></span>
+    <span>Não lido</span>
+  </div>
+
+  <div class="item-status">
+    <span class="dot amarelo"></span>
+    <span>Lido</span>
+  </div>
+
+  <div class="item-status">
+    <span class="dot verde"></span>
+    <span>Respondido</span>
+  </div>
+</div>
 
     <div class="table-wrap">
       <div class="table-card">
@@ -58,12 +74,14 @@
           <table>
             <thead>
               <tr>
+                <th>Status</th>
                 <th>Nome</th>
                 <th>Email</th>
                 <th>CPF</th>
                 <th>Comentário</th>
                 <th>Data</th>
                 <th>Ações</th>
+
               </tr>
             </thead>
             <tbody id="corpoTabela">

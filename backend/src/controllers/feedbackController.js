@@ -10,7 +10,9 @@ export const enviarFeedback = async (req, res) => {
     let { nome, cpf, comentario, email } = req.body;
 
     if (!nome || !comentario) {
-      return res.status(400).json({ erro: "Preencha todos os campos obrigatórios!" });
+      return res
+        .status(400)
+        .json({ erro: "Preencha todos os campos obrigatórios!" });
     }
 
     if (!email) email = null;
@@ -22,6 +24,10 @@ export const enviarFeedback = async (req, res) => {
       email,
       comentario,
       data: new Date().toISOString(),
+
+      // 🔥 CONTROLE DE STATUS
+      lido: false,
+      respondido: false,
     });
 
     return res.status(201).json({ mensagem: "Feedback enviado com sucesso!" });
@@ -66,10 +72,30 @@ export const excluirFeedback = async (req, res) => {
 
     await db.collection("feedback").doc(id).delete();
 
-    return res.status(200).json({ mensagem: "Feedback excluído com sucesso." });
+    return res
+      .status(200)
+      .json({ mensagem: "Feedback excluído com sucesso." });
   } catch (error) {
     console.error("Erro ao excluir feedback:", error);
     return res.status(500).json({ erro: "Erro ao excluir feedback." });
+  }
+};
+
+/**
+ * Marcar feedback como lido (somente admin)
+ */
+export const marcarComoLido = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    await db.collection("feedback").doc(id).update({
+      lido: true,
+    });
+
+    return res.status(200).json({ mensagem: "Feedback marcado como lido." });
+  } catch (error) {
+    console.error("Erro ao marcar como lido:", error);
+    return res.status(500).json({ erro: "Erro ao marcar como lido." });
   }
 };
 
@@ -82,7 +108,9 @@ export const responderFeedback = async (req, res) => {
     const { mensagem } = req.body;
 
     if (!mensagem) {
-      return res.status(400).json({ erro: "Mensagem da resposta não informada." });
+      return res
+        .status(400)
+        .json({ erro: "Mensagem da resposta não informada." });
     }
 
     const doc = await db.collection("feedback").doc(id).get();
@@ -94,7 +122,9 @@ export const responderFeedback = async (req, res) => {
     const feedback = doc.data();
 
     if (!feedback.email) {
-      return res.status(400).json({ erro: "Este feedback não possui email para resposta." });
+      return res
+        .status(400)
+        .json({ erro: "Este feedback não possui email para resposta." });
     }
 
     const transporter = nodemailer.createTransport({
@@ -120,9 +150,17 @@ export const responderFeedback = async (req, res) => {
       `,
     });
 
+    // ✅ MARCA COMO RESPONDIDO
+    await db.collection("feedback").doc(id).update({
+      respondido: true,
+      lido: true,
+    });
+
     return res.status(200).json({ mensagem: "Resposta enviada com sucesso." });
   } catch (error) {
     console.error("Erro ao responder feedback:", error);
-    return res.status(500).json({ erro: "Erro ao enviar resposta por email." });
+    return res
+      .status(500)
+      .json({ erro: "Erro ao enviar resposta por email." });
   }
 };

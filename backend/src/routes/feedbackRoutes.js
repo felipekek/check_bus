@@ -6,20 +6,24 @@ import {
   listarFeedbacks,
   excluirFeedback,
   responderFeedback,
+  marcarComoLido,
 } from "../controllers/feedbackController.js";
 
 const router = express.Router();
 
-// Envia feedback (qualquer usuário)
+// Enviar feedback (qualquer usuário)
 router.post("/", enviarFeedback);
 
-// Lista feedbacks (somente admin)
+// Listar feedbacks (somente admin)
 router.get("/", requireAdmin, listarFeedbacks);
 
 // Excluir feedback (somente admin)
 router.delete("/:id", requireAdmin, excluirFeedback);
 
-// Responder feedback por email (somente admin)
+// Marcar feedback como lido (somente admin)
+router.patch("/:id/lido", requireAdmin, marcarComoLido);
+
+// Responder feedback (somente admin)
 router.post("/:id/responder", requireAdmin, responderFeedback);
 
 export default router;
