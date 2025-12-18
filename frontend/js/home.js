@@ -1,7 +1,8 @@
 // frontend/js/home.js
 // =======================================================
 // HOME - Check Bus
-// Corrigido para evitar "Missing or insufficient permissions"
+// Versão FINAL estável (Firebase + Backend)
+// Sem acesso direto a horários (evita permissões)
 // =======================================================
 
 import { db, auth } from "./firebase-config.js";
@@ -11,26 +12,26 @@ import {
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
 import {
-  collection,
-  getDocs,
-  deleteDoc,
   doc,
   getDoc,
   setDoc
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
+// =======================================================
+// UI base
+// =======================================================
 let userId = null;
 const grid = document.getElementById("menuGrid");
 if (grid) grid.style.visibility = "hidden";
 
 // =======================================================
-// Tutorial (carregamento seguro)
+// Tutorial (lazy load seguro)
 // =======================================================
 let initTutorial = null;
 
 try {
   const tutorialModule = await import("./tutorial.js").catch(() => null);
-  if (tutorialModule && typeof tutorialModule.initTutorial === "function") {
+  if (tutorialModule?.initTutorial) {
     initTutorial = tutorialModule.initTutorial;
   }
 } catch {
@@ -50,18 +51,18 @@ onAuthStateChanged(auth, async (user) => {
   let mostrarTutorial = false;
 
   // =====================================================
-  // 🔥 CORREÇÃO PRINCIPAL (getDoc em vez de getDocs)
+  // Primeiro login (seguro, sem varrer coleção)
   // =====================================================
   try {
     const userRef = doc(db, "usuarios", userId);
-    const userSnap = await getDoc(userRef);
+    const snap = await getDoc(userRef);
 
-    if (userSnap.exists() && userSnap.data().primeiroLogin) {
+    if (snap.exists() && snap.data().primeiroLogin) {
       mostrarTutorial = true;
       await setDoc(userRef, { primeiroLogin: false }, { merge: true });
     }
-  } catch (e) {
-    console.error("Erro ao verificar primeiro login:", e);
+  } catch {
+    console.warn("Não foi possível verificar primeiro login (permissão).");
   }
 
   const tipoUsuario = localStorage.getItem("tipoUsuario") || "aluno";
@@ -103,12 +104,12 @@ onAuthStateChanged(auth, async (user) => {
     if (btn.tipo === "todos" || btn.tipo === tipoUsuario) {
       const div = document.createElement("div");
       div.className = "card";
-      div.addEventListener("click", () => (location.href = btn.href));
+      div.onclick = () => (location.href = btn.href);
       div.innerHTML = `
         <i class="fa-solid ${btn.icon} fa-2x"></i>
         <span>${btn.text}</span>
       `;
-      if (grid) grid.appendChild(div);
+      grid.appendChild(div);
     }
   });
 
@@ -117,72 +118,28 @@ onAuthStateChanged(auth, async (user) => {
   // =====================================================
   const logoutBtn = document.createElement("div");
   logoutBtn.className = "card logout";
-  logoutBtn.addEventListener("click", logout);
+  logoutBtn.onclick = logout;
   logoutBtn.innerHTML = `
     <i class="fa-solid fa-right-from-bracket fa-2x"></i>
     <span>Sair</span>
   `;
-  if (grid) grid.appendChild(logoutBtn);
+  grid.appendChild(logoutBtn);
 
-  if (grid) grid.style.visibility = "visible";
+  grid.style.visibility = "visible";
 
-  carregarHorarios();
-
+  // =====================================================
+  // Tutorial
+  // =====================================================
   if (mostrarTutorial && initTutorial) {
     initTutorial(passosTutorial, "tutorialHomeVisto");
   }
 });
 
 // =======================================================
-// Horários rápidos
-// =======================================================
-async function carregarHorarios() {
-  if (!userId) return;
-
-  try {
-    const horariosRef = collection(db, "horarios", userId, "listaHorarios");
-    const horariosSnap = await getDocs(horariosRef);
-    const horariosLista = document.getElementById("horariosLista");
-    if (!horariosLista) return;
-
-    horariosLista.innerHTML = "";
-
-    if (horariosSnap.empty) {
-      horariosLista.innerHTML = "<p>Você ainda não tem horários salvos.</p>";
-      return;
-    }
-
-    horariosSnap.forEach(docItem => {
-      const data = docItem.data();
-      const div = document.createElement("div");
-      div.classList.add("horario-item");
-      div.innerHTML = `
-        <span><strong>${data.titulo || "Sem título"}</strong>: ${data.horario || "--:--"}</span>
-        <button onclick="excluirHorario('${docItem.id}')">Excluir</button>
-      `;
-      horariosLista.appendChild(div);
-    });
-  } catch (err) {
-    console.error(err);
-  }
-}
-
-window.excluirHorario = async (docId) => {
-  try {
-    const horarioDocRef = doc(db, "horarios", userId, "listaHorarios", docId);
-    await deleteDoc(horarioDocRef);
-    carregarHorarios();
-  } catch (err) {
-    alert("Erro ao excluir o horário.");
-    console.error(err);
-  }
-};
-
-// =======================================================
-// 🔥 LOGOUT CORRIGIDO (ESSENCIAL)
+// LOGOUT LIMPO
 // =======================================================
 function logout() {
-  localStorage.clear(); // 🔥 evita token/uid sujo
+  localStorage.clear();
   signOut(auth).then(() => {
     window.location.href = "index.html";
   });
@@ -191,7 +148,7 @@ function logout() {
 window.logout = logout;
 
 // =======================================================
-// Tutorial
+// Tutorial steps
 // =======================================================
 const passosTutorial = [
   {

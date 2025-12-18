@@ -4,6 +4,10 @@
 // =======================================================
 import { auth } from "./firebase-config.js";
 
+function isAdmin() {
+  return localStorage.getItem("tipoUsuario") === "admin";
+}
+
 const API_BASE = "";
 
 // =======================================================
@@ -692,7 +696,9 @@ function wireUI() {
   btnPrev?.addEventListener("click", async () => {
     currentDate.setMonth(currentDate.getMonth() - 1);
     const ym = ymKey(currentDate);
-    await loadAdminMonth(ym);
+    if (isAdmin()) {
+      await loadAdminMonth(ym);
+    }
     await loadUserMonthFromBackend(ym);
     renderCalendar();
     atualizarListaHorarios();
@@ -701,7 +707,10 @@ function wireUI() {
   btnNext?.addEventListener("click", async () => {
     currentDate.setMonth(currentDate.getMonth() + 1);
     const ym = ymKey(currentDate);
-    await loadAdminMonth(ym);
+    if (isAdmin()) {
+  await loadAdminMonth(ym);
+}
+
     await loadUserMonthFromBackend(ym);
     renderCalendar();
     atualizarListaHorarios();
@@ -813,7 +822,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     wireUI();
 
     const ym = ymKey(currentDate);
-    await loadAdminMonth(ym);
+    if (isAdmin()) {
+  await loadAdminMonth(ym);
+}
+
     await loadUserMonthFromBackend(ym);
 
     renderCalendar();
