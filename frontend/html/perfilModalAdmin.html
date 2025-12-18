@@ -1,28 +1,36 @@
 <!-- 
   MODAL PERFIL ADMIN - CheckBus
-  Estilos inline para garantir centralização
+  Estilos inline para garantir centralização em TODAS as páginas
 -->
 
 <style>
-  /* FORÇAR CENTRALIZAÇÃO DOS MODAIS DE PERFIL */
+  /* ============================================
+     FORÇAR CENTRALIZAÇÃO DOS MODAIS DE PERFIL
+     Estes estilos têm prioridade máxima
+     ============================================ */
+  
+  /* Container do modal - TELA INTEIRA */
   #modalPerfil,
   #modalAlterarSenha,
   #modalAtualizarEmail {
-    display: none;
+    display: none !important;
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
     width: 100vw !important;
     height: 100vh !important;
+    margin: 0 !important;
+    padding: 20px !important;
     background: rgba(0, 0, 0, 0.7) !important;
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px) !important;
     z-index: 99999 !important;
     overflow-y: auto !important;
-    padding: 20px !important;
     box-sizing: border-box !important;
   }
   
-  /* Quando visível - FLEXBOX CENTRALIZADO */
+  /* Quando ABERTO - usa classe .modal-aberto */
   #modalPerfil.modal-aberto,
   #modalAlterarSenha.modal-aberto,
   #modalAtualizarEmail.modal-aberto {
@@ -31,7 +39,7 @@
     justify-content: center !important;
   }
   
-  /* Modal content centralizado */
+  /* Conteúdo do modal - CAIXA BRANCA CENTRALIZADA */
   #modalPerfil > .modal-content,
   #modalAlterarSenha > .modal-content,
   #modalAtualizarEmail > .modal-content {
@@ -40,18 +48,28 @@
     width: 100% !important;
     max-width: 500px !important;
     max-height: 90vh !important;
+    overflow: hidden !important;
     overflow-y: auto !important;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4) !important;
-    animation: modalEntrar 0.3s ease-out;
-    margin: 0 !important;
+    animation: perfilModalEntrar 0.3s ease-out !important;
+    
+    /* RESET de posicionamento */
     position: relative !important;
+    margin: 0 !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+    inset: auto !important;
   }
   
+  /* Modal de perfil principal - um pouco maior */
   #modalPerfil > .modal-content {
     max-width: 700px !important;
   }
   
-  @keyframes modalEntrar {
+  @keyframes perfilModalEntrar {
     from {
       opacity: 0;
       transform: scale(0.9) translateY(-20px);
@@ -60,6 +78,64 @@
       opacity: 1;
       transform: scale(1) translateY(0);
     }
+  }
+
+  /* Header do modal */
+  #modalPerfil .modal-header,
+  #modalAlterarSenha .modal-header,
+  #modalAtualizarEmail .modal-header {
+    text-align: center !important;
+    padding: 40px 30px 30px !important;
+    background: linear-gradient(135deg, #006b8f, #004d6d) !important;
+    color: white !important;
+    position: relative !important;
+    border-radius: 16px 16px 0 0 !important;
+  }
+
+  /* Ícone do modal */
+  #modalPerfil .modal-icon,
+  #modalAlterarSenha .modal-icon,
+  #modalAtualizarEmail .modal-icon {
+    width: 80px !important;
+    height: 80px !important;
+    margin: 0 auto 20px !important;
+    background: rgba(16, 185, 129, 0.3) !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 36px !important;
+  }
+
+  /* Botão fechar (X) */
+  #modalPerfil .close,
+  #modalAlterarSenha .close,
+  #modalAtualizarEmail .close {
+    position: absolute !important;
+    top: 20px !important;
+    right: 20px !important;
+    font-size: 28px !important;
+    font-weight: bold !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    cursor: pointer !important;
+    z-index: 10 !important;
+    width: 36px !important;
+    height: 36px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    transition: all 0.2s ease !important;
+    line-height: 1 !important;
+  }
+
+  #modalPerfil .close:hover,
+  #modalAlterarSenha .close:hover,
+  #modalAtualizarEmail .close:hover {
+    background: rgba(255, 255, 255, 0.3) !important;
+    color: white !important;
+    transform: rotate(90deg) !important;
   }
 </style>
 
