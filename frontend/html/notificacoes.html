@@ -6,28 +6,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Notificações - CheckBus</title>
 
-  <link rel="stylesheet" href="../css/notificacoes.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS - ORDEM IMPORTANTE -->
+  <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/draw.css">
+  <link rel="stylesheet" href="../css/notificacoes.css">
+  <!-- PERFIL.CSS POR ÚLTIMO -->
+  <link rel="stylesheet" href="../css/perfil.css">
 </head>
 
 <body>
 
-  <!-- Botão do menu lateral -->
-  <button class="menu-btn" onclick="toggleMenu()">☰</button>
-  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+  <!-- SIDEBAR CONTAINER (preenchido pelo JS) -->
+  <div id="sidebar-container"></div>
 
-  <!-- Menu lateral (drawer) -->
-  <div class="sidebar" id="sidebar">
-    <button onclick="location.href='home_principal.html'">Principal</button>
-    <button onclick="location.href='horarios.html'">Lista de Horários</button>
-    <button onclick="location.href='gps.html'">GPS</button>
-    <button onclick="location.href='notificacoes.html'">Notificações</button>
-    <button onclick="location.href='index.html'" class="logout">Sair</button>
-  </div>
+  <!-- BOTÃO PERFIL -->
+  <button class="perfil-btn" id="btnPerfil">
+    <i class="fa fa-user"></i>
+    Perfil
+  </button>
 
   <!-- Conteúdo principal -->
   <div class="page-container">
-    <h1 class="titulo-pagina">Notificações</h1>
+    <h1 class="titulo-pagina">
+      <i class="fas fa-bell"></i>
+      Notificações
+    </h1>
     <p class="subtitulo">
       Aqui você acompanha avisos importantes do sistema e o status do ônibus para o seu turno.
     </p>
@@ -37,11 +46,12 @@
       <!-- COLUNA ESQUERDA: Avisos do sistema -->
       <section class="card painel-avisos">
         <div class="card-header">
-          <h2>Avisos do Sistema</h2>
+          <h2><i class="fas fa-bullhorn"></i> Avisos do Sistema</h2>
           <span id="badgeTurno" class="badge-turno">Turno: --</span>
         </div>
 
         <div class="search-wrapper">
+          <i class="fas fa-search search-icon"></i>
           <input
             type="text"
             id="buscaAvisosAluno"
@@ -52,6 +62,7 @@
         <div id="listaAvisosAluno" class="lista-avisos">
           <!-- Avisos serão carregados aqui via JS -->
           <p class="mensagem-vazia" id="msgSemAvisos">
+            <i class="fas fa-inbox"></i>
             Nenhum aviso encontrado para o seu turno.
           </p>
         </div>
@@ -60,11 +71,14 @@
       <!-- COLUNA DIREITA: Notificações do ônibus -->
       <section class="card painel-onibus">
         <div class="card-header">
-          <h2>Status do Ônibus</h2>
+          <h2><i class="fas fa-bus"></i> Status do Ônibus</h2>
         </div>
 
         <div class="status-onibus-info">
-          <p class="status-titulo">Próxima chegada</p>
+          <p class="status-titulo">
+            <i class="fas fa-clock"></i>
+            Próxima chegada
+          </p>
           <p id="statusOnibusMensagem" class="status-mensagem">
             Ainda não há notificações de chegada para o seu turno.
           </p>
@@ -72,35 +86,43 @@
 
         <div class="status-onibus-detalhes">
           <div class="status-box">
-            <span class="status-label">Tempo estimado</span>
+            <span class="status-label">
+              <i class="fas fa-hourglass-half"></i>
+              Tempo estimado
+            </span>
             <span id="tempoEstimado" class="status-valor">--</span>
           </div>
           <div class="status-box">
-            <span class="status-label">Distância aproximada</span>
+            <span class="status-label">
+              <i class="fas fa-route"></i>
+              Distância aproximada
+            </span>
             <span id="distanciaAproximada" class="status-valor">--</span>
           </div>
         </div>
 
         <p class="status-observacao">
+          <i class="fas fa-info-circle"></i>
           Assim que o sistema de GPS estiver integrado, você receberá aqui
           notificações em tempo real, como <strong>"o ônibus chegará em 5 minutos"</strong>
           ou <strong>"o ônibus está a 500 metros de distância"</strong>.
         </p>
       </section>
 
+    </div>
   </div>
 
-  <!-- Script do menu lateral -->
-  <script>
-    window.toggleMenu = function () {
-      const sidebar = document.getElementById("sidebar");
-      const overlay = document.getElementById("overlay");
-      const btn = document.querySelector(".menu-btn");
+  <!-- Scripts -->
+  <script type="module">
+    import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
+    import { inicializarSidebar } from "../js/sidebar-universal.js";
 
-      sidebar.classList.toggle("active");
-      overlay.classList.toggle("active");
-      btn.classList.toggle("hidden");
-    };
+    // Inicializar Perfil
+    carregarModalPerfil();
+    document.getElementById("btnPerfil").addEventListener("click", abrirPerfil);
+
+    // Inicializar Sidebar
+    inicializarSidebar();
   </script>
 
   <!-- Script principal da página -->

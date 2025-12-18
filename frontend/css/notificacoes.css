@@ -1,32 +1,429 @@
-body { margin: 0; font-family: "Poppins", sans-serif; background: linear-gradient(to right, #004d7a, #008793); background-attachment: fixed; color: #fff; }
-.page-container { width: 95%; max-width: 1300px; margin: 50px auto 40px auto; }
-.titulo-pagina { font-size: 2.2rem; font-weight: 700; margin-bottom: 8px; }
-.subtitulo { margin-top: 0; margin-bottom: 30px; font-size: 0.95rem; opacity: 0.9; }
-.notificacoes-grid { display: grid; grid-template-columns: 2fr 1.4fr; gap: 24px; }
-@media (max-width: 950px) { .notificacoes-grid { grid-template-columns: 1fr; } }
-.card { background: #f4f8fbf2; color: #004d7a; padding: 22px 24px; border-radius: 18px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22); backdrop-filter: blur(4px); }
-.card-header { display: flex; justify-content: space-between; align-items: center; }
-.badge-turno { padding: 6px 12px; border-radius: 999px; background: #007a99; color: #fff; font-size: 0.8rem; font-weight: 600; }
-.search-wrapper { margin: 16px 0; padding: 0; }
-.search-wrapper input { width: 100%; padding: 10px 14px; border-radius: 999px; border: 2px solid #d0d0d0; font-size: 0.9rem; color: #004d7a; transition: 0.2s; box-sizing: border-box; }
-.search-wrapper input:focus { outline: none; border-color: #00bf72; background: #f0fffa; }
-.lista-avisos { max-height: 420px; overflow-y: auto; padding-right: 4px; margin-top: 12px; }
-.mensagem-vazia { font-size: 0.9rem; opacity: 0.8; margin-top: 10px; }
-.aviso-card { background: #ffffff; border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; border-left: 4px solid #007a99; box-shadow: 0 3px 10px rgba(0,0,0,0.12); cursor: pointer; transition: 0.18s ease; }
-.aviso-card:hover { transform: translateY(-2px); box-shadow: 0 5px 14px rgba(0,0,0,0.16); }
-.aviso-header { display: flex; justify-content: space-between; align-items: center; }
-.aviso-titulo { font-size: 0.98rem; font-weight: 600; margin: 0; }
-.aviso-data { font-size: 0.75rem; color: #555; }
-.aviso-mensagem { margin-top: 6px; font-size: 0.9rem; color: #244059; }
-.aviso-turno-tag { display: inline-block; margin-top: 4px; font-size: 0.7rem; padding: 3px 8px; border-radius: 999px; background: #e1f5ff; color: #005b7a; font-weight: 600; }
-.painel-onibus { display: flex; flex-direction: column; gap: 16px; }
-.status-onibus-info { background: #ffffff; border-radius: 14px; padding: 14px 16px; box-shadow: 0 3px 10px rgba(0,0,0,0.12); }
-.status-titulo { font-size: 0.95rem; margin: 0 0 4px 0; font-weight: 600; color: #004d7a; }
-.status-mensagem { margin: 0; font-size: 0.92rem; color: #244059; }
-.status-onibus-detalhes { display: flex; gap: 12px; }
-.status-box { flex: 1; background: #ffffff; border-radius: 12px; padding: 10px 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.12); }
-.status-label { display: block; font-size: 0.75rem; color: #556; margin-bottom: 3px; }
-.status-valor { font-size: 1.1rem; font-weight: 700; color: #007a99; }
-.status-observacao { font-size: 0.8rem; color: #345; margin-top: 2px; }
-.painel-avisos { padding: 22px 24px !important; }
-.painel-avisos .card-header h2 { margin: 0; padding: 0; color: #004d7a; font-size: 1.6rem; font-weight: 700; }
+/* ===================================================
+   NOTIFICACOES.CSS - CheckBus
+   Página de Notificações do Aluno
+   
+   NOTA: Estilos de .menu-btn, .perfil-btn e .sidebar
+   vêm do draw.css e perfil.css
+   =================================================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", "Poppins", sans-serif;
+  background: linear-gradient(135deg, #004d7a 0%, #008793 100%);
+  background-attachment: fixed;
+  color: #fff;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ====== CONTAINER PRINCIPAL ====== */
+.page-container {
+  width: 95%;
+  max-width: 1300px;
+  margin: 0 auto;
+  /* Espaço para botões no topo */
+  padding: 100px 20px 40px 20px;
+}
+
+/* ====== TÍTULO E SUBTÍTULO ====== */
+.titulo-pagina {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.titulo-pagina i {
+  font-size: 1.8rem;
+  opacity: 0.9;
+}
+
+.subtitulo {
+  margin-top: 0;
+  margin-bottom: 30px;
+  font-size: 1rem;
+  opacity: 0.9;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+/* ====== GRID DE NOTIFICAÇÕES ====== */
+.notificacoes-grid {
+  display: grid;
+  grid-template-columns: 2fr 1.4fr;
+  gap: 24px;
+}
+
+@media (max-width: 950px) {
+  .notificacoes-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ====== CARDS ====== */
+.card {
+  background: rgba(255, 255, 255, 0.97);
+  color: #004d7a;
+  padding: 24px 28px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(4px);
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.card-header h2 {
+  margin: 0;
+  padding: 0;
+  color: #004d7a;
+  font-size: 1.4rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-header h2 i {
+  color: #008793;
+  font-size: 1.2rem;
+}
+
+/* ====== BADGE TURNO ====== */
+.badge-turno {
+  padding: 8px 16px;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #008793, #006b8f);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 122, 153, 0.3);
+}
+
+/* ====== BARRA DE PESQUISA ====== */
+.search-wrapper {
+  margin: 16px 0;
+  padding: 0;
+  position: relative;
+}
+
+.search-wrapper .search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.search-wrapper input {
+  width: 100%;
+  padding: 12px 16px 12px 44px;
+  border-radius: 12px;
+  border: 2px solid #e5e7eb;
+  font-size: 0.95rem;
+  color: #004d7a;
+  background: #f9fafb;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.search-wrapper input::placeholder {
+  color: #9ca3af;
+}
+
+.search-wrapper input:focus {
+  outline: none;
+  border-color: #008793;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(0, 135, 147, 0.1);
+}
+
+/* ====== LISTA DE AVISOS ====== */
+.lista-avisos {
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 4px;
+  margin-top: 12px;
+}
+
+.lista-avisos::-webkit-scrollbar {
+  width: 6px;
+}
+
+.lista-avisos::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.lista-avisos::-webkit-scrollbar-thumb {
+  background: #008793;
+  border-radius: 10px;
+}
+
+.mensagem-vazia {
+  font-size: 0.95rem;
+  color: #6b7280;
+  margin-top: 20px;
+  text-align: center;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.mensagem-vazia i {
+  font-size: 2.5rem;
+  color: #d1d5db;
+}
+
+/* ====== CARDS DE AVISO ====== */
+.aviso-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-bottom: 12px;
+  border-left: 4px solid #008793;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.aviso-card:hover {
+  transform: translateY(-3px) translateX(4px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  border-left-color: #006b8f;
+}
+
+.aviso-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.aviso-titulo {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  color: #004d7a;
+}
+
+.aviso-data {
+  font-size: 0.75rem;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.aviso-mensagem {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: #374151;
+  line-height: 1.5;
+}
+
+.aviso-turno-tag {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 0.7rem;
+  padding: 4px 10px;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
+  color: #006064;
+  font-weight: 600;
+}
+
+/* ====== PAINEL DO ÔNIBUS ====== */
+.painel-onibus {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.status-onibus-info {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 18px 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-left: 4px solid #f59e0b;
+}
+
+.status-titulo {
+  font-size: 1rem;
+  margin: 0 0 8px 0;
+  font-weight: 600;
+  color: #004d7a;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-titulo i {
+  color: #f59e0b;
+}
+
+.status-mensagem {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #374151;
+  line-height: 1.5;
+}
+
+/* ====== DETALHES DO STATUS ====== */
+.status-onibus-detalhes {
+  display: flex;
+  gap: 12px;
+}
+
+.status-box {
+  flex: 1;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.status-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.status-label i {
+  color: #008793;
+}
+
+.status-valor {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #008793;
+}
+
+/* ====== OBSERVAÇÃO ====== */
+.status-observacao {
+  font-size: 0.85rem;
+  color: #374151;
+  margin-top: 4px;
+  padding: 14px 16px;
+  background: rgba(0, 135, 147, 0.08);
+  border-radius: 12px;
+  border: 1px dashed #008793;
+  line-height: 1.5;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.status-observacao i {
+  color: #008793;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.status-observacao strong {
+  color: #006b8f;
+}
+
+/* ====== RESPONSIVIDADE ====== */
+@media (max-width: 768px) {
+  .page-container {
+    padding: 90px 15px 30px 15px;
+  }
+
+  .titulo-pagina {
+    font-size: 1.8rem;
+  }
+
+  .titulo-pagina i {
+    font-size: 1.5rem;
+  }
+
+  .subtitulo {
+    font-size: 0.95rem;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .card-header h2 {
+    font-size: 1.2rem;
+  }
+
+  .status-onibus-detalhes {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-container {
+    padding: 80px 12px 25px 12px;
+  }
+
+  .titulo-pagina {
+    font-size: 1.5rem;
+  }
+
+  .card {
+    padding: 18px 16px;
+    border-radius: 16px;
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .badge-turno {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+
+  .aviso-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .status-observacao {
+    font-size: 0.8rem;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .status-observacao i {
+    margin: 0 auto;
+  }
+}
