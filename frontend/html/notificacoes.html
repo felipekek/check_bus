@@ -22,6 +22,15 @@
 
 <body>
 
+  <!-- ====== BOLAS ANIMADAS NO FUNDO ====== -->
+  <div class="background-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
+    <div class="shape shape-5"></div>
+  </div>
+
   <!-- SIDEBAR CONTAINER (preenchido pelo JS) -->
   <div id="sidebar-container"></div>
 
@@ -31,16 +40,20 @@
     Perfil
   </button>
 
-  <!-- Conteúdo principal -->
-  <div class="page-container">
-    <h1 class="titulo-pagina">
-      <i class="fas fa-bell"></i>
-      Notificações
-    </h1>
-    <p class="subtitulo">
-      Aqui você acompanha avisos importantes do sistema e o status do ônibus para o seu turno.
-    </p>
+  <!-- ====== LOGO CHECK BUS CENTRALIZADA ====== -->
+  <div class="logo-container">
+    <i class="fas fa-bus"></i>
+    <span class="logo-text">Check Bus</span>
+  </div>
 
+  <!-- ====== TÍTULO E SUBTÍTULO ====== -->
+  <header class="page-header">
+    <h1>Notificações</h1>
+    <p>Aqui você acompanha avisos importantes do sistema e o status do ônibus para o seu turno.</p>
+  </header>
+
+  <!-- ====== CONTEÚDO PRINCIPAL ====== -->
+  <div class="page-container">
     <div class="notificacoes-grid">
 
       <!-- COLUNA ESQUERDA: Avisos do sistema -->
@@ -80,7 +93,7 @@
             Próxima chegada
           </p>
           <p id="statusOnibusMensagem" class="status-mensagem">
-            Ainda não há notificações de chegada para o seu turno.
+            Assim que o ônibus do seu turno estiver a caminho, as notificações aparecerão aqui.
           </p>
         </div>
 
@@ -103,9 +116,11 @@
 
         <p class="status-observacao">
           <i class="fas fa-info-circle"></i>
-          Assim que o sistema de GPS estiver integrado, você receberá aqui
-          notificações em tempo real, como <strong>"o ônibus chegará em 5 minutos"</strong>
-          ou <strong>"o ônibus está a 500 metros de distância"</strong>.
+          <span>
+            Assim que o sistema de GPS estiver integrado, você receberá aqui
+            notificações em tempo real, como <strong>"o ônibus chegará em 5 minutos"</strong>
+            ou <strong>"o ônibus está a 500 metros de distância"</strong>.
+          </span>
         </p>
       </section>
 

@@ -1,9 +1,6 @@
 /* ===================================================
    NOTIFICACOES.CSS - CheckBus
-   Página de Notificações do Aluno
-   
-   NOTA: Estilos de .menu-btn, .perfil-btn e .sidebar
-   vêm do draw.css e perfil.css
+   Layout estilo GPS com bolas animadas
    =================================================== */
 
 * {
@@ -22,37 +19,147 @@ body {
   overflow-x: hidden;
 }
 
+/* ====== BOLAS ANIMADAS NO FUNDO ====== */
+.background-shapes {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  animation: float 20s infinite ease-in-out;
+}
+
+.shape-1 {
+  width: 300px;
+  height: 300px;
+  top: -150px;
+  left: -150px;
+  animation-duration: 25s;
+  animation-delay: 0s;
+}
+
+.shape-2 {
+  width: 200px;
+  height: 200px;
+  top: 60%;
+  right: -100px;
+  animation-duration: 30s;
+  animation-delay: 2s;
+}
+
+.shape-3 {
+  width: 150px;
+  height: 150px;
+  bottom: 10%;
+  left: 10%;
+  animation-duration: 22s;
+  animation-delay: 4s;
+}
+
+.shape-4 {
+  width: 250px;
+  height: 250px;
+  top: 40%;
+  left: 50%;
+  animation-duration: 28s;
+  animation-delay: 1s;
+}
+
+.shape-5 {
+  width: 180px;
+  height: 180px;
+  bottom: -90px;
+  right: 20%;
+  animation-duration: 26s;
+  animation-delay: 3s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.7;
+  }
+  25% {
+    transform: translate(30px, -30px) scale(1.1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(-20px, 20px) scale(0.9);
+    opacity: 0.8;
+  }
+  75% {
+    transform: translate(40px, 10px) scale(1.05);
+    opacity: 0.6;
+  }
+}
+
+/* ====== LOGO CHECK BUS CENTRALIZADA ====== */
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin: 80px auto 24px auto;
+  padding: 14px 32px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 50px;
+  backdrop-filter: blur(10px);
+  width: fit-content;
+  position: relative;
+  z-index: 10;
+}
+
+.logo-container i {
+  font-size: 28px;
+  color: white;
+}
+
+.logo-text {
+  font-size: 22px;
+  font-weight: 700;
+  color: white;
+}
+
+/* ====== TÍTULO E SUBTÍTULO ====== */
+.page-header {
+  text-align: center;
+  padding: 0 20px 30px 20px;
+  position: relative;
+  z-index: 10;
+}
+
+.page-header h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.page-header p {
+  font-size: 1rem;
+  opacity: 0.95;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.15);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
 /* ====== CONTAINER PRINCIPAL ====== */
 .page-container {
   width: 95%;
   max-width: 1300px;
   margin: 0 auto;
-  /* Espaço para botões no topo */
-  padding: 100px 20px 40px 20px;
-}
-
-/* ====== TÍTULO E SUBTÍTULO ====== */
-.titulo-pagina {
-  font-size: 2.2rem;
-  font-weight: 700;
-  margin-bottom: 8px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.titulo-pagina i {
-  font-size: 1.8rem;
-  opacity: 0.9;
-}
-
-.subtitulo {
-  margin-top: 0;
-  margin-bottom: 30px;
-  font-size: 1rem;
-  opacity: 0.9;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.15);
+  padding: 0 20px 40px 20px;
+  position: relative;
+  z-index: 10;
 }
 
 /* ====== GRID DE NOTIFICAÇÕES ====== */
@@ -358,19 +465,24 @@ body {
 
 /* ====== RESPONSIVIDADE ====== */
 @media (max-width: 768px) {
-  .page-container {
-    padding: 90px 15px 30px 15px;
+  .logo-container {
+    margin-top: 70px;
+    padding: 12px 24px;
   }
 
-  .titulo-pagina {
+  .logo-container i {
+    font-size: 24px;
+  }
+
+  .logo-text {
+    font-size: 20px;
+  }
+
+  .page-header h1 {
     font-size: 1.8rem;
   }
 
-  .titulo-pagina i {
-    font-size: 1.5rem;
-  }
-
-  .subtitulo {
+  .page-header p {
     font-size: 0.95rem;
   }
 
@@ -388,12 +500,29 @@ body {
 }
 
 @media (max-width: 480px) {
-  .page-container {
-    padding: 80px 12px 25px 12px;
+  .logo-container {
+    margin-top: 60px;
+    padding: 10px 20px;
   }
 
-  .titulo-pagina {
+  .logo-container i {
+    font-size: 22px;
+  }
+
+  .logo-text {
+    font-size: 18px;
+  }
+
+  .page-header {
+    padding: 0 15px 25px 15px;
+  }
+
+  .page-header h1 {
     font-size: 1.5rem;
+  }
+
+  .page-container {
+    padding: 0 12px 25px 12px;
   }
 
   .card {
