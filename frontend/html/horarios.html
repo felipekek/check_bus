@@ -4,13 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Horários - CheckBus</title>
-  <link rel="stylesheet" href="../css/horarios.css" />
-  <link rel="stylesheet" href="../css/perfil.css" />
-  <link rel="stylesheet" href="../css/draw.css" />
+
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS - ORDEM IMPORTANTE -->
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/draw.css">
+  <link rel="stylesheet" href="../css/horarios.css" />
+  <!-- PERFIL.CSS POR ÚLTIMO -->
+  <link rel="stylesheet" href="../css/perfil.css" />
 </head>
 
 <body>
+  <!-- ====== BOLAS ANIMADAS NO FUNDO ====== -->
   <div class="background-shapes">
     <div class="shape shape-1"></div>
     <div class="shape shape-2"></div>
@@ -19,27 +29,27 @@
     <div class="shape shape-5"></div>
   </div>
 
-  <!-- ===== Botão do menu lateral ===== -->
-  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+  <!-- SIDEBAR CONTAINER (preenchido pelo JS) -->
+  <div id="sidebar-container"></div>
 
-  <!-- ===== Botão de Perfil ===== -->
+  <!-- BOTÃO PERFIL -->
   <button class="perfil-btn" id="btnPerfil">
     <i class="fa fa-user"></i> Perfil
   </button>
 
-  <!-- Overlay escuro -->
-  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+  <!-- ====== LOGO CHECK BUS CENTRALIZADA ====== -->
+  <div class="logo-container">
+    <i class="fas fa-bus"></i>
+    <span class="logo-text">Check Bus</span>
+  </div>
 
-  <!-- ===== Sidebar ===== -->
-  <div id="sidebar-container"></div>
-
-  <!-- ===== HEADER (Título no fundo azul) ===== -->
+  <!-- ====== TÍTULO E SUBTÍTULO ====== -->
   <header class="page-header">
     <h1>Horários do Ônibus</h1>
     <p>Gerencie seus horários e dias de embarque</p>
   </header>
 
-  <!-- ===== CONTEÚDO PRINCIPAL ===== -->
+  <!-- ====== CONTEÚDO PRINCIPAL ====== -->
   <div class="container container--wide">
     <main>
 
@@ -127,7 +137,7 @@
           </div>
           <div class="stat">
             <small>Por turno</small>
-            <b id="statTurnos">—</b>
+            <b id="statTurnos">–</b>
           </div>
         </div>
 
@@ -149,28 +159,25 @@
 
   <div id="toast" class="toast"></div>
 
-  <!-- ===== Scripts ===== -->
-  <script>
-    window.toggleMenu = function() {
-      const sidebar = document.getElementById("sidebar");
-      const overlay = document.getElementById("overlay");
-      const menuBtn = document.querySelector(".menu-btn");
-      sidebar.classList.toggle("active");
-      overlay.classList.toggle("active");
-      if (menuBtn) menuBtn.classList.toggle("hidden");
-    };
-  </script>
-
+  <!-- Scripts -->
   <script type="module">
     import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
-    carregarModalPerfil();
-    const btnPerfil = document.getElementById("btnPerfil");
-    if (btnPerfil) btnPerfil.addEventListener("click", abrirPerfil);
-  </script>
-
-  <script type="module">
     import { inicializarSidebar } from "../js/sidebar-universal.js";
-    await inicializarSidebar();
+
+    // Inicializar Perfil
+    carregarModalPerfil();
+    document.getElementById("btnPerfil").addEventListener("click", abrirPerfil);
+
+    // Inicializar Sidebar
+    inicializarSidebar();
+
+    // Toggle Menu
+    window.toggleMenu = function() {
+      const sidebar = document.getElementById("sidebar") || document.querySelector(".sidebar");
+      const overlay = document.getElementById("overlay");
+      if (sidebar) sidebar.classList.toggle("active");
+      if (overlay) overlay.classList.toggle("active");
+    };
   </script>
 
   <script type="module" src="../js/horarios.js"></script>

@@ -1,72 +1,92 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Histórico de Embarques - CheckBus</title>
-    <link rel="stylesheet" href="../css/historico.css"/>
-    <link rel="stylesheet" href="../css/draw.css">
-    <link rel="stylesheet" href="../css/perfil_aluno.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Histórico de Embarques - CheckBus</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS - ORDEM IMPORTANTE -->
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/draw.css">
+  <link rel="stylesheet" href="../css/historico.css"/>
+  <!-- PERFIL.CSS POR ÚLTIMO -->
+  <link rel="stylesheet" href="../css/perfil.css">
 </head>
 
 <body>
-<!-- ===== Botão do menu lateral ===== -->
-<button class="menu-btn" onclick="toggleMenu()">☰</button>
 
-<!-- ===== Botão de Perfil ===== -->
-<button class="perfil-btn" id="btnPerfil">
+  <!-- ====== BOLAS ANIMADAS NO FUNDO ====== -->
+  <div class="background-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
+    <div class="shape shape-5"></div>
+  </div>
+
+  <!-- SIDEBAR CONTAINER (preenchido pelo JS) -->
+  <div id="sidebar-container"></div>
+
+  <!-- BOTÃO PERFIL -->
+  <button class="perfil-btn" id="btnPerfil">
     <i class="fa fa-user"></i> Perfil
-</button>
+  </button>
 
-<!-- Overlay escuro -->
-<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+  <!-- ====== LOGO CHECK BUS CENTRALIZADA ====== -->
+  <div class="logo-container">
+    <i class="fas fa-bus"></i>
+    <span class="logo-text">Check Bus</span>
+  </div>
 
-<!-- ===== Sidebar ===== -->
-<div id="sidebar-container"></div>
-
-<!-- ===== HEADER (Título no fundo azul) ===== -->
-<header class="page-header">
+  <!-- ====== TÍTULO E SUBTÍTULO ====== -->
+  <header class="page-header">
     <h1>Histórico de Embarques</h1>
     <p>Visualize todos os seus embarques registrados</p>
-</header>
+  </header>
 
-<!-- ===== CONTEÚDO PRINCIPAL ===== -->
-<div class="historico-container">
+  <!-- ====== CONTEÚDO PRINCIPAL ====== -->
+  <div class="historico-container">
     <div class="titulo-container">
-        <h2>Registros de Embarque</h2>
-        <input type="text" id="barraPesquisa" placeholder="🔍 Pesquisar...">
+      <h2>Registros de Embarque</h2>
+      <input type="text" id="barraPesquisa" placeholder="🔍 Pesquisar...">
     </div>
 
     <div id="lista">
-        <table id="tabela-historico">
-            <thead>
-                <tr>
-                    <th>ID do Cartão</th>
-                    <th>Data</th>
-                    <th>Horário</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr><td colspan="3" class="no-data">Carregando registros...</td></tr>
-            </tbody>
-        </table>
+      <table id="tabela-historico">
+        <thead>
+          <tr>
+            <th>ID do Cartão</th>
+            <th>Data</th>
+            <th>Horário</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="3" class="no-data">Carregando registros...</td></tr>
+        </tbody>
+      </table>
     </div>
-</div>
+  </div>
 
-<!-- ===== Scripts ===== -->
-<script type="module">
+  <!-- Scripts -->
+  <script type="module">
     import { carregarModalPerfil, abrirPerfil } from "../js/perfil.js";
+    import { inicializarSidebar } from "../js/sidebar-universal.js";
+
+    // Inicializar Perfil
     carregarModalPerfil();
     document.getElementById("btnPerfil").addEventListener("click", abrirPerfil);
-</script>
 
-<script type="module">
-    import { inicializarSidebar } from "../js/sidebar-universal.js";
-    await inicializarSidebar();
-</script>
+    // Inicializar Sidebar
+    inicializarSidebar();
+  </script>
 
-<script type="module" src="../js/historico.js"></script>
+  <script type="module" src="../js/historico.js"></script>
 
 </body>
 </html>

@@ -76,9 +76,9 @@ function renderizarTabela() {
   registros.forEach(reg => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td>${reg.idCartao || "-"}</td>
-      <td>${formatarData(reg.data)}</td>
-      <td>${reg.horario || "-"}</td>
+      <td data-label="ID do Cartão">${reg.idCartao || "-"}</td>
+      <td data-label="Data">${formatarData(reg.data)}</td>
+      <td data-label="Horário">${reg.horario || "-"}</td>
     `;
     tbody.appendChild(tr);
   });
@@ -110,6 +110,8 @@ carregarHistorico();
 
 /* MENU LATERAL */
 window.toggleMenu = () => {
-  document.getElementById("sidebar").classList.toggle("active");
-  document.getElementById("overlay").classList.toggle("active");
+  const sidebar = document.getElementById("sidebar") || document.querySelector(".sidebar");
+  const overlay = document.getElementById("overlay");
+  if (sidebar) sidebar.classList.toggle("active");
+  if (overlay) overlay.classList.toggle("active");
 };
