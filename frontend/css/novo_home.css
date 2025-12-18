@@ -1,6 +1,6 @@
 /* ========================================
-   CSS NOVO HOME AJUSTADO - CHECK BUS
-   (Título e descrição FORA do container)
+   CSS NOVO HOME - CHECK BUS
+   CORRIGIDO: Scroll habilitado
    ======================================== */
 
 * {
@@ -10,6 +10,12 @@
   font-family: 'Inter', Arial, sans-serif;
 }
 
+html {
+  /* Garante que o scroll funcione */
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
 body {
   background: linear-gradient(135deg, #004d7a 0%, #008793 100%);
   min-height: 100vh;
@@ -17,19 +23,36 @@ body {
   justify-content: center;
   align-items: center;
   position: relative;
-  overflow: hidden;
+  
+  /* ✅ CORREÇÃO: Permite scroll vertical, bloqueia só horizontal */
+  overflow-x: hidden;
+  overflow-y: auto;
+  
   padding: 40px 20px;
+}
+
+/* Garante que o gradiente cubra todo o conteúdo com scroll */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #004d7a 0%, #008793 100%);
+  z-index: -1;
 }
 
 /* ========================================
    SHAPES ANIMADAS
    ======================================== */
 .shape {
-  position: absolute;
+  position: fixed; /* Fixed para não scrollar junto */
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.05);
   animation: float 20s infinite ease-in-out;
   z-index: 0;
+  pointer-events: none; /* Não interfere em cliques */
 }
 
 .shape-1 {
@@ -69,7 +92,7 @@ body {
 }
 
 /* ========================================
-   MAIN WRAPPER (contém logo + título + container)
+   MAIN WRAPPER
    ======================================== */
 .main-wrapper {
   width: 90%;
@@ -77,6 +100,10 @@ body {
   position: relative;
   z-index: 10;
   animation: slideIn 0.5s ease-out;
+  
+  /* ✅ Garante espaço para scroll em telas pequenas */
+  margin: auto;
+  padding: 20px 0;
 }
 
 @keyframes slideIn {
@@ -94,16 +121,16 @@ body {
    LOGO (FORA DO CONTAINER)
    ======================================== */
 .logo-container {
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: 14px;
   margin: 0 auto 28px;
   padding: 14px 28px;
   background: rgba(255, 255, 255, 0.15);
   border-radius: 50px;
   backdrop-filter: blur(10px);
-  display: flex;
-  justify-content: center;
+  width: fit-content;
 }
 
 .logo-container i {
@@ -143,7 +170,7 @@ h1 {
 }
 
 /* ========================================
-   CONTAINER BRANCO (só conteúdo interno)
+   CONTAINER BRANCO
    ======================================== */
 .container {
   background: white;
@@ -173,6 +200,10 @@ h1 {
   color: #444;
 }
 
+.guia li:last-child {
+  margin-bottom: 0;
+}
+
 .guia li:hover {
   transform: translateX(8px);
   background: linear-gradient(135deg, rgba(0, 77, 122, 0.08), rgba(0, 135, 147, 0.08));
@@ -197,7 +228,7 @@ h1 {
   text-align: center;
   color: #666;
   font-size: 0.95rem;
-  margin-bottom: 24px;
+  margin: 28px 0 24px 0;
   padding: 16px;
   background: rgba(0, 135, 147, 0.05);
   border-radius: 10px;
@@ -250,6 +281,12 @@ h1 {
 @media (max-width: 768px) {
   body {
     padding: 30px 20px;
+    /* ✅ Mantém scroll em tablets */
+    align-items: flex-start;
+  }
+
+  .main-wrapper {
+    padding: 10px 0;
   }
 
   h1 {
@@ -273,6 +310,13 @@ h1 {
 @media (max-width: 480px) {
   body {
     padding: 25px 15px;
+    /* ✅ Em mobile, alinha no topo para scroll natural */
+    align-items: flex-start;
+  }
+
+  .main-wrapper {
+    width: 100%;
+    padding: 10px 0 30px 0;
   }
 
   .logo-container {
@@ -308,5 +352,18 @@ h1 {
     max-width: 100%;
     font-size: 1rem;
     padding: 14px 0;
+  }
+}
+
+/* ========================================
+   TELAS MUITO PEQUENAS (altura limitada)
+   ======================================== */
+@media (max-height: 700px) {
+  body {
+    align-items: flex-start;
+  }
+  
+  .main-wrapper {
+    padding: 10px 0 30px 0;
   }
 }
